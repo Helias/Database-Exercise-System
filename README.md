@@ -1,2 +1,2 @@
 # Database-Exercise-System
-An university project to simulate a exercise system
+A university project to simulate an exercise system
