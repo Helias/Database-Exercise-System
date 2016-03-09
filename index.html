@@ -25,25 +25,28 @@
         <link rel="stylesheet" href="lib/css/font-awesome.min.css">
 
         <!--[if IE]>
-<script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
-<script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+            <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
     </head>
     <body ng-controller="ExerciseController">
         <div class="container-fluid">
+            <br>
+
             <div class="row">
-                <div class="col-xs-2">
-                    <br><br>
+                <div class="col-xs-10">
                     <a ng-href="#/home"><button class="btn btn-primary btn-lg">Home</button></a>
-                    <br><br>
-                    <a ng-href="#/algebra"><button class="btn btn-primary btn-lg">⋈ Algebra Relazionale</button></a>
-                    <br><br>
                     <a ng-href="#/sql"><button class="btn btn-primary btn-lg"><i class="fa fa-database"></i> SQL</button></a>
+                    <a ng-href="#/algebra"><button class="btn btn-primary btn-lg">⋈ Algebra Relazionale</button></a>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-xs-10">
                     <div ui-view></div>
                 </div>
             </div>
+
         </div>
     </body>
 </html>
