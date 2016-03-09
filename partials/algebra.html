@@ -1,1 +1,52 @@
-ALGEBRA - TODO
+<div class="container-fluid" ng-controller="algCrtl">
+    <br>
+    <div class="row">
+        <div class="col-xs-10">
+
+            <div class="row">
+                <h3>Lista argomenti</h3>
+                <div class="list-group">
+                    <a href="#" class="list-group-item">First item</a>
+                    <a href="#" class="list-group-item">Second item</a>
+                    <a href="#" class="list-group-item">Third item</a>
+                </div>
+            </div>    
+
+            <div class="row">
+                <h3>Argomento: lalalala</h3>
+                <h3>Testo:</h3>
+                <p>Selezionare le barche di colore yeellooowwww</p>
+            </div>
+
+            <div class="row">
+                <div class="btn-group" role="group" aria-label="toolbarAlg">
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('∪')">∪</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('∩')">∩</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('-')">-</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('÷')">÷</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('×')">×</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⋈')">⋈</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧑')">⧑</button> 
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧒')">⧒</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧓')">⧓</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('σ')">σ</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('π')">π</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('ρ')">ρ</button>
+                </div>
+            </div>
+
+            <br> 
+
+            <div class="row">
+                <form>
+                    <fieldset class="form-group">
+                        <input type="text" class="form-control input-xsmall" id="queryAlg" placeholder="Inserisci la query in algebra relazionale..." ng-model="queryAlg">
+                    </fieldset>
+                    <button type="submit" class="btn btn-primary">Invia</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
