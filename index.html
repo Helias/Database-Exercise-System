@@ -6,7 +6,6 @@
         <meta name="author" content="Helias, Tkd-Alex">
 
         <title>DataBase Exercise System</title>
-        <link rel="shortcut icon" href="">
 
         <!-- JavaScript -->
         <script src="lib/js/angular.min.js"></script>
@@ -30,10 +29,10 @@
         <![endif]-->
     </head>
     <body ng-controller="ExerciseController">
-        <div class="container-fluid">
+        <div class="container">
             <br>
 
-            <div class="row">
+            <div class="row text-center">
                 <div class="col-xs-10">
                     <a ng-href="#/home"><button class="btn btn-primary btn-lg">Home</button></a>
                     <a ng-href="#/sql"><button class="btn btn-primary btn-lg"><i class="fa fa-database"></i> SQL</button></a>
@@ -42,7 +41,7 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-10">
+                <div class="col-xs-12">
                     <div ui-view></div>
                 </div>
             </div>
