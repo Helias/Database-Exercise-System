@@ -1,1 +1,10 @@
-SQL - TODO
+<div class="row" ng-controller="sqlCtrl" id="sql">
+    <div class="col-xs-12 text-center">
+        <div ng-repeat="argument in arguments">
+            <a ng-href="#/sql/{{ argument.id }}">{{ argument.argomento }}</a>
+            <select>
+                <option class="form-control">test</option>
+            </select>
+        </div>
+    </div>
+</div>

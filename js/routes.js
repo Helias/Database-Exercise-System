@@ -16,7 +16,6 @@
         $stateProvider
             .state('home', {
             url: '/',
-            controller: 'ExerciseController',
             templateUrl: 'partials/home.html'
         })
             .state('algebra', {
@@ -26,6 +25,11 @@
             .state('sql', {
             url: '/sql',
             templateUrl: 'partials/sql.html'
+        })
+            .state('sqlArguments', {
+            url: '/sql/:id',
+            controller: 'sqlCtrl',
+            templateUrl: 'partials/sqlEx.html'
         });
 
     });
