@@ -20,6 +20,37 @@
         };
     });
 
+    app.controller('algExCtrl', function($scope, $http, $stateParams) {
+
+        /* pagination settings */
+        $scope.filteredEx = [];
+        $scope.currentPage = 1;
+        $scope.numPerPage = 1;
+        $scope.maxSize = 12;
+        $scope.itemsPerPage = 1;
+
+        $http.get( "API/API.php?exerciseALG=" + $stateParams.id )
+            .success(function (data, status, header, config) {
+            $scope.exercises = data;
+
+            $scope.exs = [];
+            for (var i = 0; i < $scope.exercises.length; i++) {
+                $scope.exs.push({ text: $scope.exercises[i].testo, done:false, id: i+1});
+            }
+
+            $scope.$watch('currentPage + numPerPage', function() {
+                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+                var end = begin + $scope.numPerPage;
+
+                $scope.filteredEx = $scope.exs.slice(begin, end);
+            });
+        })
+            .error(function (data, status, header, config) {
+            console.log("[ERROR] $http.get request failed!");
+        });
+
+    });
+
     app.controller('sqlCtrl', function($scope, $http) {
 
         /* Retrieve all sql arguments */

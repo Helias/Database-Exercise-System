@@ -17,7 +17,7 @@ else if (isset($_GET['exerciseSQL']) && $_GET['exerciseSQL'] != "")
 else if (isset($_GET['exerciseALG']))
 {
     // select all algebra exercises for argument
-    $stmt = $db->query('SELECT * FROM domandeALG');
+    $stmt = $db->query('SELECT * FROM domandeALG WHERE argomento = ' . $_GET['exerciseALG']);
     $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
