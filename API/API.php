@@ -8,10 +8,10 @@ if (isset($_GET['arguments']))
     $stmt = $db->query('SELECT * FROM argomenti');
     $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
-else if (isset($_GET['exerciseSQL']))
+else if (isset($_GET['exerciseSQL']) && $_GET['exerciseSQL'] != "")
 {
     // select all SQL exercises for argument
-    $stmt = $db->query('SELECT * FROM domandeSQL');
+    $stmt = $db->query('SELECT * FROM domandeSQL WHERE argomento = ' . $_GET['exerciseSQL']);
     $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 else if (isset($_GET['exerciseALG']))

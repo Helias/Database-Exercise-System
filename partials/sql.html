@@ -1,10 +1,7 @@
 <div class="row" ng-controller="sqlCtrl" id="sql">
     <div class="col-xs-12 text-center">
         <div ng-repeat="argument in arguments">
-            <a ng-href="#/sql/{{ argument.id }}">{{ argument.argomento }}</a>
-            <select>
-                <option class="form-control">test</option>
-            </select>
+            <h1><a ng-href="#/sql/{{ argument.id }}">{{ argument.argomento }}</a></h1>
         </div>
     </div>
 </div>

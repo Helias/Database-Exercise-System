@@ -1,1 +1,55 @@
-TO DO
+<div ng-controller="sqlExCtrl">
+    <div class="row text-center">
+        <div class="col-xs-12">
+
+            <!-- customizing pagination -->
+            <script id="template/pagination/pagination.html" type="text/ng-template">
+                <ul class="pagination">
+                    <li ng-if="boundaryLinks" ng-class="{disabled: noPrevious()}">
+                        <a href ng-click="selectPage(1)" title="First Page">
+                            <span class="glyphicon glyphicon-backward"></span>
+                        </a>
+                    </li>
+                    <li ng-if="directionLinks" ng-class="{disabled: noPrevious()}">
+                        <a href ng-click="selectPage(page - 1)" title="Previous Page">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </a>
+                    </li>
+                    <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}">
+                        <a href ng-click="selectPage(page.number)" popover="{{ page.text }}" popover-trigger="mouseenter">{{  page.text }}</a>
+                    </li>
+                    <li ng-if="directionLinks" ng-class="{disabled: noNext()}">
+                        <a href ng-click="selectPage(page + 1)" title="Next Page">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </a>
+                    </li>
+                    <li ng-if="boundaryLinks" ng-class="{disabled: noNext()}">
+                        <a href ng-click="selectPage(totalPages)" title="Last Page">
+                            <span class="glyphicon glyphicon-forward"></span>
+                        </a>
+                    </li>
+                </ul>
+            </script>
+
+            <h4>Ci sono {{ exercises.length }} esercizi di questo argomento</h4>
+            <pagination
+                        ng-model="currentPage"
+                        total-items="exs.length"
+                        max-size="maxSize"
+                        boundary-links="true"
+                        items-per-page="itemsPerPage" >
+            </pagination>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div ng-repeat="ex in filteredEx track by $index">
+                <h1>Esercizio {{ ex.id }}</h1>
+                {{ex.text}}
+            </div>
+
+        </div>
+    </div>
+</div>
