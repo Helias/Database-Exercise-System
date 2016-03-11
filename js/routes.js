@@ -22,6 +22,10 @@
             url: '/algebra',
             templateUrl: 'partials/algebra.html'
         })
+            .state('algArguments', {
+            url: '/algebra/:id',
+            templateUrl: 'partials/algEx.html'
+        })
             .state('sql', {
             url: '/sql',
             templateUrl: 'partials/sql.html'

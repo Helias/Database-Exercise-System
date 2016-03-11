@@ -1,7 +1,8 @@
-<div class="row" ng-controller="sqlCtrl" id="sql">
-    <div class="col-xs-12 text-center">
-        <div ng-repeat="argument in arguments">
-            <h1><a ng-href="#/sql/{{ argument.id }}">{{ argument.argomento }}</a></h1>
+<div class="row" ng-controller="sqlCtrl">
+    <div class="col-xs-6 col-xs-offset-3 text-center">
+        <div class="list-group">
+            <a href="#" class="list-group-item active">Lista Argomenti</a>
+            <a ng-href="#/sql/{{ argument.id }}" ng-repeat="argument in arguments" class="list-group-item">{{ argument.argomento }}</a>
         </div>
     </div>
 </div>
