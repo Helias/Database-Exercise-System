@@ -13,11 +13,31 @@
             .error(function (data, status, header, config) {
             console.log("[ERROR] $http.get request failed!");
         });
+    });
 
-        $scope.queryAlg = "";
-        $scope.addOpAlg = function(op) {
-            $scope.queryAlg = $scope.queryAlg+op;
-        };
+     app.controller('adminPanel', function($scope, $http) {
+
+        $scope.radioTypeResult = 'selectS';
+        $scope.radioTypeQ = 'SQL';
+
+        /* Retrieve all algebra arguments */
+        $http.get( "API/API.php?arguments" )
+            .success(function (data, status, header, config) {
+            $scope.arguments = data;
+            $scope.selectedArgument= 1;
+        })
+            .error(function (data, status, header, config) {
+            console.log("[ERROR] $http.get request failed!");
+        });
+
+        /* Retrieve all solution */
+        /*$http.get( "API/API.php?argument="+$scope.selectedArgument)
+            .success(function (data, status, header, config) {
+            $scope.arguments = data;
+        })
+            .error(function (data, status, header, config) {
+            console.log("[ERROR] $http.get request failed!");
+        });*/
     });
 
     app.controller('algExCtrl', function($scope, $http, $stateParams) {
@@ -48,6 +68,11 @@
             .error(function (data, status, header, config) {
             console.log("[ERROR] $http.get request failed!");
         });
+
+        $scope.queryAlg = "";
+        $scope.addOpAlg = function(op) {
+            $scope.queryAlg = $scope.queryAlg+op;
+        };
 
     });
 
