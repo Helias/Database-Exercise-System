@@ -36,3 +36,11 @@ CREATE TABLE IF NOT EXISTS des.domandeSQL(
 
 #Test population argomenti
 INSERT INTO des.argomenti(argomento) VALUES ('Argomento1'),('Argomento2'),('Argomento3'),('Argomento4');
+
+#Test population soluzioni
+INSERT INTO des.soluzioni(soluzione) VALUES ('Soluzione1'),('Soluzione2'),('Soluzione3'),('Soluzione4');
+
+#Test population domandeALG
+INSERT INTO des.domandeALG(testo,soluzione,argomento) VALUES ('Seleziona una barca etc',1,1);
+
+
