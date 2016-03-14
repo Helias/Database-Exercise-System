@@ -45,10 +45,30 @@
     <div class="row">
         <div class="col-xs-12">
 
-            <div ng-repeat="ex in filteredEx track by $index">
-                <h1>Esercizio {{ ex.id }}</h1>
-                {{ex.text}}
+            
+            <div class="row">
+                <div ng-repeat="ex in filteredEx track by $index">
+                    <h3>Esercizio {{ ex.id }}</h3>
+                    {{ex.text}}
+                </div>
             </div>
+
+
+            <br><br><br><br><br><br><br><br><br>
+
+            <div class="row">
+                <div class="btn-group" role="group" aria-label="toolbarSql">
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="SELECT" popover="SELECT" popover-trigger="mouseenter">SELECT</button>
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="FROM" popover="FROM" popover-trigger="mouseenter">FROM</button>
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="WHERE" popover="WHERE" popover-trigger="mouseenter">WHERE</button>
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="GROUP" popover="GROUP" popover-trigger="mouseenter">GROUP</button>
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="HAVING" popover="HAVING" popover-trigger="mouseenter">HAVING</button>
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="ORDER" popover="ORDER" popover-trigger="mouseenter">ORDER</button>
+                    <button class="btn btn-success btn-sm" ng-click="" popover-title="LIMIT" popover="LIMIT" popover-trigger="mouseenter">LIMIT</button>
+                </div>
+            </div>
+
+
 
         </div>
     </div>
