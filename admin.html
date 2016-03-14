@@ -1,0 +1,80 @@
+<html ng-app="exerciseSystem">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="DataBase Exercise System">
+        <meta name="author" content="Helias, Tkd-Alex">
+
+        <title>DataBase Exercise System</title>
+
+        <!-- JavaScript -->
+        <script src="lib/js/angular.min.js"></script>
+        <script src="lib/js/angular-ui-router.min.js"></script>
+        <script src="lib/js/ui-bootstrap.min.js"></script>
+        <script src="lib/js/loading-bar.min.js"></script>
+
+        <script src="js/app.js"></script>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="lib/css/bootstrap.min.css">
+        <link rel="stylesheet" href="lib/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="lib/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="lib/css/font-awesome.css">
+        <link rel="stylesheet" href="lib/css/font-awesome.min.css">
+
+        <!--[if IE]>
+            <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body ng-controller="adminPanel">
+        <div class="container">
+            <br>
+
+            <form>
+                <fieldset class="form-group" >
+
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="radioTypeQ" btn-radio="'SQL'">SQL</label>
+                        <label class="btn btn-primary" ng-model="radioTypeQ" btn-radio="'ALG'">Algebra Relazionale</label>
+                    </div>
+
+                    <br><br>
+
+                    <label for="argomentiAlg">Selezionare l'argomento relativo alla domanda:</label>
+                    <select class="form-control" id="argomentiAlg" ng-model="selectedArgument">
+                        <option ng-repeat="argument in arguments" value="{{ argument.id }}">{{ argument.argomento }}</option>
+                    </select>
+
+                    <label for="testoDomanda">Inserire il testo della domanda:</label>
+                    <textarea class="form-control" id="testoDomanda" rows="3"></textarea>
+
+                    <br>
+
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="radioTypeResult" btn-radio="'selectS'">Scegli soluzione</label>
+                        <label class="btn btn-primary" ng-model="radioTypeResult" btn-radio="'writeNewS'">Nuova soluzione</label>
+                    </div>
+
+                    <br><br>
+
+                    <div id='writeNewS' ng-show="radioTypeResult == 'writeNewS'">
+                        <label for="queryRis">Inserire il risultato della query:</label>
+                        <input type="text" class="form-control input-xsmall" id="queryRis" ng-model="queryRis">
+                    </div>
+
+                    <div id='selectS' ng-show="radioTypeResult == 'selectS'">
+                        <label for="listS">Scegli una soluzione tra quelle già esistenti:</label>
+                        <select class="form-control" id="listS" ng-model="selectedSolution">
+                            <option ng-repeat="argument in arguments" value="{{ argument.id }}">{{ argument.argomento }}</option>
+                        </select>
+                    </div>
+                    
+                </fieldset>
+                <button type="submit" class="btn btn-primary">Invia</button>
+            </form>
+            
+
+        </div>
+    </body>
+</html>
