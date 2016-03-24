@@ -13,7 +13,7 @@
         <script src="lib/js/ui-bootstrap.min.js"></script>
         <script src="lib/js/loading-bar.min.js"></script>
 
-        <script src="js/app.js"></script>
+        <script src="js/appAdmin.js"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="lib/css/bootstrap.min.css">
@@ -35,43 +35,76 @@
                 <fieldset class="form-group" >
 
                     <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="radioTypeQ" btn-radio="'SQL'">SQL</label>
-                        <label class="btn btn-primary" ng-model="radioTypeQ" btn-radio="'ALG'">Algebra Relazionale</label>
+                        <label class="btn btn-primary" ng-model="radio_question" btn-radio="'domandeSQL'" ng-click="getSolutions('domandeSQL')">SQL</label>
+                        <label class="btn btn-primary" ng-model="radio_question" btn-radio="'domandeALG'" ng-click="getSolutions('domandeALG')">Algebra Relazionale</label>
                     </div>
 
-                    <br><br>
-
-                    <label for="argomentiAlg">Selezionare l'argomento relativo alla domanda:</label>
-                    <select class="form-control" id="argomentiAlg" ng-model="selectedArgument">
-                        <option ng-repeat="argument in arguments" value="{{ argument.id }}">{{ argument.argomento }}</option>
-                    </select>
-
-                    <label for="testoDomanda">Inserire il testo della domanda:</label>
-                    <textarea class="form-control" id="testoDomanda" rows="3"></textarea>
+                    <hr>
+                    
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="radio_typeArgument" btn-radio="'ex_argument'" ng-disabled="disable_selectArgument">Scegli argomento</label>
+                        <label class="btn btn-primary" ng-model="radio_typeArgument" btn-radio="'new_argument'" ng-click="radio_typeSolution = 'new_solution'">Nuovo argomento</label>
+                    </div>
 
                     <br>
 
-                    <div class="btn-group">
-                        <label class="btn btn-primary" ng-model="radioTypeResult" btn-radio="'selectS'">Scegli soluzione</label>
-                        <label class="btn btn-primary" ng-model="radioTypeResult" btn-radio="'writeNewS'">Nuova soluzione</label>
-                    </div>
-
-                    <br><br>
-
-                    <div id='writeNewS' ng-show="radioTypeResult == 'writeNewS'">
-                        <label for="queryRis">Inserire il risultato della query:</label>
-                        <input type="text" class="form-control input-xsmall" id="queryRis" ng-model="queryRis">
-                    </div>
-
-                    <div id='selectS' ng-show="radioTypeResult == 'selectS'">
-                        <label for="listS">Scegli una soluzione tra quelle già esistenti:</label>
-                        <select class="form-control" id="listS" ng-model="selectedSolution">
+                    <div ng-show="radio_typeArgument == 'ex_argument'">
+                        <label for="select_argument">Selezionare l'argomento relativo alla domanda:</label>
+                        <select class="form-control" id="select_argument" ng-model="selected_argument" ng-change="getSolutions(radio_question)">
                             <option ng-repeat="argument in arguments" value="{{ argument.id }}">{{ argument.argomento }}</option>
+                        </select>
+                    </div>
+
+                    <div ng-show="radio_typeArgument == 'new_argument'">
+                        <label for="text_argument">Inserisci il nuovo argomento:</label>
+                        <input type="text" id="text_argument" class="form-control input-xsmall" ng-model="argument">
+                    </div>
+
+                    <hr>
+
+                    <label for="textarea_question">Inserire il testo della domanda:</label>
+                    <textarea class="form-control vresize" id="textarea_question" rows="3"  ng-model="question" style="resize: vertical; min-height:110px;"></textarea>
+
+                    <hr>
+
+                    <div class="btn-group">
+                        <label class="btn btn-primary" ng-model="radio_typeSolution" btn-radio="'ex_solution'" ng-disabled="radio_typeArgument == 'new_argument' || disable_selectSolution  ">Scegli soluzione</label>
+                        <label class="btn btn-primary" ng-model="radio_typeSolution" btn-radio="'new_solution'">Nuova soluzione</label>
+                    </div>
+
+                    <br>
+
+                    <div ng-show="radio_typeSolution == 'ex_solution'">
+                        <label for="select_solution">Scegli una soluzione tra quelle già esistenti:</label>
+                        <select class="form-control" id="select_solution" ng-model="selected_solution" >
+                            <option ng-repeat="solution in solutions" value="{{ solution.id }}">{{ solution.soluzione }}</option>
+                        </select>
+                    </div>
+
+                    <div ng-show="radio_typeSolution == 'new_solution'">
+                        <label for="text_solution">Inserire il risultato della query:</label>
+                        <input type="text" id="text_solution" class="form-control input-xsmall" ng-model="solution">
+                    </div>
+
+                    <hr>
+
+                    <label for="div_database">Seleziona un Database esistente o creane uno nuovo:</label>
+                    <div class="input-group" id="div_database">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button">Aggiungi Database</button>
+                        </span>
+                        <select class="form-control" id="select_database" ng-model="selected_database" >
+                            <option ng-repeat="database in databases" value="{{ database.id }}" >{{ bho }}</option>
                         </select>
                     </div>
                     
                 </fieldset>
-                <button type="submit" class="btn btn-primary">Invia</button>
+
+                <br>
+
+                <div class="row text-center">
+                    <button class="btn btn-success btn-lg" ng-click="" ng-disabled="question == '' ">Aggiungi una nuova domanda</button>
+                </div>
             </form>
             
 
