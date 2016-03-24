@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS des.soluzioni(
 CREATE TABLE IF NOT EXISTS des.domandeALG(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	testo varchar(255) NOT NULL,
+	db_connesso varchar(255) NOT NULL,
 	soluzione INT NOT NULL,
 	argomento INT NOT NULL,
 	FOREIGN KEY (soluzione) REFERENCES soluzioni(id),
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS des.domandeALG(
 CREATE TABLE IF NOT EXISTS des.domandeSQL(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	testo varchar(255) NOT NULL,
+	db_connesso varchar(255) NOT NULL,
 	soluzione INT NOT NULL,
 	argomento INT NOT NULL,
 	FOREIGN KEY (soluzione) REFERENCES soluzioni(id),
@@ -41,6 +43,8 @@ INSERT INTO des.argomenti(argomento) VALUES ('Argomento1'),('Argomento2'),('Argo
 INSERT INTO des.soluzioni(soluzione) VALUES ('Soluzione1'),('Soluzione2'),('Soluzione3'),('Soluzione4');
 
 #Test population domandeALG
-INSERT INTO des.domandeALG(testo,soluzione,argomento) VALUES ('Seleziona una barca etc',1,1);
+INSERT INTO des.domandeALG(testo,db_connesso,soluzione,argomento) VALUES ('Seleziona una barca etc','eh',1,1);
+
+SELECT DISTINCT soluzioni.id, soluzioni.soluzione FROM domandeALG INNER JOIN soluzioni WHERE domandeALG.argomento = 1 AND domandeALG.soluzione = soluzioni.id;
 
 
