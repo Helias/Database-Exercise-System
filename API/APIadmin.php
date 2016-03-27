@@ -8,11 +8,15 @@
         $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
-    if ( isset($_GET['solutions']) && (isset($_GET['argument'])&&$_GET['argument']!= "") && (isset($_GET['question'])&&$_GET['question']!= "") ) { 
-        $stmt = $db->query('SELECT DISTINCT soluzioni.id, soluzioni.soluzione 
-                            FROM '.$_GET['question'].' INNER JOIN soluzioni 
-                            WHERE '.$_GET['question'].'.argomento = '.$_GET['argument'].' AND '.$_GET['question'].'.soluzione = soluzioni.id;');
-        $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+    if ( isset($_GET['solutions']) && 
+        (isset($_GET['argument']) && $_GET['argument']!= "") && 
+        (isset($_GET['question']) && $_GET['question']!= "") 
+        ) { 
+
+            $stmt = $db->query('SELECT DISTINCT soluzioni.id, soluzioni.soluzione 
+                                FROM '.$_GET['question'].' INNER JOIN soluzioni 
+                                WHERE '.$_GET['question'].'.argomento = '.$_GET['argument'].' AND '.$_GET['question'].'.soluzione = soluzioni.id;');
+            $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     function submitNewQuestion($db, $argumentId, $solutionId) {
