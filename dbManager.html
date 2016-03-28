@@ -10,10 +10,25 @@
         <!-- JavaScript -->
         <script src="lib/js/angular.min.js"></script>
         <script src="lib/js/angular-ui-router.min.js"></script>
+        <script src="lib/js/angular-animate.js"></script>
         <script src="lib/js/ui-bootstrap.min.js"></script>
         <script src="lib/js/loading-bar.min.js"></script>
 
         <script src="js/appAdmin.js"></script>
+
+        <!-- Modal -->
+        <script type="text/ng-template" id="ForeignKey.html">
+            <div class="modal-header">
+                <h3 class="modal-title">Foreign Key</h3>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center">Vuoi che questo campo sia una <b>chiave esterna</b>?</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="lib/css/bootstrap.min.css">
@@ -83,7 +98,7 @@
                                     <div class="input-group" >
                                         <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]"> 
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" ng-click="open('small')">FK</button>
+                                            <button class="btn btn-default" type="button" ng-click="open()">FK</button>
                                         </span>
                                     </div>
                                 </td>

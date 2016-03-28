@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var app = angular.module('exerciseSystem', ['ui.router', 'ui.bootstrap', 'chieffancypants.loadingBar']);
+    var app = angular.module('exerciseSystem', ['ui.router', 'ui.bootstrap', 'chieffancypants.loadingBar', 'ngAnimate']);
 
     app.controller('adminPanel', function($scope, $http) {
 
@@ -135,18 +135,17 @@
 
 
         /* Modals */
-        $scope.open = function (size) {
+        $scope.open = function () {
 
             var modalInstance = $uibModal.open({
                 animation: true,
-                template: '<br><br>Vuoi rendere questo campo chaive esterna? <br> (Foreign Key)?<br><br> <button class="btn-danger">Cancel</button> <button class="btn-warning">OK</button>',
+                templateUrl: 'ForeignKey.html',
                 controller: 'ModalInstanceCtrl',
-                size: size
+                size: 'small'
             });
 
             modalInstance.result.then(function (result) {
-                $log(selectedItem);
-                $scope.selected = selectedItem;
+                $scope.selected = result;
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
