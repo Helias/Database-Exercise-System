@@ -34,6 +34,16 @@
             url: '/sql/:id',
             controller: 'sqlCtrl',
             templateUrl: 'partials/sqlEx.html'
+        })
+            .state('admin', {
+            url: '/admin',
+            controller: 'adminPanel',
+            templateUrl: 'partials/admin.html'
+        })
+            .state('dbManager', {
+            url: '/dbManager'
+//            controller: 'dbManager',
+//            templateUrl: 'partials/dbManager.html'
         });
 
     });
