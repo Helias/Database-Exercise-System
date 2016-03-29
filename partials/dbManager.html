@@ -1,54 +1,85 @@
+<!-- Modal template -->
+<script type="text/ng-template" id="ForeignKey.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Foreign Key</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2  text-center">
+                <label class="control-label">Scegli una soluzione tra quelle già esistenti:</label>
+                <select class="form-control">
+                    <option id="select_table" ng-repeat="t in numTables track by $index">{{ modalTables[$index].name }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
 <div class="row">
-    <div class="col-xs-12"> 
-        <br>
+    <div class="col-xs-6 col-xs-offset-3">
 
-        <form>
-            <label for="text_nameDatabase">Inserisci il nome del database:</label>
-            <input type="text" id="text_nameDatabase" class="form-control input-xsmall" ng-model="nameDatabase">
+        <label for="text_nameDatabase">Inserisci il nome del database:</label>
+        <input type="text" id="text_nameDatabase" class="form-control" ng-model="nameDatabase">
 
-            <hr>    
+        <label for="text_nTables">Inserisci il numero di tabelle:</label>
+        <input type="number" id="text_nTables" class="form-control" ng-model="nTables" min="1" max="5">
+    </div>
+</div>
 
-            <label for="text_nTables">Inserisci il numero di tabelle:</label>
-            <input type="number" id="text_nTables" class="form-control input-xsmall" ng-model="nTables" min="1" max="5" >
+<div class="row">
+    <div ng-repeat="i in getNumber(nTables) track by $index" ng-init="indexTable = $index" class="col-xs-12">
+        <hr>
+        <h2>Tabella numero {{ indexTable+1 }} {{ tables[indexTable].name != '' ? '(' + tables[indexTable].name + ')' : '' }}</h2>
 
-            <br>
+        <div class="row">
+            <div class="col-xs-6 col-xs-offset-3">
 
-            <div ng-repeat="i in getNumber(nTables) track by $index" ng-init="indexTable = $index"> 
-                <hr>
-                <h2>Tabella numero {{indexTable+1}}</h2>
-
-                <label for="text_nameTable{{indexTable}}">Inserisci il nome della tabella:</label>
-                <input type="text" id="text_nameTable{{indexTable}}" class="form-control input-xsmall" ng-model="tables[indexTable].name">
-
-                <br>
-
-                <label for="text_nColumns">Inserisci il numero di attributi (colonne):</label>
-                <input type="number" id="text_nColumns" class="form-control input-xsmall" ng-model="tables[indexTable].columns" min="1" max="5" value="1">
+                <h3>Inserisci il nome della tabella:</h3>
+                <input type="text" id="text_nameTable{{indexTable}}" class="form-control" ng-model="tables[indexTable].name">
 
                 <br>
 
-                <div class="input-group" ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
-                    <span class="input-group-addon" id="desc_attr{{indexColum}}">Attributo Numero: {{indexColum+1}}</span>
-                    <input type="text" class="form-control" aria-describedby="desc_attr{{indexColum}}" ng-model="tables[indexTable].attr[indexColum]">
+                <h3>Inserisci il numero di attributi (colonne):</h3>
+                <input type="number" id="text_nColumns" class="form-control" ng-model="tables[indexTable].columns" min="1" max="5" value="1">
+
+                <br>
+
+                <div class="row">
+                    <div class="col-xs-6" ng-repeat="i in getNumber(tables[indexTable].columns) track by $index">
+                        <div class="input-group" ng-init="indexColum = $index">
+                            <span class="input-group-addon" id="desc_attr{{indexColum}}">Attributo {{ indexColum+1 }}:</span>
+                            <input type="text" class="form-control" aria-describedby="desc_attr{{indexColum}}" ng-model="tables[indexTable].attr[indexColum]">
+                        </div>
+                    </div>
                 </div>
 
                 <br>
 
                 <label for="text_nRows">Inserisci il numero di valori (righe):</label>
-                <input type="number" id="text_nRows" class="form-control input-xsmall" ng-model="tables[indexTable].rows" min="1" max="5" value="1">
+                <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="5" value="1">
+            </div>
 
-                <br>
+        </div>
 
+        <br>
+
+        <div class="row">
+
+            <div class="col-xs-12">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">{{tables[indexTable].attr[indexColum]}}</th>
+                            <th ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">{{ tables[indexTable].attr[indexColum] }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="i in getNumber(tables[indexTable].rows) track by $index" ng-init="indexRow = $index">
-                            <th scope="row">{{indexRow+1}}</th>
+                            <th scope="row">{{ indexRow+1 }}</th>
                             <td ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index"> 
                                 <div class="input-group" >
                                     <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]"> 
@@ -60,15 +91,22 @@
                         </tr>
                     </tbody>
                 </table>
-
             </div>
 
-            <br>
-
-            <div class="row text-center">
-                <button class="btn btn-success btn-lg" ng-click="logTable()">Aggiungi un nuovo database</button>
-            </div>
-        </form>
+        </div>
 
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-12">
+
+        <br>
+
+        <div class="row text-center">
+            <button class="btn btn-success btn-lg" ng-click="logTable()">Aggiungi un nuovo database</button>
+        </div>
+
+        <br>
+    </div>
+</div>
+

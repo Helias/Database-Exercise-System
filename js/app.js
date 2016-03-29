@@ -99,7 +99,7 @@
 
     app.controller('dbManager', function($scope, $http, $uibModal) {
 
-        $scope.nTables = 1;
+        $scope.nTables = 0;
 
         $scope.table = {
             name: "",
@@ -113,22 +113,17 @@
                     this.matrix[i] = new Array();
                 }
             }
-
         };
 
         $scope.tables = new Array();
 
-        $scope.inizializeTables = function() {
-            for (var i = 0; i < 5; i++) {
-                $scope.tables[i] = angular.copy($scope.table);
-                $scope.tables[i].inizializeMatrix();
-            }
-        };
-
-        $scope.inizializeTables();
+        for (var i = 0; i < 5; i++) {
+            $scope.tables[i] = angular.copy($scope.table);
+            $scope.tables[i].inizializeMatrix();
+        }
 
         $scope.getNumber = function(num) {
-            return new Array(num);   
+            return new Array(num);
         };
 
         $scope.logTable = function() {
@@ -151,12 +146,16 @@
 
         /* Modals */
         $scope.open = function () {
-
+        
             var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'ForeignKey.html',
                 controller: 'ModalInstanceCtrl',
-                size: 'small'
+                size: 'small',
+                resolve: {
+                    tables: function() { return $scope.tables },
+                    nTables: function() { return $scope.nTables }
+                }
             });
 
             modalInstance.result.then(function (result) {
@@ -166,7 +165,10 @@
 
     });
 
-    app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
+    app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, tables, nTables) {
+
+        $scope.modalTables = tables;
+        $scope.numTables = new Array(nTables);
 
         $scope.ok = function () {
             $uibModalInstance.close("OK"); //result
@@ -181,6 +183,9 @@
 
         $scope.radio_question = 'domandeSQL';
         $scope.question = '';
+
+        $scope.radio_typeArgument = 'ex_argument';
+        $scope.radio_typeSolution = 'ex_solution';
 
         $scope.getArguments = function() {
             $http.get("API/APIadmin.php?arguments")
