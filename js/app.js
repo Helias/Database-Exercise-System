@@ -222,16 +222,13 @@
 
         $scope.submitNewQuestion = function() {
 
-            if($scope.question) {
-
-                if (radio_typeArgumentt == 'new_argument' && radio_typeSolution == 'new_solution') {
-                    $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "db=eh" )
-                        .success(function (data, status, header, config) {
-                    })
-                        .error(function (data, status, header, config) {
-                        console.log("[ERROR] $http.get request failed!");
-                    });  
-                }
+            if (radio_typeArgumentt == 'new_argument' && radio_typeSolution == 'new_solution') {
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "db=eh" )
+                    .success(function (data, status, header, config) {
+                })
+                    .error(function (data, status, header, config) {
+                    console.log("[ERROR] $http.get request failed!");
+                });  
             }
 
             if (radio_typeArgumentt == 'ex_argument' && radio_typeSolution == 'ex_solution') {
@@ -253,7 +250,6 @@
             }
         }
 
-        $scope.getArguments();
     });
 
 }());
