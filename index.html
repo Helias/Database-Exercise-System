@@ -17,6 +17,21 @@
         <script src="js/app.js"></script>
         <script src="js/routes.js"></script>
 
+        <!-- Modal template -->
+        <script type="text/ng-template" id="ForeignKey.html">
+            <div class="modal-header">
+                <h3 class="modal-title">Foreign Key</h3>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center">Vuoi che questo campo sia una <b>chiave esterna</b>?</h3>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </script>
+
+
         <!-- CSS -->
         <link rel="stylesheet" href="lib/css/bootstrap.min.css">
         <link rel="stylesheet" href="lib/css/bootstrap-theme.min.css">
@@ -25,8 +40,8 @@
         <link rel="stylesheet" href="lib/css/font-awesome.min.css">
 
         <!--[if IE]>
-            <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
     <body>

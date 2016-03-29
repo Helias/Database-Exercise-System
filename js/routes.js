@@ -41,9 +41,9 @@
             templateUrl: 'partials/admin.html'
         })
             .state('dbManager', {
-            url: '/dbManager'
-//            controller: 'dbManager',
-//            templateUrl: 'partials/dbManager.html'
+            url: '/dbManager',
+            controller: 'dbManager',
+            templateUrl: 'partials/dbManager.html'
         });
 
     });
