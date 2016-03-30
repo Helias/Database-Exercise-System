@@ -107,10 +107,17 @@
             columns: 1,
             attr: new Array(),
             matrix: new Array(),
+            fk: new Array(),
 
             inizializeMatrix: function () {
                 for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
                     this.matrix[i] = new Array();
+                }
+            },
+
+            inizializeFk: function () {
+                for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
+                    this.fk[i] = new Array();
                 }
             }
         };
@@ -120,6 +127,7 @@
         for (var i = 0; i < 5; i++) {
             $scope.tables[i] = angular.copy($scope.table);
             $scope.tables[i].inizializeMatrix();
+            $scope.tables[i].inizializeFk();
         }
 
         $scope.getNumber = function(num) {
@@ -138,6 +146,7 @@
                 for (var b = 0; b < $scope.tables[i].rows; b++){
                     for (var a = 0; a < $scope.tables[i].columns; a++) {
                         console.log("Riga n: " + b + " Attr n: " + a + " = " + $scope.tables[i].matrix[b][a]);
+                        console.log("Fk: "+$scope.tables[i].fk[b][a]);
                     }
                 }
             }
@@ -197,6 +206,7 @@
 
         $scope.ok = function () {
             $scope.modalTables[_indexTable].matrix[_row][_col] = $scope.modalTables[$scope.selected_table].matrix[$scope.selected_value][$scope.selected_attr];
+            $scope.modalTables[_indexTable].fk[_row][_col] = $scope.selected_table + "," + $scope.selected_value + "," + $scope.selected_attr;
             $uibModalInstance.close("OK"); //result
         };
 
