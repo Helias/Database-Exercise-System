@@ -6,10 +6,28 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2  text-center">
-                <label class="control-label">Scegli una soluzione tra quelle già esistenti:</label>
-                <select class="form-control">
-                    <option id="select_table" ng-repeat="t in numTables track by $index">{{ modalTables[$index].name }}</option>
+
+                <label class="control-label">Seleziona una tabella:</label>
+                <select class="form-control" ng-model="selected_table">
+                    <option id="select_table" ng-repeat="t in numTables track by $index" ng-init="indexTableModal = $index" value="{{ indexTableModal }}" ng-disabled="indexTableModal == indexTable">
+                        {{ indexTableModal+1 }} - {{ modalTables[indexTableModal].name }}
+                    </option>
                 </select>
+
+                <label class="control-label">Seleziona un attributo:</label>
+                <select class="form-control" ng-model="selected_attr">
+                    <option id="select_attr" ng-repeat="t in modalTables[selected_table].attr track by $index" ng-init="indexAttrModal = $index" value="{{ indexAttrModal }}" >
+                        {{ modalTables[selected_table].attr[indexAttrModal] }}
+                    </option>
+                </select>
+
+                <label class="control-label">Seleziona il valore :</label>
+                <select class="form-control" ng-model="selected_value">
+                    <option id="select_value" ng-repeat="t in modalTables[selected_table].matrix track by $index" ng-init="indexValueModal = $index" value="{{ indexValueModal }}" >
+                        {{ modalTables[selected_table].matrix[indexValueModal][selected_attr] }}
+                    </option>
+                </select>
+
             </div>
         </div>
     </div>
@@ -36,7 +54,7 @@
         <h2>Tabella numero {{ indexTable+1 }} {{ tables[indexTable].name != '' ? '(' + tables[indexTable].name + ')' : '' }}</h2>
 
         <div class="row">
-            <div class="col-xs-6 col-xs-offset-3">
+            <div class="col-xs-4">
 
                 <h3>Inserisci il nome della tabella:</h3>
                 <input type="text" id="text_nameTable{{indexTable}}" class="form-control" ng-model="tables[indexTable].name">
@@ -51,7 +69,7 @@
                 <div class="row">
                     <div class="col-xs-6" ng-repeat="i in getNumber(tables[indexTable].columns) track by $index">
                         <div class="input-group" ng-init="indexColum = $index">
-                            <span class="input-group-addon" id="desc_attr{{indexColum}}">Attributo {{ indexColum+1 }}:</span>
+                            <span class="input-group-addon" id="desc_attr{{indexColum}}">Attr {{ indexColum+1 }}:</span>
                             <input type="text" class="form-control" aria-describedby="desc_attr{{indexColum}}" ng-model="tables[indexTable].attr[indexColum]">
                         </div>
                     </div>
@@ -63,18 +81,19 @@
                 <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="5" value="1">
             </div>
 
-        </div>
-
-        <br>
-
-        <div class="row">
-
-            <div class="col-xs-12">
+            <div class="col-xs-8">
                 <table class="table">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">{{ tables[indexTable].attr[indexColum] }}</th>
+                            <th ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
+                                {{ tables[indexTable].attr[indexColum] }} &nbsp;
+                                <select ng-model="selectedAL" ng-show="tables[indexTable].attr[indexColum]!=NULL" ng-change="autoLoader(indexTable,indexColum, selectedAL)">
+                                    <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
+                                        {{ autoLoad }}
+                                    </option>
+                                </select>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,7 +103,7 @@
                                 <div class="input-group" >
                                     <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]"> 
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button" ng-click="open()">FK</button>
+                                        <button class="btn btn-default" type="button" ng-click="open(indexTable, indexRow, indexColum)">FK</button>
                                     </span>
                                 </div>
                             </td>
@@ -92,6 +111,12 @@
                     </tbody>
                 </table>
             </div>
+
+        </div>
+
+        <br>
+
+        <div class="row">
 
         </div>
 
