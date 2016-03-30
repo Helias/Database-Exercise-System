@@ -99,7 +99,7 @@
 
     app.controller('dbManager', function($scope, $http, $uibModal) {
 
-        $scope.nTables = 0;
+        $scope.nTables = 0;        
 
         $scope.table = {
             name: "",
@@ -109,7 +109,7 @@
             matrix: new Array(),
 
             inizializeMatrix: function () {
-                for (var i = 0; i < 5; i++) {
+                for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
                     this.matrix[i] = new Array();
                 }
             }
@@ -143,9 +143,29 @@
             }
         };
 
+        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
+        
+        $scope.autoLoadList = new Array();
+        $scope.autoLoadList[0] = new Array('Aldo', 'Giovanni', 'Giacomo', 'Mario', 'Alessandro', 'Stefano', 'Salvatore', 'Alfredo');
+        $scope.autoLoadList[1] = new Array('Rossi', 'Borzì', 'Pulvirenti', 'Maggio', 'Calabrò', 'Foti');
+        $scope.autoLoadList[2] = new Array('Giallo', 'Rosso', 'Verde', 'Blu', 'Arancione', 'Celeste', 'Viola');
+        $scope.autoLoadList[3] = new Array('Roma', 'Catania', 'Messina', 'Barcellona PG', 'Caltagirone');
+        $scope.autoLoadList[4] = new Array('21.50', '596.20', '444121.00', '12');
+
+        $scope.autoLoader = function(iTable, column,selectedAutoLoad){
+            console.log("Tabella n: " + iTable);   
+            console.log("Colonna: " + column);               
+            console.log("Selezionato: "+selectedAutoLoad);
+            
+            for (var i = 0; i < $scope.tables[iTable].rows; i++) {
+                $scope.rndNumber = Math.floor(Math.random() * $scope.autoLoadList[selectedAutoLoad].length-1) + 1  ;
+                console.log("i "+i+" rnd: "+$scope.rndNumber);
+                $scope.tables[iTable].matrix[i][column] = $scope.autoLoadList[selectedAutoLoad][$scope.rndNumber];
+            }
+        };
 
         /* Modals */
-        $scope.open = function () {
+        $scope.open = function (indexTable, row, col) {
         
             var modalInstance = $uibModal.open({
                 animation: true,
@@ -154,7 +174,10 @@
                 size: 'small',
                 resolve: {
                     tables: function() { return $scope.tables },
-                    nTables: function() { return $scope.nTables }
+                    nTables: function() { return $scope.nTables },
+                    _indexTable: function() { return indexTable },
+                    _row: function() { return row},
+                    _col: function() { return col}
                 }
             });
 
@@ -165,12 +188,15 @@
 
     });
 
-    app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, tables, nTables) {
+    app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, tables, nTables, _indexTable, _row, _col) {
+
+        $scope.indexTable = _indexTable;
 
         $scope.modalTables = tables;
         $scope.numTables = new Array(nTables);
 
         $scope.ok = function () {
+            $scope.modalTables[_indexTable].matrix[_row][_col] = $scope.modalTables[$scope.selected_table].matrix[$scope.selected_value][$scope.selected_attr];
             $uibModalInstance.close("OK"); //result
         };
 
@@ -187,25 +213,25 @@
         $scope.radio_typeArgument = 'ex_argument';
         $scope.radio_typeSolution = 'ex_solution';
 
-        $scope.getArguments = function() {
-            $http.get("API/APIadmin.php?arguments")
-                .success(function (data, status, header, config) {
-                if (data.length > 0) {
-                    $scope.arguments = data;
-                    $scope.selected_argument =  $scope.arguments[0].id;
-                    $scope.radio_typeArgument = 'ex_argument';
-                    $scope.getSolutions($scope.radio_question);
-                } else {
-                    $scope.radio_typeArgument = 'new_argument';
-                    $scope.disable_selectArgument = true;
-                    $scope.radio_typeSolution = 'new_solution';
-                    $scope.disable_selectSolution = true;
-                } 
-            })
-                .error(function (data, status, header, config) {
-                console.log("[ERROR] $http.get request failed!");
-            });   
-        };
+
+        $http.get("API/APIadmin.php?arguments")
+            .success(function (data, status, header, config) {
+            if (data.length > 0) {
+                $scope.arguments = data;
+                $scope.selected_argument =  $scope.arguments[0].id;
+                $scope.radio_typeArgument = 'ex_argument';
+                $scope.getSolutions($scope.radio_question);
+            } else {
+                $scope.radio_typeArgument = 'new_argument';
+                $scope.disable_selectArgument = true;
+                $scope.radio_typeSolution = 'new_solution';
+                $scope.disable_selectSolution = true;
+            } 
+        })
+            .error(function (data, status, header, config) {
+            console.log("[ERROR] $http.get request failed!");
+        });   
+        
 
         $scope.getSolutions = function() {
             $http.get("API/APIadmin.php?solutions&argument=" + $scope.selected_argument + "&question=" + $scope.radio_question)
@@ -227,17 +253,8 @@
 
         $scope.submitNewQuestion = function() {
 
-            if (radio_typeArgumentt == 'new_argument' && radio_typeSolution == 'new_solution') {
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "db=eh" )
-                    .success(function (data, status, header, config) {
-                })
-                    .error(function (data, status, header, config) {
-                    console.log("[ERROR] $http.get request failed!");
-                });  
-            }
-
-            if (radio_typeArgumentt == 'ex_argument' && radio_typeSolution == 'ex_solution') {
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&ex_solution=" + $scope.selected_solution + "db=eh" )
+            if ($scope.radio_typeArgument == 'new_argument' && $scope.radio_typeSolution == 'new_solution') {
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=eh" )
                     .success(function (data, status, header, config) {
                 })
                     .error(function (data, status, header, config) {
@@ -245,8 +262,17 @@
                 });
             }
 
-            if (radio_typeArgumentt == 'ex_argument' && radio_typeSolution == 'new_solution') {
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "db=eh" )
+            if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'ex_solution') {
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&ex_solution=" + $scope.selected_solution + "&db=eh" )
+                    .success(function (data, status, header, config) {
+                })
+                    .error(function (data, status, header, config) {
+                    console.log("[ERROR] $http.get request failed!");
+                });
+            }
+
+            if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'new_solution') {
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=eh" )
                     .success(function (data, status, header, config) {
                 })
                     .error(function (data, status, header, config) {
