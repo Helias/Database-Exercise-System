@@ -238,7 +238,6 @@
         $scope.getSolutions = function() {
             $http.get("API/APIadmin.php?solutions&argument=" + $scope.selected_argument + "&question=" + $scope.radio_question)
                 .success(function (data, status, header, config) {
-                console.log("API/APIadmin.php?solutions&argument=" + $scope.selected_argument + "&question=" + $scope.radio_question);
                 if (data.length > 0) {
                     $scope.solutions = data;
                     $scope.selected_solution = $scope.solutions[0].id;
