@@ -99,7 +99,7 @@
 
     app.controller('dbManager', function($scope, $http, $uibModal) {
 
-        $scope.nTables = 0;        
+        $scope.nTables = 0;
 
         $scope.table = {
             name: "",
@@ -144,7 +144,7 @@
         };
 
         $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
-        
+
         $scope.autoLoadList = new Array();
         $scope.autoLoadList[0] = new Array('Aldo', 'Giovanni', 'Giacomo', 'Mario', 'Alessandro', 'Stefano', 'Salvatore', 'Alfredo');
         $scope.autoLoadList[1] = new Array('Rossi', 'Borzì', 'Pulvirenti', 'Maggio', 'Calabrò', 'Foti');
@@ -153,10 +153,10 @@
         $scope.autoLoadList[4] = new Array('21.50', '596.20', '444121.00', '12');
 
         $scope.autoLoader = function(iTable, column,selectedAutoLoad){
-            console.log("Tabella n: " + iTable);   
-            console.log("Colonna: " + column);               
+            console.log("Tabella n: " + iTable);
+            console.log("Colonna: " + column);
             console.log("Selezionato: "+selectedAutoLoad);
-            
+
             for (var i = 0; i < $scope.tables[iTable].rows; i++) {
                 $scope.rndNumber = Math.floor(Math.random() * $scope.autoLoadList[selectedAutoLoad].length-1) + 1  ;
                 console.log("i "+i+" rnd: "+$scope.rndNumber);
@@ -166,7 +166,7 @@
 
         /* Modals */
         $scope.open = function (indexTable, row, col) {
-        
+
             var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'ForeignKey.html',
@@ -226,12 +226,12 @@
                 $scope.disable_selectArgument = true;
                 $scope.radio_typeSolution = 'new_solution';
                 $scope.disable_selectSolution = true;
-            } 
+            }
         })
             .error(function (data, status, header, config) {
             console.log("[ERROR] $http.get request failed!");
-        });   
-        
+        });
+
 
         $scope.getSolutions = function() {
             $http.get("API/APIadmin.php?solutions&argument=" + $scope.selected_argument + "&question=" + $scope.radio_question)

@@ -56,12 +56,12 @@
         <div class="row">
             <div class="col-xs-4">
 
-                <h3>Inserisci il nome della tabella:</h3>
+                <h4>Inserisci il nome della tabella:</h4>
                 <input type="text" id="text_nameTable{{indexTable}}" class="form-control" ng-model="tables[indexTable].name">
 
                 <br>
 
-                <h3>Inserisci il numero di attributi (colonne):</h3>
+                <h4>Inserisci il numero di attributi (colonne):</h4>
                 <input type="number" id="text_nColumns" class="form-control" ng-model="tables[indexTable].columns" min="1" max="5" value="1">
 
                 <br>
@@ -77,7 +77,7 @@
 
                 <br>
 
-                <label for="text_nRows">Inserisci il numero di valori (righe):</label>
+                <h4>Inserisci il numero di valori (righe):</h4>
                 <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="5" value="1">
             </div>
 
@@ -99,9 +99,9 @@
                     <tbody>
                         <tr ng-repeat="i in getNumber(tables[indexTable].rows) track by $index" ng-init="indexRow = $index">
                             <th scope="row">{{ indexRow+1 }}</th>
-                            <td ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index"> 
+                            <td ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
                                 <div class="input-group" >
-                                    <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]"> 
+                                    <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]">
                                     <span class="input-group-btn">
                                         <button class="btn btn-default" type="button" ng-click="open(indexTable, indexRow, indexColum)">FK</button>
                                     </span>
