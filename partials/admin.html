@@ -13,7 +13,7 @@
                 <hr>
 
                 <div class="btn-group">
-                    <label class="btn btn-primary" ng-model="radio_typeArgument" uib-btn-radio="'ex_argument'" ng-disabled="disable_selectArgument">Scegli argomento</label>
+                    <label class="btn btn-primary" ng-model="radio_typeArgument" uib-btn-radio="'ex_argument'" ng-disabled="disable_selectArgument" ng-click="updateArguments()">Scegli argomento</label>
                     <label class="btn btn-primary" ng-model="radio_typeArgument" uib-btn-radio="'new_argument'" ng-click="radio_typeSolution = 'new_solution'">Nuovo argomento</label>
                 </div>
 
@@ -39,7 +39,7 @@
                 <hr>
 
                 <div class="btn-group">
-                    <label class="btn btn-primary" ng-model="radio_typeSolution" uib-btn-radio="'ex_solution'" ng-disabled="radio_typeArgument == 'new_argument' || disable_selectSolution  ">Scegli soluzione</label>
+                    <label class="btn btn-primary" ng-model="radio_typeSolution" uib-btn-radio="'ex_solution'" ng-disabled="radio_typeArgument == 'new_argument' || disable_selectSolution" ng-click="getSolutions()">Scegli soluzione</label>
                     <label class="btn btn-primary" ng-model="radio_typeSolution" uib-btn-radio="'new_solution'">Nuova soluzione</label>
                 </div>
 
@@ -74,7 +74,13 @@
             <br>
 
             <div class="row text-center">
-                <button class="btn btn-success btn-lg" ng-click="submitNewQuestion()" ng-disabled="question == '' ">Aggiungi una nuova domanda</button>
+                <div class="col-xs-6 col-xs-offset-3">
+                    <button class="btn btn-success btn-lg" ng-click="submitNewQuestion()" ng-disabled="question == '' ">Aggiungi una nuova domanda</button>
+                    <br>
+                    <br>
+                    <uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="closeAlert($index)">{{ alert.msg }}</uib-alert>
+                    <br>
+                </div>
             </div>
         </form>
 

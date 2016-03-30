@@ -213,29 +213,32 @@
         $scope.radio_typeArgument = 'ex_argument';
         $scope.radio_typeSolution = 'ex_solution';
 
+        $scope.updateArguments = function() {
 
-        $http.get("API/APIadmin.php?arguments")
-            .success(function (data, status, header, config) {
-            if (data.length > 0) {
-                $scope.arguments = data;
-                $scope.selected_argument =  $scope.arguments[0].id;
-                $scope.radio_typeArgument = 'ex_argument';
-                $scope.getSolutions($scope.radio_question);
-            } else {
-                $scope.radio_typeArgument = 'new_argument';
-                $scope.disable_selectArgument = true;
-                $scope.radio_typeSolution = 'new_solution';
-                $scope.disable_selectSolution = true;
-            }
-        })
-            .error(function (data, status, header, config) {
-            console.log("[ERROR] $http.get request failed!");
-        });
-
+            $http.get("API/APIadmin.php?arguments")
+                .success(function (data, status, header, config) {
+                if (data.length > 0) {
+                    $scope.arguments = data;
+                    $scope.selected_argument = $scope.arguments[0].id;
+                    $scope.radio_typeArgument = 'ex_argument';
+                    $scope.getSolutions($scope.radio_question);
+                } else {
+                    $scope.radio_typeArgument = 'new_argument';
+                    $scope.disable_selectArgument = true;
+                    $scope.radio_typeSolution = 'new_solution';
+                    $scope.disable_selectSolution = true;
+                }
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
+        };
+        $scope.updateArguments();
 
         $scope.getSolutions = function() {
             $http.get("API/APIadmin.php?solutions&argument=" + $scope.selected_argument + "&question=" + $scope.radio_question)
                 .success(function (data, status, header, config) {
+                console.log("API/APIadmin.php?solutions&argument=" + $scope.selected_argument + "&question=" + $scope.radio_question);
                 if (data.length > 0) {
                     $scope.solutions = data;
                     $scope.selected_solution = $scope.solutions[0].id;
@@ -256,6 +259,9 @@
             if ($scope.radio_typeArgument == 'new_argument' && $scope.radio_typeSolution == 'new_solution') {
                 $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=eh" )
                     .success(function (data, status, header, config) {
+
+                    $scope.checkErr(data.Error);
+
                 })
                     .error(function (data, status, header, config) {
                     console.log("[ERROR] $http.get request failed!");
@@ -265,6 +271,9 @@
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'ex_solution') {
                 $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&ex_solution=" + $scope.selected_solution + "&db=eh" )
                     .success(function (data, status, header, config) {
+
+                    $scope.checkErr(data.Error);
+
                 })
                     .error(function (data, status, header, config) {
                     console.log("[ERROR] $http.get request failed!");
@@ -272,14 +281,37 @@
             }
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'new_solution') {
+
                 $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=eh" )
                     .success(function (data, status, header, config) {
+
+                    $scope.checkErr(data.Error);
+
                 })
                     .error(function (data, status, header, config) {
                     console.log("[ERROR] $http.get request failed!");
                 });
             }
-        }
+        };
+
+        $scope.alerts = [];
+
+        $scope.addAlert = function(type, msg) {
+            $scope.alerts.push({type: type, msg: msg});
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        $scope.checkErr = function(error) {
+            $scope.res = error;
+            console.log($scope.res);
+            if ($scope.res != "" && $scope.res != null)
+                $scope.addAlert('danger', $scope.res);
+            else
+                $scope.addAlert('success', 'Domanda aggiunta!');
+        };
 
     });
 
