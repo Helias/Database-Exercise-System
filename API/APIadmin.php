@@ -20,6 +20,9 @@ try {
                 $json = '{ "Error": "Password non corretta!" }';    
         }else 
             $json = '{ "Error": "Nome utente non esistente!" }';
+        header('Content-Type: application/json');
+        echo $json;
+        return;
     }
 
 
@@ -28,7 +31,7 @@ try {
             $json = '{ "Error": "Login non effettuato!" }';
     }
 
-    //if ( $_SESSION["username"] == "" || $_SESSION["password"] == "" ) {
+    if ( $_SESSION["username"] != "" || $_SESSION["password"] != "" ) {
 
         if ( isset($_GET['arguments']) ) {
             $stmt = $db->query('SELECT * FROM des.argomenti;');
@@ -81,9 +84,7 @@ try {
             }
             else
                 $json = '{ "Error": "Argomento esistente!" }';
-
-
-        }
+       }
 
         if ((isset($_GET['text']) && $_GET['text'] != "") &&
             (isset($_GET['type']) && $_GET['type'] != "") &&
@@ -108,13 +109,12 @@ try {
             else
                 $json = '{ "Error": "Soluzione esistente!" }';
         }
-    //}else
-    //    $json = '{ "Error": "Non è stato effettuato il login!" }';
+    } else
+        $json = '{ "Error": "Non è stato effettuato il login!" }';
 
 } catch(PDOException $exception) {
     $json = '{ "Error":"' . $exception->getMessage() . '" }';
 }
-
 
 header('Content-Type: application/json');
 echo $json;

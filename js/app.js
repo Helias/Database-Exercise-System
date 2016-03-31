@@ -97,7 +97,7 @@
 
     /* Admin panel */
 
-    app.controller('dbManager', function($scope, $http, $uibModal) {
+    app.controller('dbManager', function($scope, $http, $uibModal, $state) {
 
         $scope.nTables = 0;
 
@@ -184,7 +184,7 @@
 
             /*$scope.sameAttrName = false;
             for (var k = 0; k < $scope.nTables; k++) {
-            
+
                 for (var i = 0; i < $scope.tables[k].columns; i++) {
                     for (var j = i+1; j < $scope.tables[k].columns; j++) {
                     if ( $scope.tables[k].attr[i] == $scope.tables[k].attr[j] )
@@ -197,7 +197,7 @@
             //if ( ! ( $scope.sameAttrName ) ) {} 
 
             $scope.queryResult = new Array();
-            
+
             for (var i = 0; i < $scope.nTables; i++) {
                 $scope.queryResult[i] = "CREATE TABLE IF NOT EXISTS des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
                 for (var j = 0; j < $scope.tables[i].columns; j++) {
@@ -282,35 +282,20 @@
             });
         };
 
-        $scope.loginStatus = false;
-
         $scope.checkLogin = function() {
             $http.get("API/APIadmin.php?checklogin")
                 .success(function (data, status, header, config) {
 
                 $scope.res = data.Error;
-                if (!($scope.res != "" && $scope.res != null))
-                    $scope.loginStatus = true;
-
+                if ($scope.res != "" && $scope.res != null)
+                    $state.go('auth', {ref: 1});
             })
                 .error(function (data, status, header, config) {
                 console.log("[ERROR] $http.get request failed!");
             });
         };
 
-         $scope.checkLogin();
-
-        $scope.loginAdmin = function() {
-            $http.get("API/APIadmin.php?username=" + $scope.loginUsername + "&password=" + $scope.loginPassword)
-                .success(function (data, status, header, config) {
-
-                $scope.checkErrLogin(data.Error);
-
-            })
-                .error(function (data, status, header, config) {
-                console.log("[ERROR] $http.get request failed!");
-            });
-        };
+        $scope.checkLogin();
 
         $scope.alerts = [];
 
@@ -322,16 +307,13 @@
             $scope.alerts.splice(index, 1);
         };
 
-        $scope.checkErrLogin = function(error) {
+        $scope.checkErrQuestion = function(error) {
             $scope.res = error;
             console.log($scope.res);
             if ($scope.res != "" && $scope.res != null)
                 $scope.addAlert('danger', $scope.res);
-            else{
-                $scope.addAlert('success', 'Login effettuato!');
-                $scope.checkLogin ();
-            }
-            
+            else
+                $scope.addAlert('success', 'Domanda aggiunta!');
         };
 
     });
@@ -354,7 +336,22 @@
         };
     });
 
-    app.controller('adminPanel', function($scope, $http) {
+    app.controller('adminPanel', function($scope, $http, $state) {
+
+        $scope.checkLogin = function() {
+            $http.get("API/APIadmin.php?checklogin")
+                .success(function (data, status, header, config) {
+
+                $scope.res = data.Error;
+                if ($scope.res != "" && $scope.res != null)
+                    $state.go('auth', {ref: 0});
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
+        };
+
+        $scope.checkLogin();
 
         $scope.radio_question = 'domandeSQL';
         $scope.question = '';
@@ -459,6 +456,39 @@
                 $scope.addAlert('danger', $scope.res);
             else
                 $scope.addAlert('success', 'Domanda aggiunta!');
+        };
+
+    });
+
+    app.controller('auth', function($scope, $http, $state, $stateParams) {
+
+        $scope.loginAdmin = function() {
+            $http.get("API/APIadmin.php?username=" + $scope.loginUsername + "&password=" + $scope.loginPassword)
+                .success(function (data, status, header, config) {
+
+                $scope.checkErrLogin(data.Error);
+
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
+        };
+
+        $scope.alerts = [];
+
+        $scope.checkErrLogin = function(error) {
+            $scope.res = error;
+            console.log($scope.res);
+            if ($scope.res != "" && $scope.res != null)
+                $scope.addAlert('danger', $scope.res);
+            else {
+                $scope.addAlert('success', 'Login effettuato!');
+                if ($stateParams.ref == 1)
+                    $state.go("dbManager");
+                else
+                    $state.go("admin");
+            }
+
         };
 
     });

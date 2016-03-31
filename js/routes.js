@@ -44,6 +44,11 @@
             url: '/dbManager',
             controller: 'dbManager',
             templateUrl: 'partials/dbManager.html'
+        })
+            .state('auth', {
+            url: '/auth:ref',
+            controller: 'auth',
+            templateUrl: 'partials/auth.html'
         });
 
     });
