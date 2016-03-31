@@ -106,8 +106,9 @@
             rows: 1,
             columns: 1,
             attr: new Array(),
+            fk_attr: new Array(),
             matrix: new Array(),
-            fk: new Array(),
+            fk_matrix: new Array(),
 
             inizializeMatrix: function () {
                 for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
@@ -115,9 +116,9 @@
                 }
             },
 
-            inizializeFk: function () {
+            inizializeFkMatrix: function () {
                 for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
-                    this.fk[i] = new Array();
+                    this.fk_matrix[i] = new Array();
                 }
             }
         };
@@ -127,7 +128,7 @@
         for (var i = 0; i < 5; i++) {
             $scope.tables[i] = angular.copy($scope.table);
             $scope.tables[i].inizializeMatrix();
-            $scope.tables[i].inizializeFk();
+            $scope.tables[i].inizializeFkMatrix();
         }
 
         $scope.getNumber = function(num) {
@@ -146,10 +147,96 @@
                 for (var b = 0; b < $scope.tables[i].rows; b++){
                     for (var a = 0; a < $scope.tables[i].columns; a++) {
                         console.log("Riga n: " + b + " Attr n: " + a + " = " + $scope.tables[i].matrix[b][a]);
-                        console.log("Fk: "+$scope.tables[i].fk[b][a]);
+                        console.log("Fk: "+$scope.tables[i].fk_matrix[b][a]);
                     }
                 }
             }
+        };
+
+        $scope.createQuery = function(){
+
+            /*$scope.isEmpty = false;
+
+            for (var i = 0; i < $scope.nTables; i++) {
+                for (var j = 0; j < $scope.tables[i].columns; j++) {
+                    if ( $scope.tables[i].attr[j] == '' || $scope.tables[i].attr[j] == null )
+                        $scope.isEmpty = true;  
+                }
+                for (var b = 0; b < $scope.tables[i].rows; b++){
+                    for (var a = 0; a < $scope.tables[i].columns; a++) {
+                        if ( $scope.tables[i].matrix[b][a] == '' || $scope.tables[i].matrix[b][a] == null )
+                            $scope.isEmpty = true;  
+                    }
+                }
+            }*/
+
+            //if ( ! ( $scope.isEmpty) ) {} 
+
+            /*$scope.sameTableName = false;
+            for (var i = 0; i < $scope.nTables-1; i++) {
+                for (var j = i+1; j < $scope.nTables; j++) {
+                    if ( $scope.tables[i].name == $scope.tables[j].name )
+                        $scope.sameTableName = true;        
+                }                
+            }*/
+
+            //if ( ! ( $scope.sameTableName ) ) {} 
+
+            /*$scope.sameAttrName = false;
+            for (var k = 0; k < $scope.nTables; k++) {
+            
+                for (var i = 0; i < $scope.tables[k].columns; i++) {
+                    for (var j = i+1; j < $scope.tables[k].columns; j++) {
+                    if ( $scope.tables[k].attr[i] == $scope.tables[k].attr[j] )
+                        $scope.sameAttrName = true;        
+                    }                
+                }
+
+            }*/
+
+            //if ( ! ( $scope.sameAttrName ) ) {} 
+
+            $scope.queryResult = new Array();
+            
+            for (var i = 0; i < $scope.nTables; i++) {
+                $scope.queryResult[i] = "CREATE TABLE IF NOT EXISTS des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
+                for (var j = 0; j < $scope.tables[i].columns; j++) {
+                    if ( ! ( $scope.tables[i].fk_attr[j] ) )
+                        $scope.queryResult[i] = $scope.queryResult[i] + $scope.tables[i].attr[j] + " varchar(255) NOT NULL ";
+                    if ( j < $scope.tables[i].columns-1) 
+                        $scope.queryResult[i] = $scope.queryResult[i] + " , ";
+                }
+                $scope.queryResult[i] = $scope.queryResult[i] + " ); ";
+
+                console.log($scope.queryResult[i]);
+            }
+
+            for (var i = 0; i < $scope.nTables; i++) {
+                $scope.queryResult[i] = "INSERT INTO des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
+                for (var j = 0; j < $scope.tables[i].columns; j++) {
+                    $scope.queryResult[i] = $scope.queryResult[i] + $scope.tables[i].attr[j] ;
+                    if ( j < $scope.tables[i].columns-1) 
+                        $scope.queryResult[i] = $scope.queryResult[i] + " , ";
+                }
+                $scope.queryResult[i] = $scope.queryResult[i] + " ) VALUES ";
+
+                for (var b = 0; b < $scope.tables[i].rows; b++){
+                    $scope.queryResult[i] = $scope.queryResult[i] + " ( ";
+                    for (var a = 0; a < $scope.tables[i].columns; a++) {
+                        $scope.queryResult[i] = $scope.queryResult[i] + " '" + $scope.tables[i].matrix[b][a] + "' ";
+                        if ( a < $scope.tables[i].columns-1) 
+                            $scope.queryResult[i] = $scope.queryResult[i] + " , ";
+                    }
+                    if ( b < $scope.tables[i].rows-1) 
+                        $scope.queryResult[i] = $scope.queryResult[i] + " ) , ";
+                }
+
+                $scope.queryResult[i] = $scope.queryResult[i] + " ); ";
+
+                console.log($scope.queryResult[i]);
+            }
+
+
         };
 
         $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
@@ -258,7 +345,7 @@
 
         $scope.ok = function () {
             $scope.modalTables[_indexTable].matrix[_row][_col] = $scope.modalTables[$scope.selected_table].matrix[$scope.selected_value][$scope.selected_attr];
-            $scope.modalTables[_indexTable].fk[_row][_col] = $scope.selected_table + "," + $scope.selected_value + "," + $scope.selected_attr;
+            $scope.modalTables[_indexTable].fk_matrix[_row][_col] = $scope.selected_table + "," + $scope.selected_value + "," + $scope.selected_attr;
             $uibModalInstance.close("OK"); //result
         };
 

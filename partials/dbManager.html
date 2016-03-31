@@ -108,11 +108,16 @@
                                 <th>#</th>
                                 <th ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
                                     {{ tables[indexTable].attr[indexColum] }} &nbsp;
-                                    <select ng-model="selectedAL" ng-show="tables[indexTable].attr[indexColum]!=NULL" ng-change="autoLoader(indexTable,indexColum, selectedAL)">
-                                        <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
-                                            {{ autoLoad }}
-                                        </option>
-                                    </select>
+                                    <div ng-show="tables[indexTable].attr[indexColum]!=NULL">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" value="" ng-model="tables[indexTable].fk_attr[indexColum]">FK</label>
+                                        </div>
+                                        <select ng-model="selectedAL" ng-change="autoLoader(indexTable,indexColum, selectedAL)">
+                                            <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
+                                                {{ autoLoad }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -123,7 +128,7 @@
                                     <div class="input-group" >
                                         <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" ng-click="open(indexTable, indexRow, indexColum)">FK</button>
+                                            <button class="btn btn-default" type="button" ng-click="open(indexTable, indexRow, indexColum)" ng-disabled="!tables[indexTable].fk_attr[indexColum]">FK</button>
                                         </span>
                                     </div>
                                 </td>
@@ -142,7 +147,7 @@
             <br>
 
             <div class="row text-center">
-                <button class="btn btn-success btn-lg" ng-click="logTable()">Aggiungi un nuovo database</button>
+                <button class="btn btn-success btn-lg" ng-click="createQuery()">Aggiungi un nuovo database</button>
             </div>
 
             <br>
