@@ -195,6 +195,58 @@
             });
         };
 
+        $scope.loginStatus = false;
+
+        $scope.checkLogin = function() {
+            $http.get("API/APIadmin.php?checklogin")
+                .success(function (data, status, header, config) {
+
+                $scope.res = data.Error;
+                if (!($scope.res != "" && $scope.res != null))
+                    $scope.loginStatus = true;
+
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
+        };
+
+         $scope.checkLogin();
+
+        $scope.loginAdmin = function() {
+            $http.get("API/APIadmin.php?username=" + $scope.loginUsername + "&password=" + $scope.loginPassword)
+                .success(function (data, status, header, config) {
+
+                $scope.checkErrLogin(data.Error);
+
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
+        };
+
+        $scope.alerts = [];
+
+        $scope.addAlert = function(type, msg) {
+            $scope.alerts.push({type: type, msg: msg});
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+        $scope.checkErrLogin = function(error) {
+            $scope.res = error;
+            console.log($scope.res);
+            if ($scope.res != "" && $scope.res != null)
+                $scope.addAlert('danger', $scope.res);
+            else{
+                $scope.addAlert('success', 'Login effettuato!');
+                $scope.checkLogin ();
+            }
+            
+        };
+
     });
 
     app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, tables, nTables, _indexTable, _row, _col) {
@@ -269,7 +321,7 @@
                 $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=eh" )
                     .success(function (data, status, header, config) {
 
-                    $scope.checkErr(data.Error);
+                    $scope.checkErrQuestion(data.Error);
 
                 })
                     .error(function (data, status, header, config) {
@@ -281,7 +333,7 @@
                 $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&ex_solution=" + $scope.selected_solution + "&db=eh" )
                     .success(function (data, status, header, config) {
 
-                    $scope.checkErr(data.Error);
+                    $scope.checkErrQuestion(data.Error);
 
                 })
                     .error(function (data, status, header, config) {
@@ -294,7 +346,7 @@
                 $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=eh" )
                     .success(function (data, status, header, config) {
 
-                    $scope.checkErr(data.Error);
+                    $scope.checkErrQuestion(data.Error);
 
                 })
                     .error(function (data, status, header, config) {
@@ -313,7 +365,7 @@
             $scope.alerts.splice(index, 1);
         };
 
-        $scope.checkErr = function(error) {
+        $scope.checkErrQuestion = function(error) {
             $scope.res = error;
             console.log($scope.res);
             if ($scope.res != "" && $scope.res != null)

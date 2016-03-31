@@ -47,4 +47,10 @@ INSERT INTO des.domandeALG(testo,db_connesso,soluzione,argomento) VALUES ('Selez
 
 SELECT DISTINCT soluzioni.id, soluzioni.soluzione FROM domandeALG INNER JOIN soluzioni WHERE domandeALG.argomento = 1 AND domandeALG.soluzione = soluzioni.id;
 
+CREATE TABLE IF NOT EXISTS des.utenti(
+	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    username varchar(255) NOT NULL,
+	psw varchar(255) NOT NULL
+);
 
+INSERT INTO des.utenti(username,psw) VALUES ('admin',md5('dbex'));
