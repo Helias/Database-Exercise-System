@@ -49,8 +49,11 @@
         <div class="row">
             <div class="col-xs-12">
                 <div ng-repeat="ex in filteredEx track by $index">
-                    <h3>Esercizio {{ ex.id }}</h3>
-                    {{ex.text}}
+                    <h3 class="text-center">Esercizio {{ ex.id }}</h3>
+                    <h1>{{ db }}</h1>
+                    <h3 ng-repeat="table in tables">{{ table }}</h3>
+                    <br>
+                    {{ ex.text }}
                 </div>
             </div>
         </div>
@@ -61,13 +64,13 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="btn-group" role="group" aria-label="toolbarSql">
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="SELECT" uib-popover="SELECT" popover-trigger="mouseenter">SELECT</button>
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="FROM" uib-popover="FROM" popover-trigger="mouseenter">FROM</button>
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="WHERE" uib-popover="WHERE" popover-trigger="mouseenter">WHERE</button>
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="GROUP" uib-popover="GROUP" popover-trigger="mouseenter">GROUP</button>
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="HAVING" uib-popover="HAVING" popover-trigger="mouseenter">HAVING</button>
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="ORDER" uib-popover="ORDER" popover-trigger="mouseenter">ORDER</button>
-                    <button class="btn btn-success btn-sm" ng-click="" popover-title="LIMIT" uib-popover="LIMIT" popover-trigger="mouseenter">LIMIT</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('SELECT')" popover-title="SELECT" uib-popover="SELECT" popover-trigger="mouseenter">SELECT</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('FROM')" popover-title="FROM" uib-popover="FROM" popover-trigger="mouseenter">FROM</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('WHERE')" popover-title="WHERE" uib-popover="WHERE" popover-trigger="mouseenter">WHERE</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('GROUP')" popover-title="GROUP" uib-popover="GROUP" popover-trigger="mouseenter">GROUP</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('HAVING')" popover-title="HAVING" uib-popover="HAVING" popover-trigger="mouseenter">HAVING</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('ORDER')" popover-title="ORDER" uib-popover="ORDER" popover-trigger="mouseenter">ORDER</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpSql('LIMIT')" popover-title="LIMIT" uib-popover="LIMIT" popover-trigger="mouseenter">LIMIT</button>
                 </div>
             </div>
         </div>
@@ -78,7 +81,9 @@
             <div class="col-xs-12">
                 <textarea type="text" class="form-control" id="querySql" placeholder="Inserisci la query in sql..." ng-model="querySql">
                 </textarea>
+
                 <br>
+
                 <button type="submit" class="btn btn-primary">Invia</button>
             </div>
         </div>

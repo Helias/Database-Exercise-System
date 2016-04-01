@@ -48,8 +48,11 @@
         <div class="row">
             <div class="col-xs-12">
                 <div ng-repeat="ex in filteredEx track by $index">
-                    <h3>Esercizio {{ ex.id }}</h3>
-                    {{ex.text}}
+                    <h3 class="text-center">Esercizio {{ ex.id }}</h3>
+                    <h1>{{ db }}</h1>
+                    <h3 ng-repeat="table in tables">{{ table }}</h3>
+                    <br>
+                    {{ ex.text }}
                 </div>
             </div>
         </div>

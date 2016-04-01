@@ -38,6 +38,17 @@
                 var end = begin + $scope.numPerPage;
 
                 $scope.filteredEx = $scope.exs.slice(begin, end);
+
+                $scope.db = $scope.exercises[$scope.currentPage-1].db_connesso;
+                $http.get( "API/API.php?db_tables=" + $scope.exercises[$scope.currentPage-1].db_connesso)
+                    .success(function (data, status, header, config) {
+
+                    $scope.tables = data;
+
+                })
+                    .error(function (data, status, header, config) {
+                    console.log("[ERROR] $http.get request failed!");
+                });
             });
         })
             .error(function (data, status, header, config) {
@@ -48,19 +59,6 @@
         $scope.addOpAlg = function(op) {
             $scope.queryAlg = $scope.queryAlg+op;
         };
-
-    });
-
-    app.controller('sqlCtrl', function($scope, $http) {
-
-        /* Retrieve all sql arguments */
-        $http.get( "API/API.php?arguments" )
-            .success(function (data, status, header, config) {
-            $scope.arguments = data;
-        })
-            .error(function (data, status, header, config) {
-            console.log("[ERROR] $http.get request failed!");
-        });
 
     });
 
@@ -79,7 +77,7 @@
 
             $scope.exs = [];
             for (var i = 0; i < $scope.exercises.length; i++) {
-                $scope.exs.push({ text: $scope.exercises[i].testo, done:false, id: i+1});
+                $scope.exs.push({ text: $scope.exercises[i].testo, done:false, id: i+1, db_connesso: $scope.exercises[i].db_connesso});
             }
 
             $scope.$watch('currentPage + numPerPage', function() {
@@ -87,11 +85,29 @@
                 var end = begin + $scope.numPerPage;
 
                 $scope.filteredEx = $scope.exs.slice(begin, end);
+
+                $scope.db = $scope.exercises[$scope.currentPage-1].db_connesso;
+                $http.get( "API/API.php?db_tables=" + $scope.exercises[$scope.currentPage-1].db_connesso)
+                    .success(function (data, status, header, config) {
+
+                    $scope.tables = data;
+
+                })
+                    .error(function (data, status, header, config) {
+                    console.log("[ERROR] $http.get request failed!");
+                });
+
+
             });
         })
             .error(function (data, status, header, config) {
             console.log("[ERROR] $http.get request failed!");
         });
+
+        $scope.querySql = "";
+        $scope.addOpSql = function(op) {
+            $scope.querySql = $scope.querySql+op;
+        };
 
     });
 
