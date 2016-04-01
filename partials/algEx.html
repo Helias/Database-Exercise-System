@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}">
-                    <a href ng-click="selectPage(page.number)" popover="{{ page.text }}" popover-trigger="mouseenter">{{  page.text }}</a>
+                    <a href ng-click="selectPage(page.number)" uib-popover="{{ page.text }}" popover-trigger="mouseenter">{{  page.text }}</a>
                 </li>
                 <li ng-if="directionLinks" ng-class="{disabled: noNext()}">
                     <a href ng-click="selectPage(page + 1)" title="Next Page">
@@ -31,60 +31,65 @@
         </script>
 
         <h4>Ci sono {{ exercises.length }} esercizi di questo argomento</h4>
-        <pagination
-                    ng-model="currentPage"
-                    total-items="exs.length"
-                    max-size="maxSize"
-                    boundary-links="true"
-                    items-per-page="itemsPerPage" >
-        </pagination>
+        <uib-pagination
+                        ng-model="currentPage"
+                        ng-show="exercises.length != 0"
+                        total-items="exs.length"
+                        max-size="maxSize"
+                        boundary-links="true"
+                        items-per-page="itemsPerPage">
+        </uib-pagination>
 
     </div>
 </div>
-<div class="row">
+<div class="row" ng-show="exercises.length != 0">
     <div class="col-xs-12">
 
         <div class="row">
-            <div ng-repeat="ex in filteredEx track by $index">
-                <h3>Esercizio {{ ex.id }}</h3>
-                {{ex.text}}
+            <div class="col-xs-12">
+                <div ng-repeat="ex in filteredEx track by $index">
+                    <h3>Esercizio {{ ex.id }}</h3>
+                    {{ex.text}}
+                </div>
             </div>
         </div>
 
         <br><br><br><br><br><br><br><br><br>
 
         <div class="row">
-            <div class="btn-group" role="group" aria-label="toolbarAlg">
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('∪')" popover-title="Unione" popover="Unione" popover-trigger="mouseenter">∪</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('∩')" popover-title="Intersezione" popover="Intersezione" popover-trigger="mouseenter">∩</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('-')" popover-title="Sottrazione" popover="Sottrazione" popover-trigger="mouseenter">-</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('÷')" popover-title="Divisione" popover="Divisione" popover-trigger="mouseenter">÷</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('×')" popover-title="Prodotto cartesiano" popover="Prodotto cartesiano"  popover-trigger="mouseenter">×</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('⋈')" popover-title="Natural Join" popover="Natural Join" popover-trigger="mouseenter">⋈</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧑')" popover-title="Left Outer Join" popover="Left Outer Join" popover-trigger="mouseenter">⧑</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧒')" popover-title="Right Outer Join" popover="Right Outer Join" popover-trigger="mouseenter">⧒</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧓')" popover-title="Full Outer Join" popover="Full Outer Join" popover-trigger="mouseenter">⧓</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('σ')" popover-title="Selezione" popover="Selezione" popover-trigger="mouseenter">σ</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('π')" popover-title="Proiezione π a,b (A)" popover="Proiezione π a,b (A)" popover-trigger="mouseenter">π</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('ρ')" popover-title="Ridenominazione" popover="Ridenominazione" popover-trigger="mouseenter">ρ</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('∧')" popover-title="And" popover="And" popover-trigger="mouseenter">∧</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('∨')" popover-title="Or" popover="Or" popover-trigger="mouseenter">∨</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('=')" popover-title="Uguale" popover="Uguale" popover-trigger="mouseenter">=</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('≠')" popover-title="Diverso" popover="Diverso" popover-trigger="mouseenter">≠</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('≥')" popover-title="Maggiore o uguale" popover="Maggiore o uguale" popover-trigger="mouseenter">≥</button>
-                <button class="btn btn-success btn-sm" ng-click="addOpAlg('≤')" popover-title="Minore o uguale" popover="Minore o uguale" popover-trigger="mouseenter">≤</button>
+            <div class="col-xs-12">
+                <div class="btn-group" role="group" aria-label="toolbarAlg">
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('∪')" popover-title="Unione" uib-popover="Unione" popover-trigger="mouseenter">∪</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('∩')" popover-title="Intersezione" uib-popover="Intersezione" popover-trigger="mouseenter">∩</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('-')" popover-title="Sottrazione" uib-popover="Sottrazione" popover-trigger="mouseenter">-</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('÷')" popover-title="Divisione" uib-popover="Divisione" popover-trigger="mouseenter">÷</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('×')" popover-title="Prodotto cartesiano" uib-popover="Prodotto cartesiano"  popover-trigger="mouseenter">×</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⋈')" popover-title="Natural Join" uib-popover="Natural Join" popover-trigger="mouseenter">⋈</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧑')" popover-title="Left Outer Join" uib-popover="Left Outer Join" popover-trigger="mouseenter">⧑</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧒')" popover-title="Right Outer Join" uib-popover="Right Outer Join" popover-trigger="mouseenter">⧒</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('⧓')" popover-title="Full Outer Join" uib-popover="Full Outer Join" popover-trigger="mouseenter">⧓</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('σ')" popover-title="Selezione" uib-popover="Selezione" popover-trigger="mouseenter">σ</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('π')" popover-title="Proiezione π a,b (A)" uib-popover="Proiezione π a,b (A)" popover-trigger="mouseenter">π</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('ρ')" popover-title="Ridenominazione" uib-popover="Ridenominazione" popover-trigger="mouseenter">ρ</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('∧')" popover-title="And" uib-popover="And" popover-trigger="mouseenter">∧</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('∨')" popover-title="Or" uib-popover="Or" popover-trigger="mouseenter">∨</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('=')" popover-title="Uguale" uib-popover="Uguale" popover-trigger="mouseenter">=</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('≠')" popover-title="Diverso" uib-popover="Diverso" popover-trigger="mouseenter">≠</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('≥')" popover-title="Maggiore o uguale" uib-popover="Maggiore o uguale" popover-trigger="mouseenter">≥</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOpAlg('≤')" popover-title="Minore o uguale" uib-popover="Minore o uguale" popover-trigger="mouseenter">≤</button>
+                </div>
             </div>
         </div>
 
         <br>
 
         <div class="row">
-            <form>
-                <fieldset class="form-group">
-                    <input type="text" class="form-control input-xsmall" id="queryAlg" placeholder="Inserisci la query in algebra relazionale..." ng-model="queryAlg">
-                </fieldset>
+            <div class="col-xs-12">
+                <textarea class="form-control" id="queryAlg" placeholder="Inserisci la query in algebra relazionale..." ng-model="queryAlg">
+                </textarea>
+                <br>
                 <button type="submit" class="btn btn-primary">Invia</button>
-            </form>
+            </div>
         </div>
 
     </div>

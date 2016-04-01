@@ -20,7 +20,7 @@
         })
             .state('algebra', {
             url: '/algebra',
-            controller: 'algCrtl',
+            controller: 'argumentsCrtl',
             templateUrl: 'partials/algebra.html'
         })
             .state('algArguments', {
@@ -30,7 +30,7 @@
         })
             .state('sql', {
             url: '/sql',
-            controller: 'sqlCrtl',
+            controller: 'argumentsCrtl',
             templateUrl: 'partials/sql.html'
         })
             .state('sqlArguments', {

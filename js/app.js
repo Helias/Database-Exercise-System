@@ -3,7 +3,7 @@
 
     var app = angular.module('exerciseSystem', ['ui.router', 'ui.bootstrap', 'chieffancypants.loadingBar', 'ngAnimate']);
 
-    app.controller('algCrtl', function($scope, $http) {
+    app.controller('argumentsCrtl', function($scope, $http) {
 
         /* Retrieve all algebra arguments */
         $http.get( "API/API.php?arguments" )
