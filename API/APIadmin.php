@@ -16,10 +16,37 @@ try {
             if ( $stmt->fetchColumn() != "" ) {
                 $_SESSION["username"] = $_GET['username'];
                 $_SESSION["password"] = md5($_GET['password']);
-            }else 
-                $json = '{ "Error": "Password non corretta!" }';    
-        }else 
+            }else
+                $json = '{ "Error": "Password non corretta!" }';
+        }else
             $json = '{ "Error": "Nome utente non esistente!" }';
+        header('Content-Type: application/json');
+        echo $json;
+        return;
+    }
+
+    if (isset($_GET['sql']) && $_GET['sql'] != NULL) {
+        $sql = strtolower($_GET['sql']);
+
+        if (strpos($sql, "select") == -1)
+            $json = '{ "Error": "Non è stata eseguita una query SELECT!" }';
+        else {
+            if (   strpos($sql, "delete") > -1
+                || strpos($sql, "insert") > -1
+                || strpos($sql, "create") > -1
+                || strpos($sql, "drop") > -1
+                || strpos($sql, "replication") > -1
+                || strpos($sql, "replace") > -1
+                || strpos($sql, "grant") > -1
+                || strpos($sql, "trigger") > -1) {
+
+                $json = '{ "Error": "Non è stata eseguita una query SELECT!" }';
+
+            } else {
+                /* TO DO: confronto tra il risultatotra la query soluzione e la query $sql */
+            }
+        }
+
         header('Content-Type: application/json');
         echo $json;
         return;

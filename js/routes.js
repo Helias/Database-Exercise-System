@@ -20,19 +20,22 @@
         })
             .state('algebra', {
             url: '/algebra',
+            controller: 'algCrtl',
             templateUrl: 'partials/algebra.html'
         })
             .state('algArguments', {
             url: '/algebra/:id',
+            controller: 'algExCtrl',
             templateUrl: 'partials/algEx.html'
         })
             .state('sql', {
             url: '/sql',
+            controller: 'sqlCrtl',
             templateUrl: 'partials/sql.html'
         })
             .state('sqlArguments', {
             url: '/sql/:id',
-            controller: 'sqlCtrl',
+            controller: 'sqlExCtrl',
             templateUrl: 'partials/sqlEx.html'
         })
             .state('admin', {
