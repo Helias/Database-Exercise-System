@@ -37,12 +37,12 @@
     </div>
 </script>
 
-<div>
+<form onsubmit="return false" ng-submit="buildQuery()">
     <div class="row">
         <div class="col-xs-6 col-xs-offset-3">
 
             <label for="text_nameDatabase">Inserisci il nome del database:</label>
-            <input type="text" id="text_nameDatabase" class="form-control" ng-model="nameDatabase">
+            <input type="text" id="text_nameDatabase" class="form-control" ng-model="nameDatabase" required>
 
             <label for="text_nTables">Inserisci il numero di tabelle:</label>
             <input type="number" id="text_nTables" class="form-control" ng-model="nTables" min="1" max="5">
@@ -58,7 +58,7 @@
                 <div class="col-xs-4">
 
                     <h4>Inserisci il nome della tabella:</h4>
-                    <input type="text" id="text_nameTable{{indexTable}}" class="form-control" ng-model="tables[indexTable].name">
+                    <input type="text" id="text_nameTable{{indexTable}}" class="form-control" ng-model="tables[indexTable].name" required>
 
                     <br>
 
@@ -71,7 +71,7 @@
                         <div class="col-xs-6" ng-repeat="i in getNumber(tables[indexTable].columns) track by $index">
                             <div class="input-group" ng-init="indexColum = $index">
                                 <span class="input-group-addon" id="desc_attr{{indexColum}}">Attr {{ indexColum+1 }}:</span>
-                                <input type="text" class="form-control" aria-describedby="desc_attr{{indexColum}}" ng-model="tables[indexTable].attr[indexColum]">
+                                <input type="text" class="form-control" aria-describedby="desc_attr{{indexColum}}" ng-model="tables[indexTable].attr[indexColum]" required>
                             </div>
                         </div>
                     </div>
@@ -107,7 +107,7 @@
                                 <th scope="row">{{ indexRow+1 }}</th>
                                 <td ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
                                     <div class="input-group" >
-                                        <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]">
+                                        <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]" required>
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" ng-click="open(indexTable, indexRow, indexColum)" ng-disabled="!tables[indexTable].fk_attr[indexColum]">FK</button>
                                         </span>
@@ -128,11 +128,11 @@
             <br>
 
             <div class="row text-center">
-                <button class="btn btn-success btn-lg" ng-click="createQuery()">Aggiungi un nuovo database</button>
+                <button class="btn btn-success btn-lg"  ng-disabled="sameAttrName() || sameTableName()" type="submit">Aggiungi un nuovo database</button>
             </div>
 
             <br>
         </div>
     </div>
-</div>
+</form>
 
