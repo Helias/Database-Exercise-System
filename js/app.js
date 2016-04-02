@@ -202,7 +202,7 @@
                         $scope.queryResult[i] += " , ";
                 }
                 $scope.queryResult[i] += " ); ";
-            }  
+            }
             return $scope.queryResult;
         };
 

@@ -1,0 +1,20 @@
+.tables {
+  font-size: 22px;
+}
+
+.pagination {
+    margin: 0px 0px 20px 0px;
+}
+
+.ex_text {
+    border-left: 1px solid #ededed;
+}
+
+.tables_text {
+    border-right: 1px solid #ededed;
+}
+
+.db_title {
+    line-height: 0.5;
+}
+
