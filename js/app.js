@@ -492,6 +492,14 @@
 
         $scope.alerts = [];
 
+        $scope.addAlert = function(type, msg) {
+            $scope.alerts.push({type: type, msg: msg});
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
         $scope.checkErrLogin = function(error) {
             $scope.res = error;
             console.log($scope.res);
