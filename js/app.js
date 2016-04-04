@@ -118,22 +118,23 @@
 
     app.controller('dbManager', function($scope, $http, $uibModal, $state) {
 
-        $scope.nTables = 0;
+        $scope.nTables = 0;                     //Numbers of table
 
+        //Table structure
         $scope.table = {
-            name: "",
-            rows: 1,
-            columns: 1,
-            attr: new Array(),
-            matrix: new Array(),
+            name: "",                           //TableName
+            rows: 1,                            //Number of row
+            columns: 1,                         //Number of columns
+            attr: new Array(),                  //Array with the name of attr
+            matrix: new Array(),                //Matrix contains the value of table
 
-            fk_matrix: new Array(),
-            fk_attr: new Array(),
+            fk_matrix: new Array(),             //Matrix with indexTable, columns linked by FK
+            fk_attr: new Array(),               //fk_attr (Boolean) --> the index is the same of attr 
 
+            //Create matrix
             inizializeMatrix: function () {
-                for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
+                for (var i = 0; i < 5; i++)
                     this.matrix[i] = new Array();
-                }
             }
         };
 
@@ -260,30 +261,46 @@
             for( var i=0; i<$scope.queryFK.length; i++ )
                 console.log($scope.queryFK[i]);
 
-            $scope.queryInsert = $scope.writeQueryInsert();
-            for( var i=0; i<$scope.nTables; i++ )
-                console.log($scope.queryInsert[i]);
-
             //Order insert
-            console.log("orderList");
+            console.log("orderList"); 
 
-            var orderList = new Array();
-            var k = 0;
-
-            for (var i=0; i<$scope.nTables; i++) {
-                for (var j=0; j<$scope.tables[i].columns; j++){
-                    if ( $scope.tables[i].fk_attr[j] ){
-                        orderList[k] = i;
-                        k++;      
-                    }
+            for (var i=0; i<$scope.nTables; i++) {                      
+                for (var j=0; j<$scope.tables[i].columns; j++){         
+                    if ( $scope.tables[i].fk_attr[j] ) 
+                        console.log($scope.tables[i].fk_matrix);
                 }
             }
 
-            console.log("Chiave esterna presente in tab: ");
-            for (var j=0; j<k; j++){
-                console.log(orderList[j]);
+
+            var orderList = new Array();
+            var k = 0;
+            var isFK = false;
+
+            for (var i=0; i<$scope.nTables; i++) {                      
+                isFK = false;
+                for (var j=0; j<$scope.tables[i].columns; j++){         
+                    if ( $scope.tables[i].fk_attr[j] )          
+                        isFK = true;
+                }
+
+                if (isFK) {
+                    orderList[k] = i;
+                }else{
+                    for (var a = k+1; a > 0; a--)
+                        orderList[a] = orderList[a-1];  
+                    
+                    orderList[0] = i;                        
+                } 
+
+                k++;             
             }
 
+             $scope.queryInsert = $scope.writeQueryInsert();
+            console.log("Chiave orderList: ");
+            for (var j=0; j<k; j++){  
+                console.log($scope.queryInsert[orderList[j]]);                           
+            }
+            
         };
 
          /* Modals */
