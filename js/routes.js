@@ -18,20 +18,20 @@
             url: '/',
             templateUrl: 'partials/home.html'
         })
-            .state('algebra', {
-            url: '/algebra',
+            .state('arguments', {
+            url: '/arguments/:arg',
             controller: 'argumentsCrtl',
-            templateUrl: 'partials/algebra.html'
+            templateUrl: 'partials/arguments.html'
+        })
+            .state('exercise', {
+            url: '/exercise/:arg/:id',
+            controller: 'ExerciseCtrl',
+            templateUrl: 'partials/exercise.html'
         })
             .state('algArguments', {
             url: '/algebra/:id',
             controller: 'algExCtrl',
             templateUrl: 'partials/algEx.html'
-        })
-            .state('sql', {
-            url: '/sql',
-            controller: 'argumentsCrtl',
-            templateUrl: 'partials/sql.html'
         })
             .state('sqlArguments', {
             url: '/sql/:id',
