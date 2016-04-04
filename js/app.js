@@ -122,19 +122,14 @@
             rows: 1,
             columns: 1,
             attr: new Array(),
-            fk_attr: new Array(),
             matrix: new Array(),
+
             fk_matrix: new Array(),
+            fk_attr: new Array(),
 
             inizializeMatrix: function () {
                 for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
                     this.matrix[i] = new Array();
-                }
-            },
-
-            inizializeFkMatrix: function () {
-                for (var i = 0; i < 5; i++) { //Anzichè 5, mettere rows?
-                    this.fk_matrix[i] = new Array();
                 }
             }
         };
@@ -144,7 +139,6 @@
         for (var i = 0; i < 5; i++) {
             $scope.tables[i] = angular.copy($scope.table);
             $scope.tables[i].inizializeMatrix();
-            $scope.tables[i].inizializeFkMatrix();
         }
 
         $scope.getNumber = function(num) {
@@ -196,10 +190,9 @@
             for (var i = 0; i < $scope.nTables; i++) {
                 $scope.queryResult[i] = "CREATE TABLE IF NOT EXISTS des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
                 for (var j = 0; j < $scope.tables[i].columns; j++) {
-                    if ( ! ( $scope.tables[i].fk_attr[j] ) )
-                        $scope.queryResult[i] += $scope.tables[i].attr[j] + " varchar(255) NOT NULL ";
-                    if ( j < $scope.tables[i].columns-1)
-                        $scope.queryResult[i] += " , ";
+                    $scope.queryResult[i] += $scope.tables[i].attr[j] + " varchar(255) NOT NULL ";
+                    if ( j < $scope.tables[i].columns-1 )
+                        $scope.queryResult[i] += ", ";
                 }
                 $scope.queryResult[i] += " ); ";
             }  
@@ -213,7 +206,7 @@
                 for (var j = 0; j < $scope.tables[i].columns; j++) {
                     $scope.queryResult[i] += $scope.tables[i].attr[j] ;
                     if ( j < $scope.tables[i].columns-1)
-                        $scope.queryResult[i] += " , ";
+                        $scope.queryResult[i] += ", ";
                 }
                 $scope.queryResult[i] = $scope.queryResult[i] + " ) VALUES ";
 
@@ -222,12 +215,30 @@
                     for (var a = 0; a < $scope.tables[i].columns; a++) {
                         $scope.queryResult[i] += " '" + $scope.tables[i].matrix[b][a] + "' ";
                         if ( a < $scope.tables[i].columns-1)
-                            $scope.queryResult[i] += " , ";
+                            $scope.queryResult[i] += ", ";
                     }
                     if ( b < $scope.tables[i].rows-1)
-                        $scope.queryResult[i] += " ) , ";
+                        $scope.queryResult[i] += " ), ";
                 }
                 $scope.queryResult[i] += " ); ";
+            }
+            return $scope.queryResult;
+        };
+
+        $scope.writeQueryFK = function(){
+            $scope.queryResult = new Array();
+            for (var i=0; i<$scope.nTables; i++) {
+                for (var j=0; j<$scope.tables[i].columns; j++){
+                    if ( $scope.tables[i].fk_attr[j] ){
+                        $scope.queryResult[i] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
+                                                " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
+
+                        $scope.queryResult[i] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
+                                                " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
+                                                " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name + 
+                                                "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
+                    }
+                }
             }
             return $scope.queryResult;
         };
@@ -239,39 +250,66 @@
             $scope.queryFK = new Array();
 
             $scope.queryCreate = $scope.writeQueryCreate();
+            for( var i=0; i<$scope.nTables; i++ )
+                console.log($scope.queryCreate[i]);
+
+            $scope.queryFK = $scope.writeQueryFK();
+            for( var i=0; i<$scope.queryFK.length; i++ )
+                console.log($scope.queryFK[i]);
+
             $scope.queryInsert = $scope.writeQueryInsert();
-            //FK ?? writeQueryFK and go :P
+            for( var i=0; i<$scope.nTables; i++ )
+                console.log($scope.queryInsert[i]);
+
+            //Order insert
+            console.log("orderList");
+
+            var orderList = new Array();
+            var k = 0;
+
+            for (var i=0; i<$scope.nTables; i++) {
+                for (var j=0; j<$scope.tables[i].columns; j++){
+                    if ( $scope.tables[i].fk_attr[j] ){
+                        orderList[k] = i;
+                        k++;      
+                    }
+                }
+            }
+
+            console.log("Chiave esterna presente in tab: ");
+            for (var j=0; j<k; j++){
+                console.log(orderList[j]);
+            }
 
         };
 
-        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
+         /* Modals */
+        $scope.openModalSetupT = function (indexTable) {
 
-        $scope.autoLoadList = new Array();
-        $scope.autoLoadList[0] = new Array('Aldo', 'Giovanni', 'Giacomo', 'Mario', 'Alessandro', 'Stefano', 'Salvatore', 'Alfredo');
-        $scope.autoLoadList[1] = new Array('Rossi', 'Borzì', 'Pulvirenti', 'Maggio', 'Calabrò', 'Foti');
-        $scope.autoLoadList[2] = new Array('Giallo', 'Rosso', 'Verde', 'Blu', 'Arancione', 'Celeste', 'Viola');
-        $scope.autoLoadList[3] = new Array('Roma', 'Catania', 'Messina', 'Barcellona PG', 'Caltagirone');
-        $scope.autoLoadList[4] = new Array('21.50', '596.20', '444121.00', '12');
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'setupTable.html',
+                controller: 'ctrlSetupTmodal',
+                size: 'small',
+                resolve: {
+                    tables: function() { return $scope.tables },
+                    nTables: function() { return $scope.nTables },
+                    _indexTable: function() { return indexTable }
+                }
+            });
 
-        $scope.autoLoader = function(iTable, column,selectedAutoLoad){
-            console.log("Tabella n: " + iTable);
-            console.log("Colonna: " + column);
-            console.log("Selezionato: "+selectedAutoLoad);
-
-            for (var i = 0; i < $scope.tables[iTable].rows; i++) {
-                $scope.rndNumber = Math.floor(Math.random() * $scope.autoLoadList[selectedAutoLoad].length-1) + 1  ;
-                console.log("i "+i+" rnd: "+$scope.rndNumber);
-                $scope.tables[iTable].matrix[i][column] = $scope.autoLoadList[selectedAutoLoad][$scope.rndNumber];
-            }
+            modalInstance.result.then(function (result) {
+                $scope.selected = result;
+            });
         };
 
         /* Modals */
-        $scope.open = function (indexTable, row, col) {
+        $scope.openModalFK = function (indexTable, row, col) {
 
             var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'ForeignKey.html',
-                controller: 'ModalInstanceCtrl',
+                controller: 'ctrlFKmodal',
                 size: 'small',
                 resolve: {
                     tables: function() { return $scope.tables },
@@ -323,16 +361,61 @@
 
     });
 
-    app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, tables, nTables, _indexTable, _row, _col) {
+    app.controller('ctrlFKmodal', function ($scope, $uibModalInstance, tables, nTables, _indexTable, _row, _col) {
 
         $scope.indexTable = _indexTable;
+        $scope.col = _col;
 
         $scope.modalTables = tables;
         $scope.numTables = new Array(nTables);
 
+        if ($scope.modalTables[_indexTable].fk_matrix[_col] != null){
+            $scope.selected_table = $scope.modalTables[_indexTable].fk_matrix[_col][0];
+            $scope.selected_attr = $scope.modalTables[_indexTable].fk_matrix[_col][1];
+        }
+
         $scope.ok = function () {
             $scope.modalTables[_indexTable].matrix[_row][_col] = $scope.modalTables[$scope.selected_table].matrix[$scope.selected_value][$scope.selected_attr];
-            $scope.modalTables[_indexTable].fk_matrix[_row][_col] = $scope.selected_table + "," + $scope.selected_value + "," + $scope.selected_attr;
+
+            if ($scope.modalTables[_indexTable].fk_matrix[_col] == null)
+                $scope.modalTables[_indexTable].fk_matrix[_col] = new Array();
+
+            $scope.modalTables[_indexTable].fk_matrix[_col][0] = $scope.selected_table;
+            $scope.modalTables[_indexTable].fk_matrix[_col][1] = $scope.selected_attr;
+
+            $uibModalInstance.close("OK"); //result
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    });
+
+    app.controller('ctrlSetupTmodal', function ($scope, $uibModalInstance, tables, nTables, _indexTable) {
+
+        $scope.indexTable = _indexTable;
+        $scope.numTables = new Array(nTables);
+
+        $scope.modalTables = tables;
+        $scope.numColum = new Array(tables[_indexTable].columns);
+
+        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
+
+        $scope.autoLoadList = new Array();
+        $scope.autoLoadList[0] = new Array('Aldo', 'Giovanni', 'Giacomo', 'Mario', 'Alessandro', 'Stefano', 'Salvatore', 'Alfredo');
+        $scope.autoLoadList[1] = new Array('Rossi', 'Borzì', 'Pulvirenti', 'Maggio', 'Calabrò', 'Foti');
+        $scope.autoLoadList[2] = new Array('Giallo', 'Rosso', 'Verde', 'Blu', 'Arancione', 'Celeste', 'Viola');
+        $scope.autoLoadList[3] = new Array('Roma', 'Catania', 'Messina', 'Barcellona PG', 'Caltagirone');
+        $scope.autoLoadList[4] = new Array('21.50', '596.20', '444121.00', '12');
+
+        $scope.autoLoader = function(column,selectedAutoLoad){
+            for (var i = 0; i < $scope.modalTables[_indexTable].rows; i++) {
+                $scope.rndNumber = Math.floor(Math.random() * $scope.autoLoadList[selectedAutoLoad].length-1) + 1  ;
+                $scope.modalTables[_indexTable].matrix[i][column] = $scope.autoLoadList[selectedAutoLoad][$scope.rndNumber];
+            }
+        };
+
+        $scope.ok = function () {
             $uibModalInstance.close("OK"); //result
         };
 
@@ -456,7 +539,6 @@
 
         $scope.checkErrQuestion = function(error) {
             $scope.res = error;
-            console.log($scope.res);
             if ($scope.res != "" && $scope.res != null)
                 $scope.addAlert('danger', $scope.res);
             else

@@ -7,19 +7,21 @@
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2  text-center">
 
-                <label class="control-label">Seleziona una tabella:</label>
-                <select class="form-control" ng-model="selected_table">
-                    <option id="select_table" ng-repeat="t in numTables track by $index" ng-init="indexTableModal = $index" value="{{ indexTableModal }}" ng-disabled="indexTableModal == indexTable">
-                        {{ indexTableModal+1 }} - {{ modalTables[indexTableModal].name }}
-                    </option>
-                </select>
+                <div ng-show = "modalTables[indexTable].fk_matrix[col] == null">
+                    <label class="control-label">Seleziona una tabella:</label>
+                    <select class="form-control" ng-model="selected_table">
+                        <option id="select_table" ng-repeat="t in numTables track by $index" ng-init="indexTableModal = $index" value="{{ indexTableModal }}" ng-disabled="indexTableModal == indexTable">
+                            {{ indexTableModal+1 }} - {{ modalTables[indexTableModal].name }}
+                        </option>
+                    </select>
 
-                <label class="control-label">Seleziona un attributo:</label>
-                <select class="form-control" ng-model="selected_attr">
-                    <option id="select_attr" ng-repeat="t in modalTables[selected_table].attr track by $index" ng-init="indexAttrModal = $index" value="{{ indexAttrModal }}" >
-                        {{ modalTables[selected_table].attr[indexAttrModal] }}
-                    </option>
-                </select>
+                    <label class="control-label">Seleziona un attributo:</label>
+                    <select class="form-control" ng-model="selected_attr">
+                        <option id="select_attr" ng-repeat="t in modalTables[selected_table].attr track by $index" ng-init="indexAttrModal = $index" value="{{ indexAttrModal }}" >
+                            {{ modalTables[selected_table].attr[indexAttrModal] }}
+                        </option>
+                    </select>
+                </div>
 
                 <label class="control-label">Seleziona il valore :</label>
                 <select class="form-control" ng-model="selected_value">
@@ -33,6 +35,42 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" type="button" ng-click="ok()" ng-disabled="selected_value==NULL">OK</button>
+        <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<!-- Modal template -->
+<script type="text/ng-template" id="setupTable.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Impostazioni Tabella</h3>
+    </div>
+    <div class="modal-body">
+        
+            <div class="row" ng-repeat="i in numColum track by $index" ng-init="indexColum = $index">
+                <div ng-show="modalTables[indexTable].attr[indexColum]!=NULL">
+                    <div class="col-xs-8">
+
+                            {{ modalTables[indexTable].attr[indexColum] }} 
+
+                            <br>
+                            AutoLoad
+                            <select ng-model="selectedAL" ng-change="autoLoader(indexColum, selectedAL)" ng-show = "! modalTables[indexTable].fk_attr[indexColum]">
+                                <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
+                                    {{ autoLoad }}
+                                </option>
+                            </select>
+                            
+                            <div class="checkbox">
+                                <label><input type="checkbox" value="" ng-model="modalTables[indexTable].fk_attr[indexColum]">FK</label>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
         <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </script>
@@ -52,7 +90,13 @@
     <div class="row">
         <div ng-repeat="i in getNumber(nTables) track by $index" ng-init="indexTable = $index" class="col-xs-12">
             <hr>
-            <h2>Tabella numero {{ indexTable+1 }} {{ tables[indexTable].name != '' ? '(' + tables[indexTable].name + ')' : '' }}</h2>
+
+            <h2>
+                <button type="button" class="btn btn-default" ng-click="openModalSetupT(indexTable)">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                </button>
+                Tabella numero {{ indexTable+1 }} {{ tables[indexTable].name != '' ? '(' + tables[indexTable].name + ')' : '' }}
+            </h2> 
 
             <div class="row">
                 <div class="col-xs-4">
@@ -89,16 +133,6 @@
                                 <th>#</th>
                                 <th ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
                                     {{ tables[indexTable].attr[indexColum] }} &nbsp;
-                                    <div ng-show="tables[indexTable].attr[indexColum]!=NULL">
-                                        <div class="checkbox">
-                                            <label><input type="checkbox" value="" ng-model="tables[indexTable].fk_attr[indexColum]">FK</label>
-                                        </div>
-                                        <select ng-model="selectedAL" ng-change="autoLoader(indexTable,indexColum, selectedAL)">
-                                            <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
-                                                {{ autoLoad }}
-                                            </option>
-                                        </select>
-                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -107,9 +141,9 @@
                                 <th scope="row">{{ indexRow+1 }}</th>
                                 <td ng-repeat="i in getNumber(tables[indexTable].columns) track by $index" ng-init="indexColum = $index">
                                     <div class="input-group" >
-                                        <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]" required>
+                                        <input type="text" id="row{{indexRow}}_col{{indexColum}}" class="form-control" ng-model="tables[indexTable].matrix[indexRow][indexColum]" required ng-disabled="tables[indexTable].fk_attr[indexColum]">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" ng-click="open(indexTable, indexRow, indexColum)" ng-disabled="!tables[indexTable].fk_attr[indexColum]">FK</button>
+                                            <button class="btn btn-default" type="button" ng-click="openModalFK(indexTable, indexRow, indexColum)" ng-disabled="!tables[indexTable].fk_attr[indexColum]">FK</button>
                                         </span>
                                     </div>
                                 </td>

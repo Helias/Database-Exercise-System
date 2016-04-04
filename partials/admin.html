@@ -2,7 +2,7 @@
     <div class="col-xs-12">
         <br>
 
-        <form>
+        <form onsubmit="return false" ng-submit="submitNewQuestion()">
             <fieldset class="form-group" >
 
                 <div class="btn-group">
@@ -34,7 +34,7 @@
                 <hr>
 
                 <label for="textarea_question">Inserire il testo della domanda:</label>
-                <textarea class="form-control vresize" id="textarea_question" rows="3"  ng-model="question" style="resize: vertical; min-height:110px;"></textarea>
+                <textarea class="form-control vresize" id="textarea_question" rows="3"  ng-model="question" style="resize: vertical; min-height:110px;" required></textarea>
 
                 <hr>
 
@@ -75,7 +75,7 @@
 
             <div class="row text-center">
                 <div class="col-xs-6 col-xs-offset-3">
-                    <button class="btn btn-success btn-lg" ng-click="submitNewQuestion()" ng-disabled="question == '' ">Aggiungi una nuova domanda</button>
+                    <button class="btn btn-success btn-lg" type="submit">Aggiungi una nuova domanda</button>
                     <br>
                     <br>
                     <uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="closeAlert($index)">{{ alert.msg }}</uib-alert>
