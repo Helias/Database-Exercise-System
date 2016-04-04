@@ -3,7 +3,7 @@
 
     var app = angular.module('exerciseSystem', ['ui.router', 'ui.bootstrap', 'chieffancypants.loadingBar', 'ngAnimate']);
 
-    app.controller('argumentsCrtl', function($scope, $http) {
+    app.controller('argumentsCrtl', function($scope, $http, $stateParams) {
 
         /* Retrieve all algebra arguments */
         $http.get( "API/API.php?arguments" )
@@ -13,16 +13,11 @@
             .error(function (data, status, header, config) {
             console.log("[ERROR] $http.get request failed!");
         });
+
+        $scope.type = $stateParams.arg;
     });
 
     app.controller('algExCtrl', function($scope, $http, $stateParams) {
-
-        /* pagination settings */
-        $scope.filteredEx = [];
-        $scope.currentPage = 1;
-        $scope.numPerPage = 1;
-        $scope.maxSize = 12;
-        $scope.itemsPerPage = 1;
 
         $http.get( "API/API.php?exerciseALG=" + $stateParams.id )
             .success(function (data, status, header, config) {
@@ -62,7 +57,7 @@
 
     });
 
-    app.controller('sqlExCtrl', function($scope, $http, $stateParams) {
+    app.controller('ExerciseCtrl', function($scope, $http, $stateParams) {
 
         /* pagination settings */
         $scope.filteredEx = [];
@@ -70,8 +65,13 @@
         $scope.numPerPage = 1;
         $scope.maxSize = 12;
         $scope.itemsPerPage = 1;
+        
+        if ($stateParams.arg == "sql")
+            $scope.type = "SQL";
+        else if ($stateParams.arg == "algebra")
+            $scope.type = "ALG";
 
-        $http.get( "API/API.php?exerciseSQL=" + $stateParams.id )
+        $http.get( "API/API.php?exercise" + $scope.type + "=" + $stateParams.id )
             .success(function (data, status, header, config) {
             $scope.exercises = data;
 
@@ -86,17 +86,19 @@
 
                 $scope.filteredEx = $scope.exs.slice(begin, end);
 
-                $scope.db = $scope.exercises[$scope.currentPage-1].db_connesso;
-                $http.get( "API/API.php?db_tables=" + $scope.exercises[$scope.currentPage-1].db_connesso)
-                    .success(function (data, status, header, config) {
+                if ($scope.exercises.length != 0) {
 
-                    $scope.tables = data;
+                    $scope.db = $scope.exercises[$scope.currentPage-1].db_connesso;
+                    $http.get( "API/API.php?db_tables=" + $scope.exercises[$scope.currentPage-1].db_connesso)
+                        .success(function (data, status, header, config) {
 
-                })
-                    .error(function (data, status, header, config) {
-                    console.log("[ERROR] $http.get request failed!");
-                });
+                        $scope.tables = data;
 
+                    })
+                        .error(function (data, status, header, config) {
+                        console.log("[ERROR] $http.get request failed!");
+                    });
+                }
 
             });
         })
@@ -104,9 +106,10 @@
             console.log("[ERROR] $http.get request failed!");
         });
 
-        $scope.querySql = "";
-        $scope.addOpSql = function(op) {
-            $scope.querySql = $scope.querySql+op;
+        $scope.query = "";
+        $scope.addOp = function(op) {
+            $scope.query = $scope.query+op;
+            console.log("asd");
         };
 
     });
@@ -177,8 +180,8 @@
             for (var k = 0; k < $scope.nTables; k++) {
                 for (var i = 0; i < $scope.tables[k].columns; i++) {
                     for (var j = i+1; j < $scope.tables[k].columns; j++) {
-                    if ( $scope.tables[k].attr[i] == $scope.tables[k].attr[j] )
-                        return true;
+                        if ( $scope.tables[k].attr[i] == $scope.tables[k].attr[j] )
+                            return true;
                     }
                 }
             }
@@ -195,7 +198,7 @@
                         $scope.queryResult[i] += ", ";
                 }
                 $scope.queryResult[i] += " ); ";
-            }  
+            }
             return $scope.queryResult;
         };
 
