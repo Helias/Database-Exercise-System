@@ -42,6 +42,7 @@ else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
 
     foreach($stmt as $table) {
         $t = str_replace($prefix . "_", "", $table[0]) . " (";
+        $t = strtoupper($t);
 
         $columns = $db->query("SHOW COLUMNS FROM " . $prefix . "_" . str_replace($prefix . "_", "", $table[0]));
         foreach ($columns as $column) {

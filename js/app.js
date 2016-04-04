@@ -109,7 +109,6 @@
         $scope.query = "";
         $scope.addOp = function(op) {
             $scope.query = $scope.query+op;
-            console.log("asd");
         };
 
     });
