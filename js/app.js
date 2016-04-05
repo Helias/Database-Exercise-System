@@ -477,6 +477,15 @@
         $scope.radio_typeArgument = 'ex_argument';
         $scope.radio_typeSolution = 'ex_solution';
 
+        $http.get("API/APIadmin.php?database")
+            .success(function (data, status, header, config) {
+            if (data.length > 0) 
+                $scope.databases = data;
+        })
+            .error(function (data, status, header, config) {
+            console.log("[ERROR] $http.get request failed!");
+        });
+
         $scope.updateArguments = function() {
 
             $http.get("API/APIadmin.php?arguments")
@@ -520,7 +529,7 @@
         $scope.submitNewQuestion = function() {
 
             if ($scope.radio_typeArgument == 'new_argument' && $scope.radio_typeSolution == 'new_solution') {
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=eh" )
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
                     .success(function (data, status, header, config) {
 
                     $scope.checkErrQuestion(data.Error);
@@ -532,7 +541,7 @@
             }
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'ex_solution') {
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&ex_solution=" + $scope.selected_solution + "&db=eh" )
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&ex_solution=" + $scope.selected_solution + "&db=" + $scope.selected_database )
                     .success(function (data, status, header, config) {
 
                     $scope.checkErrQuestion(data.Error);
@@ -545,7 +554,7 @@
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'new_solution') {
 
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=eh" )
+                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
                     .success(function (data, status, header, config) {
 
                     $scope.checkErrQuestion(data.Error);

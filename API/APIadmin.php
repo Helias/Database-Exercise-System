@@ -7,6 +7,7 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 try {
 
+    //Login "function".
     if ((isset($_GET['username']) && $_GET['username'] != "") &&
         (isset($_GET['password']) && $_GET['password'] != "")
        ) {
@@ -25,6 +26,7 @@ try {
        return;
     }
 
+    //Blacklist word.
     if (isset($_GET['sql']) && $_GET['sql'] != NULL) {
         $sql = strtolower($_GET['sql']);
 
@@ -52,14 +54,31 @@ try {
         return;
     }
 
-
+    //Check if the user is logged.
     if ( isset($_GET['checklogin']) ) {
         if ( $_SESSION["username"] == "" || $_SESSION["password"] == "" )
             $json = '{ "Error": "Login non effettuato!" }';
     }
 
+    //If user is logged.
     if ( $_SESSION["username"] != "" || $_SESSION["password"] != "" ) {
 
+
+        //Show all "databases".
+        if (isset($_GET['database'])) {
+            $stmt = $db->query('SHOW TABLES FROM des');
+
+            $arr = array();
+
+            foreach ($stmt as $dbs) {
+            if ( strpos($dbs[0], "_") && !in_array(substr($dbs[0], 0, strpos($dbs[0], "_")), $arr) )
+                array_push($arr, substr($dbs[0], 0, strpos($dbs[0], "_")));
+            }
+
+            $json = json_encode($arr);
+        }
+
+        //Execute query CREATE, ALTER, INSERT.
         if (isset($_GET['query']) && $_GET['query'] != "" && 
             isset($_GET['nameDB']) && $_GET['nameDB'] != ""
             ){
@@ -74,16 +93,18 @@ try {
                     $stmt = $db->query($sql);
                 }
 
-                $json = '{ "Success": "Domanda aggiunta!" }';
+                $json = '{ "Success": "Database aggiunto!" }';
             }else
                 $json = '{ "Error": "Database già esistente!" }';
         }
 
+        //Show all arguments.
         if ( isset($_GET['arguments']) ) {
             $stmt = $db->query('SELECT * FROM des.argomenti;');
             $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
+        //Show all solutions.
         if ( isset($_GET['solutions']) &&
             (isset($_GET['argument']) && $_GET['argument'] != "") &&
             (isset($_GET['question']) && $_GET['question'] != "")
@@ -95,10 +116,11 @@ try {
             $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
+        //Submit newQuestion, INSERT argomento, soluzioni and domandeALG/SQL.
         function submitNewQuestion($db, $argumentId, $solutionId) {
             $stmt = $db->query("INSERT INTO des." . $_GET['type'] . " (testo,db_connesso,soluzione,argomento)
                                 VALUES ('" . $_GET['text'] . "','" . $_GET['db'] . "'," . $solutionId . "," . $argumentId . ");");
-            $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            $json = '{ "Success": "Domanda aggiunta!" }';
         }
 
         function getIdArgument($db){
@@ -130,7 +152,7 @@ try {
             }
             else
                 $json = '{ "Error": "Argomento esistente!" }';
-       }
+        }
 
         if ((isset($_GET['text']) && $_GET['text'] != "") &&
             (isset($_GET['type']) && $_GET['type'] != "") &&
