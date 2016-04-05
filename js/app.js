@@ -294,6 +294,36 @@
             for (var i=0; i<lenghtQueryToAPI;i++) {
                 console.log(queryToAPI[i]);
             }
+
+            //$myArray = explode('|', $_GET['myData']);
+            //page.php?myData=A|B|C|D
+
+            //page.php?arr[]
+            //$arr = unserialize($_GET["arr"]); 
+
+
+            /*
+            dataString = ??? ; // array?
+            var jsonString = JSON.stringify(dataString);
+            $.ajax({
+                type: "POST",
+                url: "script.php",
+                data: {data : jsonString}, 
+                cache: false,
+
+                success: function(){
+                    alert("OK");
+                }
+            });
+
+            $data = json_decode(stripslashes($_POST['data']));
+
+            // here i would like use foreach:
+
+            foreach($data as $d){
+                echo $d;
+            }
+            */
             
         };
 
