@@ -173,6 +173,8 @@
                     <div class="alert alert-danger" ng-show="sameAttrName()">
                         <strong>Attenzione!</strong> Non è possibile avere attributi nulli o con lo stesso nome nella stessa tabella.
                     </div>
+
+                    <uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="closeAlert($index)">{{ alert.msg }}</uib-alert>
                 </div>
             </div>
         </div>

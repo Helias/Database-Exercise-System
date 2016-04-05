@@ -231,16 +231,18 @@
         //Write the ALTER TABLE QUERY | Return array of query/string.
         $scope.writeQueryFK = function(){
             var queryResult = new Array();
+            var counter = 0;
             for (var i=0; i<$scope.nTables; i++) {
                 for (var j=0; j<$scope.tables[i].columns; j++){
                     if ($scope.tables[i].fk_attr[j]){
-                        queryResult[i] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
+                        queryResult[counter] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
                                                 " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
 
-                        queryResult[i] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
+                        queryResult[counter] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
                                                 " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
                                                 " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name + 
                                                 "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
+                        counter++;
                     }
                 }
             }
@@ -273,58 +275,43 @@
                 }
             }
 
-            var queryToAPI = new Array();
-            var lenghtQueryToAPI = 0;
+            //Concact all query and pass toLowerCase form.
+            var queryToAPI = "";
+            for (var i=0; i<$scope.nTables; i++)
+                queryToAPI += queryCreate[i].toLowerCase() + " | ";
 
-            for (var i=0; i<$scope.nTables; i++) {
-                queryToAPI[lenghtQueryToAPI] = queryCreate[i].toLowerCase();
-                lenghtQueryToAPI++;
+            for (var i=0; i<queryFK.length; i++)
+                queryToAPI += queryFK[i].toLowerCase() + " | ";
+
+            for (var i=0; i<$scope.nTables; i++){
+                queryToAPI += queryInsert[i].toLowerCase()
+                if (i<$scope.nTables-1)
+                    queryToAPI += " | ";
             }
 
-            for (var i=0; i<queryFK.length; i++) {
-                queryToAPI[lenghtQueryToAPI] = queryFK[i].toLowerCase();
-                lenghtQueryToAPI++;
-            }
-
-            for (var i=0; i<$scope.nTables; i++) {
-                queryToAPI[lenghtQueryToAPI] = queryInsert[i].toLowerCase();
-                lenghtQueryToAPI++;
-            }
-
-            for (var i=0; i<lenghtQueryToAPI;i++) {
-                console.log(queryToAPI[i]);
-            }
-
-            //$myArray = explode('|', $_GET['myData']);
-            //page.php?myData=A|B|C|D
-
-            //page.php?arr[]
-            //$arr = unserialize($_GET["arr"]); 
-
-
-            /*
-            dataString = ??? ; // array?
-            var jsonString = JSON.stringify(dataString);
-            $.ajax({
-                type: "POST",
-                url: "script.php",
-                data: {data : jsonString}, 
-                cache: false,
-
-                success: function(){
-                    alert("OK");
-                }
+            
+            //Call the API
+            $http.get("API/APIadmin.php?query=" + queryToAPI + "&nameDB=" + $scope.nameDatabase)
+                .success(function (data, status, header, config) {
+                    if (data.Success)
+                        $scope.addAlert('success', data.Success);
+                    else
+                        $scope.addAlert('danger', data.Error);
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
             });
 
-            $data = json_decode(stripslashes($_POST['data']));
+        };
 
-            // here i would like use foreach:
+        $scope.alerts = [];
 
-            foreach($data as $d){
-                echo $d;
-            }
-            */
-            
+        $scope.addAlert = function(type, msg) {
+            $scope.alerts.push({type: type, msg: msg});
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
         };
 
         $scope.openModalSetupT = function (indexTable) {

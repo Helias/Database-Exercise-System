@@ -60,6 +60,25 @@ try {
 
     if ( $_SESSION["username"] != "" || $_SESSION["password"] != "" ) {
 
+        if (isset($_GET['query']) && $_GET['query'] != "" && 
+            isset($_GET['nameDB']) && $_GET['nameDB'] != ""
+            ){
+            
+            $stmt = $db->query('SHOW TABLES FROM des WHERE Tables_in_des LIKE "' . $_GET['nameDB'] . '_%"');
+            if ( $stmt->fetchColumn() == ""){
+
+                $query = explode('|', $_GET['query']);
+            
+                foreach($query as $q){
+                    $sql = strtolower($q);
+                    $stmt = $db->query($sql);
+                }
+
+                $json = '{ "Success": "Domanda aggiunta!" }';
+            }else
+                $json = '{ "Error": "Database già esistente!" }';
+        }
+
         if ( isset($_GET['arguments']) ) {
             $stmt = $db->query('SELECT * FROM des.argomenti;');
             $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
