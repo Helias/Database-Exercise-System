@@ -22,7 +22,7 @@ try {
             $json = '{ "Error": "Nome utente non esistente!" }';
         header('Content-Type: application/json');
         echo $json;
-        return;
+       return;
     }
 
     if (isset($_GET['sql']) && $_GET['sql'] != NULL) {

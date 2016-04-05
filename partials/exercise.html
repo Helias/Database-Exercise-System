@@ -49,14 +49,13 @@
         <div ng-repeat="ex in filteredEx track by $index">
 
             <h3 class="text-center">Esercizio {{ ex.id }}</h3>
-            <br>
 
             <div class="row">
-                <div class="col-xs-6 tables_text">
-                    <h2 class="text-center db_title">{{ db }}</h2>
+                <div class="col-xs-8 tables_text">
+                    <h4 class="text-center db_title">db: {{ db }}</h4>
                     <b ng-repeat="table in tables" class="tables">{{ table }} <br></b>
                 </div>
-                <div class="col-xs-6 ex_text">
+                <div class="col-xs-4 ex_text">
                     <h4>{{ ex.text }}</h4>
                 </div>
             </div>
