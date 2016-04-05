@@ -15,6 +15,7 @@
         });
 
         $scope.type = $stateParams.arg;
+    
     });
 
     app.controller('algExCtrl', function($scope, $http, $stateParams) {
@@ -109,79 +110,62 @@
         $scope.query = "";
         $scope.addOp = function(op) {
             $scope.query = $scope.query+op;
-            console.log("asd");
         };
 
     });
 
-    /* Admin panel */
-
     app.controller('dbManager', function($scope, $http, $uibModal, $state) {
 
-        $scope.nTables = 0;                     //Numbers of table
+        $scope.nTables = 0;                     //Numbers of table.
 
-        //Table structure
+        //Table structure.
         $scope.table = {
-            name: "",                           //TableName
-            rows: 1,                            //Number of row
-            columns: 1,                         //Number of columns
-            attr: new Array(),                  //Array with the name of attr
-            matrix: new Array(),                //Matrix contains the value of table
+            name: "",                           //TableName.
+            rows: 1,                            //Number of row.
+            columns: 1,                         //Number of columns.
+            attr: new Array(),                  //Array with the name of attr.
+            matrix: new Array(),                //Matrix contains the value of table.
 
-            fk_matrix: new Array(),             //Matrix with indexTable, columns linked by FK
-            fk_attr: new Array(),               //fk_attr (Boolean) --> the index is the same of attr 
+            fk_matrix: new Array(),             //Matrix with indexTable, columns linked by FK.
+            fk_attr: new Array(),               //fk_attr (Boolean) --> the index is the same of attr.
 
-            //Create matrix
+            //Create matrix.
             inizializeMatrix: function () {
                 for (var i = 0; i < 5; i++)
                     this.matrix[i] = new Array();
             }
         };
 
-        $scope.tables = new Array();
+        //Create and inizialize array of table.
+        $scope.tables = new Array();            
 
         for (var i = 0; i < 5; i++) {
             $scope.tables[i] = angular.copy($scope.table);
             $scope.tables[i].inizializeMatrix();
         }
 
+        //Function for ng-repeat.
         $scope.getNumber = function(num) {
             return new Array(num);
         };
 
-        $scope.logTable = function() {
-            for (var i = 0; i < $scope.nTables; i++) {
-                console.log("Tabella n: " + i);
-                console.log("Nome: " + $scope.tables[i].name);
-                console.log("Righe: " + $scope.tables[i].rows);
-                console.log("Colonne: " + $scope.tables[i].columns);
-                for (var j = 0; j < $scope.tables[i].columns; j++) {
-                    console.log("Attr n: " + j + " = " + $scope.tables[i].attr[j]);
-                }
-                for (var b = 0; b < $scope.tables[i].rows; b++){
-                    for (var a = 0; a < $scope.tables[i].columns; a++) {
-                        console.log("Riga n: " + b + " Attr n: " + a + " = " + $scope.tables[i].matrix[b][a]);
-                        console.log("Fk: "+$scope.tables[i].fk_matrix[b][a]);
-                    }
-                }
-            }
-        };
-
+        //Check if there are table with the same name.
         $scope.sameTableName = function(){
             for (var i = 0; i < $scope.nTables-1; i++) {
                 for (var j = i+1; j < $scope.nTables; j++) {
-                    if ( $scope.tables[i].name == $scope.tables[j].name )
+                    if ($scope.tables[i].name == $scope.tables[j].name)
                         return true;
                 }
             }
             return false;
         };
 
+        //Check if there are attributes with the same name in the same table.
         $scope.sameAttrName = function(){
             for (var k = 0; k < $scope.nTables; k++) {
                 for (var i = 0; i < $scope.tables[k].columns; i++) {
                     for (var j = i+1; j < $scope.tables[k].columns; j++) {
-                        if ( $scope.tables[k].attr[i] == $scope.tables[k].attr[j] )
+                        if ($scope.tables[k].attr[i] == $scope.tables[k].attr[j])
                             return true;
                     }
                 }
@@ -189,121 +173,130 @@
             return false;
         };
 
-        $scope.writeQueryCreate = function(){
-            $scope.queryResult = new Array();
-            for (var i = 0; i < $scope.nTables; i++) {
-                $scope.queryResult[i] = "CREATE TABLE IF NOT EXISTS des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
-                for (var j = 0; j < $scope.tables[i].columns; j++) {
-                    $scope.queryResult[i] += $scope.tables[i].attr[j] + " varchar(255) NOT NULL ";
-                    if ( j < $scope.tables[i].columns-1 )
-                        $scope.queryResult[i] += ", ";
+        //Check if there are empty fields.
+        $scope.emptyField = function(){
+            for (var k = 0; k < $scope.nTables; k++) {
+                for (var i = 0; i < $scope.tables[k].rows; i++) {
+                    for (var j = 0; j < $scope.tables[k].columns; j++) {
+                        if ($scope.tables[k].matrix[i][j] == '' || $scope.tables[k].matrix[i][j] == null)
+                            return true;
+                    }    
                 }
-                $scope.queryResult[i] += " ); ";
             }
-            return $scope.queryResult;
+            return false;
+        }
+
+        //Write the CREATE TABLE QUERY | Return array of query/string.
+        $scope.writeQueryCreate = function(){
+            var queryResult = new Array();
+            for (var i = 0; i < $scope.nTables; i++) {
+                queryResult[i] = "CREATE TABLE IF NOT EXISTS des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
+                for (var j = 0; j < $scope.tables[i].columns; j++) {
+                    queryResult[i] += $scope.tables[i].attr[j] + " varchar(255) NOT NULL ";
+                    if (j < $scope.tables[i].columns-1)
+                        queryResult[i] += ", ";
+                }
+                queryResult[i] += " ); ";
+            }
+            return queryResult;
         };
 
+        //Write the INSERT INTO QUERY | Return array of query/string.
         $scope.writeQueryInsert = function(){
-            $scope.queryResult = new Array();
+            var queryResult = new Array();
             for (var i = 0; i < $scope.nTables; i++) {
-                $scope.queryResult[i] = "INSERT INTO des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
+                queryResult[i] = "INSERT INTO des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
                 for (var j = 0; j < $scope.tables[i].columns; j++) {
-                    $scope.queryResult[i] += $scope.tables[i].attr[j] ;
-                    if ( j < $scope.tables[i].columns-1)
-                        $scope.queryResult[i] += ", ";
+                    queryResult[i] += $scope.tables[i].attr[j] ;
+                    if (j < $scope.tables[i].columns-1)
+                        queryResult[i] += ", ";
                 }
-                $scope.queryResult[i] = $scope.queryResult[i] + " ) VALUES ";
+                queryResult[i] += " ) VALUES ";
 
                 for (var b = 0; b < $scope.tables[i].rows; b++){
-                    $scope.queryResult[i] += " ( ";
+                    queryResult[i] += " ( ";
                     for (var a = 0; a < $scope.tables[i].columns; a++) {
-                        $scope.queryResult[i] += " '" + $scope.tables[i].matrix[b][a] + "' ";
-                        if ( a < $scope.tables[i].columns-1)
-                            $scope.queryResult[i] += ", ";
+                        queryResult[i] += " '" + $scope.tables[i].matrix[b][a] + "' ";
+                        if (a < $scope.tables[i].columns-1)
+                            queryResult[i] += ", ";
                     }
-                    if ( b < $scope.tables[i].rows-1)
-                        $scope.queryResult[i] += " ), ";
+                    if (b < $scope.tables[i].rows-1)
+                        queryResult[i] += " ), ";
                 }
-                $scope.queryResult[i] += " ); ";
+                queryResult[i] += " ); ";
             }
-            return $scope.queryResult;
+            return queryResult;
         };
 
+        //Write the ALTER TABLE QUERY | Return array of query/string.
         $scope.writeQueryFK = function(){
-            $scope.queryResult = new Array();
+            var queryResult = new Array();
             for (var i=0; i<$scope.nTables; i++) {
                 for (var j=0; j<$scope.tables[i].columns; j++){
-                    if ( $scope.tables[i].fk_attr[j] ){
-                        $scope.queryResult[i] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
+                    if ($scope.tables[i].fk_attr[j]){
+                        queryResult[i] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
                                                 " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
 
-                        $scope.queryResult[i] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
+                        queryResult[i] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
                                                 " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
                                                 " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name + 
                                                 "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
                     }
                 }
             }
-            return $scope.queryResult;
+            return queryResult;
         };
 
+        //BuildQuery function call the other function to writeQuery and submit it to API.
         $scope.buildQuery = function(){
 
-            $scope.queryCreate = new Array();
-            $scope.queryInsert = new Array();
-            $scope.queryFK = new Array();
+            //Declare array.
+            var queryCreate = new Array();
+            var queryInsert = new Array();
+            var queryFK = new Array();
 
-            $scope.queryCreate = $scope.writeQueryCreate();
-            for( var i=0; i<$scope.nTables; i++ )
-                console.log($scope.queryCreate[i]);
+            //Load the array.
+            queryCreate = $scope.writeQueryCreate();
+            queryFK = $scope.writeQueryFK();
+            queryInsert = $scope.writeQueryInsert();
 
-            $scope.queryFK = $scope.writeQueryFK();
-            for( var i=0; i<$scope.queryFK.length; i++ )
-                console.log($scope.queryFK[i]);
-
-            //Order insert
-            console.log("orderList"); 
-
+            //Order the array with INSERT QUERY.
             for (var i=0; i<$scope.nTables; i++) {                      
                 for (var j=0; j<$scope.tables[i].columns; j++){         
-                    if ( $scope.tables[i].fk_attr[j] ) 
-                        console.log($scope.tables[i].fk_matrix);
+                    if ( $scope.tables[i].fk_attr[j] ){ 
+                        if (i < $scope.tables[i].fk_matrix[j][0]){
+                            var tmp = queryInsert[i];
+                            queryInsert[i] = queryInsert[$scope.tables[i].fk_matrix[j][0]];
+                            queryInsert[$scope.tables[i].fk_matrix[j][0]] = tmp;
+                        }
+                    }
                 }
             }
 
+            var queryToAPI = new Array();
+            var lenghtQueryToAPI = 0;
 
-            var orderList = new Array();
-            var k = 0;
-            var isFK = false;
-
-            for (var i=0; i<$scope.nTables; i++) {                      
-                isFK = false;
-                for (var j=0; j<$scope.tables[i].columns; j++){         
-                    if ( $scope.tables[i].fk_attr[j] )          
-                        isFK = true;
-                }
-
-                if (isFK) {
-                    orderList[k] = i;
-                }else{
-                    for (var a = k+1; a > 0; a--)
-                        orderList[a] = orderList[a-1];  
-                    
-                    orderList[0] = i;                        
-                } 
-
-                k++;             
+            for (var i=0; i<$scope.nTables; i++) {
+                queryToAPI[lenghtQueryToAPI] = queryCreate[i].toLowerCase();
+                lenghtQueryToAPI++;
             }
 
-             $scope.queryInsert = $scope.writeQueryInsert();
-            console.log("Chiave orderList: ");
-            for (var j=0; j<k; j++){  
-                console.log($scope.queryInsert[orderList[j]]);                           
+            for (var i=0; i<queryFK.length; i++) {
+                queryToAPI[lenghtQueryToAPI] = queryFK[i].toLowerCase();
+                lenghtQueryToAPI++;
+            }
+
+            for (var i=0; i<$scope.nTables; i++) {
+                queryToAPI[lenghtQueryToAPI] = queryInsert[i].toLowerCase();
+                lenghtQueryToAPI++;
+            }
+
+            for (var i=0; i<lenghtQueryToAPI;i++) {
+                console.log(queryToAPI[i]);
             }
             
         };
 
-         /* Modals */
         $scope.openModalSetupT = function (indexTable) {
 
             var modalInstance = $uibModal.open({
@@ -323,7 +316,6 @@
             });
         };
 
-        /* Modals */
         $scope.openModalFK = function (indexTable, row, col) {
 
             var modalInstance = $uibModal.open({
@@ -372,7 +364,6 @@
 
         $scope.checkErrQuestion = function(error) {
             $scope.res = error;
-            console.log($scope.res);
             if ($scope.res != "" && $scope.res != null)
                 $scope.addAlert('danger', $scope.res);
             else
@@ -403,12 +394,13 @@
             $scope.modalTables[_indexTable].fk_matrix[_col][0] = $scope.selected_table;
             $scope.modalTables[_indexTable].fk_matrix[_col][1] = $scope.selected_attr;
 
-            $uibModalInstance.close("OK"); //result
+            $uibModalInstance.close("OK");
         };
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
+    
     });
 
     app.controller('ctrlSetupTmodal', function ($scope, $uibModalInstance, tables, nTables, _indexTable) {
@@ -436,12 +428,13 @@
         };
 
         $scope.ok = function () {
-            $uibModalInstance.close("OK"); //result
+            $uibModalInstance.close("OK");
         };
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
+    
     });
 
     app.controller('adminPanel', function($scope, $http, $state) {
@@ -593,7 +586,6 @@
 
         $scope.checkErrLogin = function(error) {
             $scope.res = error;
-            console.log($scope.res);
             if ($scope.res != "" && $scope.res != null)
                 $scope.addAlert('danger', $scope.res);
             else {
