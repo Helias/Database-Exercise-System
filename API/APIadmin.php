@@ -22,7 +22,7 @@ try {
             $json = '{ "Error": "Nome utente non esistente!" }';
         header('Content-Type: application/json');
         echo $json;
-       return;
+        return;
     }
 
     if (isset($_GET['sql']) && $_GET['sql'] != NULL) {
@@ -44,6 +44,34 @@ try {
 
             } else {
                 /* TO DO: confronto tra il risultatotra la query soluzione e la query $sql */
+
+                /* Query Utente */
+                $stmt = $db->query($sql);
+
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo count($data);
+
+                /* Query souzione */
+                $stmt = $db->query("SELECT id_conto FROM banca_contocorrente CC WHERE NOT EXISTS (SELECT * FROM banca_contocorrente CC1 WHERE CC1.saldo > CC.saldo)");
+
+                $data2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                echo " " . count($data2);
+
+                // COUNT : righe
+
+                /*
+                foreach($data as $mydata) {
+                    var_dump($mydata);
+                    foreach($mydata as $d) {
+                        echo "<br>";
+                        var_dump($d);
+                    }
+                    echo "<br><br>";
+                }
+                */
+
+                return;
+                $json = json_encode($data);
             }
         }
 
@@ -111,7 +139,7 @@ try {
             }
             else
                 $json = '{ "Error": "Argomento esistente!" }';
-       }
+        }
 
         if ((isset($_GET['text']) && $_GET['text'] != "") &&
             (isset($_GET['type']) && $_GET['type'] != "") &&

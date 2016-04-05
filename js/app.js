@@ -65,7 +65,7 @@
         $scope.numPerPage = 1;
         $scope.maxSize = 12;
         $scope.itemsPerPage = 1;
-        
+
         if ($stateParams.arg == "sql")
             $scope.type = "SQL";
         else if ($stateParams.arg == "algebra")
@@ -109,6 +109,18 @@
         $scope.query = "";
         $scope.addOp = function(op) {
             $scope.query = $scope.query+op;
+        };
+
+        $scope.sendQuery = function() {
+            $http.get( "API/APIadmin.php?sql=" + $scope.query)
+                .success(function (data, status, header, config) {
+
+                console.log(data);
+
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
         };
 
     });
@@ -234,12 +246,12 @@
                 for (var j=0; j<$scope.tables[i].columns; j++){
                     if ( $scope.tables[i].fk_attr[j] ){
                         $scope.queryResult[i] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
-                                                " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
+                            " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
 
                         $scope.queryResult[i] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
-                                                " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
-                                                " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name + 
-                                                "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
+                            " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
+                            " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name + 
+                            "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
                     }
                 }
             }
@@ -287,22 +299,22 @@
                 }else{
                     for (var a = k+1; a > 0; a--)
                         orderList[a] = orderList[a-1];  
-                    
+
                     orderList[0] = i;                        
                 } 
 
                 k++;             
             }
 
-             $scope.queryInsert = $scope.writeQueryInsert();
+            $scope.queryInsert = $scope.writeQueryInsert();
             console.log("Chiave orderList: ");
             for (var j=0; j<k; j++){  
                 console.log($scope.queryInsert[orderList[j]]);                           
             }
-            
+
         };
 
-         /* Modals */
+        /* Modals */
         $scope.openModalSetupT = function (indexTable) {
 
             var modalInstance = $uibModal.open({
