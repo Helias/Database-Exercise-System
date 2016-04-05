@@ -59,15 +59,11 @@
 
                 <hr>
 
-                <label for="div_database">Seleziona un Database esistente o creane uno nuovo:</label>
-                <div class="input-group" id="div_database">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button">Aggiungi Database</button>
-                    </span>
-                    <select class="form-control" id="select_database" ng-model="selected_database" >
-                        <option ng-repeat="database in databases" value="{{ database.id }}" >{{ bho }}</option>
-                    </select>
-                </div>
+                <label for="select_database">Seleziona un Database esistente:</label>
+                <select class="form-control" id="select_database" ng-model="selected_database" >
+                    <option ng-repeat="database in databases">{{ database }}</option>
+                </select>
+                
 
             </fieldset>
 

@@ -71,7 +71,6 @@
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-        <button class="btn btn-danger" type="button" ng-click="cancel()">Cancel</button>
     </div>
 </script>
 
@@ -153,7 +152,6 @@
                 </div>
 
             </div>
-
         </div>
     </div>
     <div class="row">
@@ -162,10 +160,23 @@
             <br>
 
             <div class="row text-center">
-                <button class="btn btn-success btn-lg"  ng-disabled="sameAttrName() || sameTableName()" type="submit">Aggiungi un nuovo database</button>
-            </div>
+                <button class="btn btn-success btn-lg"  ng-disabled="sameAttrName() || sameTableName() || emptyField()" type="submit">Aggiungi un nuovo database</button>
+                
+                <div class="col-xs-8 col-xs-offset-2">
+                    <br>
+                    <div class="alert alert-danger" ng-show="emptyField()">
+                        <strong>Attenzione!</strong> Assicurati di aver riempito tutti i campi.
+                    </div>
+                    <div class="alert alert-danger" ng-show="sameTableName()">
+                        <strong>Attenzione!</strong> Le tabelle non possono avere nome nullo o uguale.
+                    </div>
+                    <div class="alert alert-danger" ng-show="sameAttrName()">
+                        <strong>Attenzione!</strong> Non è possibile avere attributi nulli o con lo stesso nome nella stessa tabella.
+                    </div>
 
-            <br>
+                    <uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="closeAlert($index)">{{ alert.msg }}</uib-alert>
+                </div>
+            </div>
         </div>
     </div>
 </form>
