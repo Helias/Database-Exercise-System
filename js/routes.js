@@ -28,16 +28,6 @@
             controller: 'ExerciseCtrl',
             templateUrl: 'partials/exercise.html'
         })
-            .state('algArguments', {
-            url: '/algebra/:id',
-            controller: 'algExCtrl',
-            templateUrl: 'partials/algEx.html'
-        })
-            .state('sqlArguments', {
-            url: '/sql/:id',
-            controller: 'sqlExCtrl',
-            templateUrl: 'partials/sqlEx.html'
-        })
             .state('admin', {
             url: '/admin',
             controller: 'adminPanel',

@@ -18,46 +18,6 @@
 
     });
 
-    app.controller('algExCtrl', function($scope, $http, $stateParams) {
-
-        $http.get( "API/API.php?exerciseALG=" + $stateParams.id )
-            .success(function (data, status, header, config) {
-            $scope.exercises = data;
-
-            $scope.exs = [];
-            for (var i = 0; i < $scope.exercises.length; i++) {
-                $scope.exs.push({ text: $scope.exercises[i].testo, done:false, id: i+1});
-            }
-
-            $scope.$watch('currentPage + numPerPage', function() {
-                var begin = (($scope.currentPage - 1) * $scope.numPerPage)
-                var end = begin + $scope.numPerPage;
-
-                $scope.filteredEx = $scope.exs.slice(begin, end);
-
-                $scope.db = $scope.exercises[$scope.currentPage-1].db_connesso;
-                $http.get( "API/API.php?db_tables=" + $scope.exercises[$scope.currentPage-1].db_connesso)
-                    .success(function (data, status, header, config) {
-
-                    $scope.tables = data;
-
-                })
-                    .error(function (data, status, header, config) {
-                    console.log("[ERROR] $http.get request failed!");
-                });
-            });
-        })
-            .error(function (data, status, header, config) {
-            console.log("[ERROR] $http.get request failed!");
-        });
-
-        $scope.queryAlg = "";
-        $scope.addOpAlg = function(op) {
-            $scope.queryAlg = $scope.queryAlg+op;
-        };
-
-    });
-
     app.controller('ExerciseCtrl', function($scope, $http, $stateParams) {
 
         /* pagination settings */
