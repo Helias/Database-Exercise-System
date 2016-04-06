@@ -88,21 +88,23 @@
             
             flag : new Array(),                             //Flag for type.
             query : new Array(),                            //Query/string for type.
-            counter : new Array(),
+            indexOf : new Array(),                          //Last index of char (?).
+
+            completeQuery : "",                             //Query completed.
+            tmpQuery : "",                                  //Temp query.
 
             //Inizialize method.
             inizializeStruct: function () {
                 for (var i=0; i<type.length;i++){
                     this.flag[type[i]] = false;
                     this.query[type[i]] = "";
-                    this.counter[type[i]] = 0;
+                    this.indexOf[type[i]] = 0;
                 }
             }
         };
 
         var querysSql = new Array();                        //Array contains splittedQuery.
         var nQuerysSql = 0;                                 //Number of splittedQuery.
-        var querySQL = new Array();
 
         //If the index location in null||undefined -> inizialize.
         function checkIsUndefine (i) {
@@ -117,128 +119,136 @@
             //Union ∪
             if ( op == '∪' ){
                 querysSql[nQuerysSql].flag["union"] = true;
-                querysSql[nQuerysSql].counter["union"] = $scope.query.length;
+                querysSql[nQuerysSql].indexOf["union"] = $scope.query.length;
+
+                querysSql[nQuerysSql].completeQuery += querysSql[nQuerysSql].query["union"] = " UNION ";
+
                 nQuerysSql++;
             }
-
         }
                        
-
         //Convert query method.
         $scope.convertQuery = function () {
+            if ($scope.type == "ALG"){
 
-            checkIsUndefine(nQuerysSql);
-
-            if (nQuerysSql>0){
+                checkIsUndefine(nQuerysSql);
+                
+                if (nQuerysSql>0){
                     if (querysSql[nQuerysSql-1].flag["union"]){
-                        var i = querysSql[nQuerysSql-1].counter["union"];
+                        querysSql[nQuerysSql].tmpQuery = $scope.query.substring(querysSql[nQuerysSql-1].indexOf["union"],$scope.query.length);   
                     }
-            }else
-                var i = 0;
+                }else
+                    querysSql[nQuerysSql].tmpQuery = $scope.query;
 
-            for (i=0; i<$scope.query.length; i++){
+                for (var i=0; i<querysSql[nQuerysSql].tmpQuery.length; i++){
 
-                console.log(i);
+                    //Select π.
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == 'π' )
+                        querysSql[nQuerysSql].flag["select"] = true; 
+                    
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["select"] )
+                        querysSql[nQuerysSql].flag["select"] = false;
 
-                //Select π.
-                if ( $scope.query[i] == 'π' )
-                    querysSql[nQuerysSql].flag["select"] = true; 
-                
-                if ( $scope.query[i] == '(' && querysSql[nQuerysSql].flag["select"] )
-                    querysSql[nQuerysSql].flag["select"] = false;
+                    if ( querysSql[nQuerysSql].flag["select"] )
+                        querysSql[nQuerysSql].query["select"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                .replace('π','')
+                                                                                                .replace('(',''); 
 
-                if ( querysSql[nQuerysSql].flag["select"] )
-                    querysSql[nQuerysSql].query["select"] += $scope.query[i]
-                                                                    .replace('π','')
-                                                                    .replace('(',''); 
+                    //NewName ρ.
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == 'ρ' ){
+                        querysSql[nQuerysSql].flag["newName"] = true;
+                        querysSql[nQuerysSql].flag["from"] = false; 
+                    }
+                    
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == '←' && querysSql[nQuerysSql].flag["newName"] )
+                        querysSql[nQuerysSql].flag["newName"] = false;
 
-                //NewName ρ.
-                if ( $scope.query[i] == 'ρ' ){
-                    querysSql[nQuerysSql].flag["newName"] = true;
-                    querysSql[nQuerysSql].flag["from"] = false; 
+                    if ( querysSql[nQuerysSql].flag["newName"] )
+                        querysSql[nQuerysSql].query["newName"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                .replace('ρ','')
+                                                                                                .replace('←',''); 
+
+                    //OldName ←
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == '←' )
+                        querysSql[nQuerysSql].flag["oldName"] = true; 
+                    
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["oldName"] )
+                        querysSql[nQuerysSql].flag["oldName"] = false;
+
+                    if ( querysSql[nQuerysSql].flag["oldName"] )
+                        querysSql[nQuerysSql].query["oldName"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                .replace('←','')
+                                                                                                .replace('(',''); 
+
+                    //Where σ.
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == 'σ' ){
+                        querysSql[nQuerysSql].flag["where"] = true;
+                        querysSql[nQuerysSql].flag["from"] = false; 
+                    }
+                    
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["where"] )
+                        querysSql[nQuerysSql].flag["where"] = false;
+
+                    if ( querysSql[nQuerysSql].flag["where"] )   
+                        querysSql[nQuerysSql].query["where"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                .replace('σ','')
+                                                                                                .replace('(',''); 
+
+                    //From ( )
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' )
+                        querysSql[nQuerysSql].flag["from"] = true;
+
+                    if ( querysSql[nQuerysSql].tmpQuery[i] == ')' && querysSql[nQuerysSql].flag["from"] )
+                        querysSql[nQuerysSql].flag["from"] = false;
+
+                    if ( querysSql[nQuerysSql].flag["from"] )
+                        querysSql[nQuerysSql].query["from"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                .replace('(','')
+                                                                                                .replace(')','')
+                                                                                                .replace('×',' , '); 
+                             
                 }
-                
-                if ( $scope.query[i] == '←' && querysSql[nQuerysSql].flag["newName"] )
-                    querysSql[nQuerysSql].flag["newName"] = false;
 
-                if ( querysSql[nQuerysSql].flag["newName"] )
-                    querysSql[nQuerysSql].query["newName"] += $scope.query[i]
-                                                                    .replace('ρ','')
-                                                                    .replace('←',''); 
+                if (querysSql[nQuerysSql].query["from"] != "")
+                    querysSql[nQuerysSql].query["from"] = " FROM " + querysSql[nQuerysSql].query["from"];
 
-                //OldName ←
-                if ( $scope.query[i] == '←' )
-                    querysSql[nQuerysSql].flag["oldName"] = true; 
-                
-                if ( $scope.query[i] == '(' && querysSql[nQuerysSql].flag["oldName"] )
-                    querysSql[nQuerysSql].flag["oldName"] = false;
+                if (querysSql[nQuerysSql].query["newName"] != "" && querysSql[nQuerysSql].query["oldName"]!= "" ){
+                    var newName = querysSql[nQuerysSql].query["newName"].replace(' ','').split(",");
+                    var oldName = querysSql[nQuerysSql].query["oldName"].replace(' ','').split(",");
 
-                if ( querysSql[nQuerysSql].flag["oldName"] )
-                    querysSql[nQuerysSql].query["oldName"] += $scope.query[i]
-                                                                    .replace('←','')
-                                                                    .replace('(',''); 
+                    var newSelect = "";
+                    for (var j=0; j<newName.length;j++){
+                        newSelect += newName[j] + " AS " + oldName[j];
+                        if (j<newName.length-1)
+                            newSelect += ", "; 
+                    }
 
-                //Where σ.
-                if ( $scope.query[i] == 'σ' ){
-                    querysSql[nQuerysSql].flag["where"] = true;
-                    querysSql[nQuerysSql].flag["from"] = false; 
+                    querysSql[nQuerysSql].query["select"] = newSelect;
                 }
-                
-                if ( $scope.query[i] == '(' && querysSql[nQuerysSql].flag["where"] )
-                    querysSql[nQuerysSql].flag["where"] = false;
 
-                if ( querysSql[nQuerysSql].flag["where"] )   
-                    querysSql[nQuerysSql].query["where"] += $scope.query[i]
-                                                                    .replace('σ','')
-                                                                    .replace('(',''); 
+                if (querysSql[nQuerysSql].query["select"] == "" && querysSql[nQuerysSql].query["from"] != "")
+                    querysSql[nQuerysSql].query["select"] = " SELECT * ";
 
-                //From ( )
-                if ( $scope.query[i] == '(' )
-                    querysSql[nQuerysSql].flag["from"] = true;
+                if (querysSql[nQuerysSql].query["select"] != "" && querysSql[nQuerysSql].query["select"] != " SELECT * ")
+                    querysSql[nQuerysSql].query["select"] = " SELECT " + querysSql[nQuerysSql].query["select"];
 
-                if ( $scope.query[i] == ')' && querysSql[nQuerysSql].flag["from"] )
-                    querysSql[nQuerysSql].flag["from"] = false;
+                if (querysSql[nQuerysSql].query["where"] != "")
+                    querysSql[nQuerysSql].query["where"] = " WHERE " + querysSql[nQuerysSql].query["where"];
 
-                if ( querysSql[nQuerysSql].flag["from"] )
-                    querysSql[nQuerysSql].query["from"] += $scope.query[i]
-                                                                    .replace('(','')
-                                                                    .replace(')','')
-                                                                    .replace('×',' , '); 
-                         
+                querysSql[nQuerysSql].completeQuery =   querysSql[nQuerysSql].query["select"] + 
+                                                        querysSql[nQuerysSql].query["from"] +
+                                                        querysSql[nQuerysSql].query["where"] +
+                                                        querysSql[nQuerysSql].query["union"];
+
+                var lastQuery="";
+                for (var i=0; i<=nQuerysSql; i++){
+                    lastQuery+=querysSql[i].completeQuery;   
+                }
+
+                $scope.querySQL = lastQuery;
+                   
+                $scope.querySQL = replacerLogOP( $scope.querySQL );
             }
-
-            if (querysSql[nQuerysSql].query["from"] != "")
-                querysSql[nQuerysSql].query["from"] = " FROM " + querysSql[nQuerysSql].query["from"];
-
-            if (querysSql[nQuerysSql].query["newName"] != "" && querysSql[nQuerysSql].query["oldName"]!= "" ){
-                var newName = querysSql[nQuerysSql].query["newName"].replace(' ','').split(",");
-                var oldName = querysSql[nQuerysSql].query["oldName"].replace(' ','').split(",");
-
-                var newSelect = "";
-                for (var j=0; j<newName.length;j++){
-                    newSelect += newName[j] + " AS " + oldName[j];
-                    if (j<newName.length-1)
-                        newSelect += ", "; 
-                }
-
-                querysSql[nQuerysSql].query["select"] = newSelect;
-            }
-
-            if (querysSql[nQuerysSql].query["select"] == "" && querysSql[nQuerysSql].query["from"] != "")
-                querysSql[nQuerysSql].query["select"] = " SELECT * ";
-
-            if (querysSql[nQuerysSql].query["select"] != "" && querysSql[nQuerysSql].query["select"] != " SELECT * ")
-                querysSql[nQuerysSql].query["select"] = " SELECT " + querysSql[nQuerysSql].query["select"];
-
-            if (querysSql[nQuerysSql].query["where"] != "")
-                querysSql[nQuerysSql].query["where"] = " WHERE " + querysSql[nQuerysSql].query["where"];
-
-            querySQL[nQuerysSql] =  querysSql[nQuerysSql].query["select"] + 
-                                    querysSql[nQuerysSql].query["from"] +
-                                    querysSql[nQuerysSql].query["where"] ;
-
-            $scope.querySQL = querySQL[nQuerysSql];                
-            $scope.querySQL = replacerLogOP( $scope.querySQL );
         }
 
         //Replace logic operator.
