@@ -77,24 +77,27 @@
                 </div>
 
                 <div class="btn-group" role="group" aria-label="toolbarAlg" ng-show="type == 'ALG'">
-                    <button class="btn btn-success btn-sm" ng-click="addOp('∪')" popover-title="Unione" uib-popover="Unione" popover-trigger="mouseenter">∪</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('∩')" popover-title="Intersezione" uib-popover="Intersezione" popover-trigger="mouseenter">∩</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('-')" popover-title="Sottrazione" uib-popover="Sottrazione" popover-trigger="mouseenter">-</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('÷')" popover-title="Divisione" uib-popover="Divisione" popover-trigger="mouseenter">÷</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('×')" popover-title="Prodotto cartesiano" uib-popover="Prodotto cartesiano"  popover-trigger="mouseenter">×</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('⋈')" popover-title="Natural Join" uib-popover="Natural Join" popover-trigger="mouseenter">⋈</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('⧑')" popover-title="Left Outer Join" uib-popover="Left Outer Join" popover-trigger="mouseenter">⧑</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('⧒')" popover-title="Right Outer Join" uib-popover="Right Outer Join" popover-trigger="mouseenter">⧒</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('⧓')" popover-title="Full Outer Join" uib-popover="Full Outer Join" popover-trigger="mouseenter">⧓</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('σ')" popover-title="Selezione" uib-popover="Selezione" popover-trigger="mouseenter">σ</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('π')" popover-title="Proiezione π a,b (A)" uib-popover="Proiezione π a,b (A)" popover-trigger="mouseenter">π</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('ρ')" popover-title="Ridenominazione" uib-popover="Ridenominazione" popover-trigger="mouseenter">ρ</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('∧')" popover-title="And" uib-popover="And" popover-trigger="mouseenter">∧</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('∨')" popover-title="Or" uib-popover="Or" popover-trigger="mouseenter">∨</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('=')" popover-title="Uguale" uib-popover="Uguale" popover-trigger="mouseenter">=</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('≠')" popover-title="Diverso" uib-popover="Diverso" popover-trigger="mouseenter">≠</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('≥')" popover-title="Maggiore o uguale" uib-popover="Maggiore&nbsp;o&nbsp;uguale" popover-trigger="mouseenter">≥</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('≤')" popover-title="Minore o uguale" uib-popover="Minore&nbsp;o&nbsp;uguale" popover-trigger="mouseenter">≤</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('∪')" popover-title="Unione" uib-popover="A ∪ B" popover-trigger="mouseenter">∪</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('∩')" popover-title="Intersezione" uib-popover="A ∩ B" popover-trigger="mouseenter">∩</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('-')" popover-title="Sottrazione" uib-popover="A - B" popover-trigger="mouseenter">-</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('÷')" popover-title="Divisione" uib-popover="A ÷ B" popover-trigger="mouseenter">÷</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('×')" popover-title="Prodotto cartesiano" uib-popover="A × B"  popover-trigger="mouseenter">×</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('⋈')" popover-title="Natural Join" uib-popover="A ⋈ B" popover-trigger="mouseenter">⋈</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('⧑')" popover-title="Left Outer Join" uib-popover="A ⧑ B" popover-trigger="mouseenter">⧑</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('⧒')" popover-title="Right Outer Join" uib-popover="A ⧒ B" popover-trigger="mouseenter">⧒</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('⧓')" popover-title="Full Outer Join" uib-popover="A ⧓ B" popover-trigger="mouseenter">⧓</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('σ')" popover-title="Selezione" uib-popover="σ a > x (A)" popover-trigger="mouseenter">σ</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('π')" popover-title="Proiezione" uib-popover="π a,b (A)" popover-trigger="mouseenter">π</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('ρ ←')" popover-title="Ridenominazione" uib-popover="ρ a ← b" popover-trigger="mouseenter">ρ</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('∧')" popover-title="And" uib-popover="a ∧ b" popover-trigger="mouseenter">∧</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('∨')" popover-title="Or" uib-popover="a ∨ b" popover-trigger="mouseenter">∨</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('¬')" popover-title="Not" uib-popover="a ¬ b" popover-trigger="mouseenter">¬</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('=')" popover-title="Uguale" uib-popover="a = b" popover-trigger="mouseenter">=</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('≠')" popover-title="Diverso" uib-popover="a ≠ b" popover-trigger="mouseenter">≠</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('≥')" popover-title="Maggiore o uguale" uib-popover="a ≥ b" popover-trigger="mouseenter">≥</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('≤')" popover-title="Minore o uguale" uib-popover="a ≤ b" popover-trigger="mouseenter">≤</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('>')" popover-title="Maggiore" uib-popover="a > b" popover-trigger="mouseenter">></button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('<')" popover-title="Minore" uib-popover="a < b" popover-trigger="mouseenter"><</button>
                 </div>
             </div>
         </div>
@@ -103,9 +106,11 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <textarea type="text" class="form-control" id="query" placeholder="Inserisci la query..." ng-model="query">
+                <textarea type="text" class="form-control" id="query" placeholder="Inserisci la query..." ng-model="query" style="resize: vertical; min-height:110px;" ng-change="convertQuery()">
                 </textarea>
 
+                <br>
+                {{ querySQL }}
                 <br>
 
                 <button class="btn btn-primary" ng-click="sendQuery()">Invia</button>

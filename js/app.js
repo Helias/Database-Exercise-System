@@ -69,8 +69,145 @@
 
         $scope.query = "";
         $scope.addOp = function(op) {
-            $scope.query = $scope.query+op;
+            $scope.query += op;
+            $scope.convertQuery();
         };
+
+        $scope.querySQL = "";
+
+        $scope.convertQuery = function() {
+
+            var whereFlag = false;
+            var whereQuery = "";
+
+            var fromFlag = false;
+            var fromQuery = "";
+
+            var selectFlag = false;
+            var selectQuery = "";
+
+            var oldNameFlag = false;
+            var oldNameQuery = new Array();
+            var n_oldName = 0;
+
+            var newNameFlag = false;
+            var newNameQuery = new Array();
+            var n_newName = 0;
+
+            var renameQuery = "";
+
+            for (var i=0; i<$scope.query.length; i++){
+     
+                //OldName ρ AND NewName ←
+                if ($scope.query[i] == 'ρ'){
+                    fromFlag = false;
+                    newNameFlag = true;
+                }
+
+                if ($scope.query[i] == '←' && newNameFlag){
+                    newNameFlag = false;
+                    oldNameFlag = true;
+                }
+
+                if (newNameFlag){
+                    if ($scope.query[i] == ',')
+                        n_newName++;
+
+                    if (newNameQuery[n_newName]==null)
+                        newNameQuery[n_newName] = ""; 
+                     
+                    newNameQuery[n_newName] += $scope.query[i].replace('ρ','');
+                }
+
+                if (oldNameFlag){
+                    if ($scope.query[i] == ',')
+                        n_oldName++;
+
+                    if (oldNameQuery[n_oldName]==null)
+                        oldNameQuery[n_oldName] = "";
+                    
+                    oldNameQuery[n_oldName] += $scope.query[i].replace('←','').replace('(','').replace(',','');
+                }
+
+                if ($scope.query[i] == '(' && oldNameFlag){
+                    fromFlag = true;
+                    oldNameFlag = false;
+
+                    for (var i=0; i<n_newName+1; i++)
+                        renameQuery += newNameQuery[i] + " AS " + oldNameQuery[i];
+                }
+
+                //Select π
+                if ($scope.query[i] == 'π')
+                    selectFlag = true;
+
+                if ($scope.query[i] == '(' && selectFlag){
+                    selectFlag = false;
+                    fromFlag = true;
+                }
+
+                if (selectFlag){
+                    selectQuery += $scope.query[i].replace('π','SELECT ');
+                }
+
+                //Where σ
+                if ($scope.query[i] == 'σ'){
+                    whereFlag = true;
+                    fromFlag = false;
+                }
+
+                if ($scope.query[i] == '(' && whereFlag){
+                    whereFlag = false;
+                    fromFlag = true;
+                }
+                
+                if (whereFlag){
+                    whereQuery += $scope.query[i].replace('σ','WHERE ');
+                    var replaced = $scope.replacerForWhere($scope.query[i],whereQuery);
+                    if (replaced != '')
+                        whereQuery = replaced;
+                }
+
+                //From ()
+                if ($scope.query[i] == ')' && fromFlag){
+                    fromFlag = false;
+                    fromQuery = ' FROM' + fromQuery;
+                }
+
+                if (fromFlag)
+                    fromQuery += $scope.query[i].replace('(',' ');
+                
+            }
+
+            if (selectQuery == "" && fromQuery != "")
+                selectQuery = "SELECT * "
+
+            if (renameQuery != "")
+                selectQuery = "SELECT " + renameQuery;
+
+            $scope.querySQL = selectQuery  + fromQuery + " " + whereQuery;
+
+            //console.log("SelectQuery " + selectQuery );
+            console.log("FromQuery " + fromQuery );
+            //console.log("Where " + whereQuery );
+        };
+
+        $scope.replacerForWhere = function(op,query){
+            if (op == '∧')
+                return query.replace('∧',' AND ');
+            if (op == '∨')
+                return query.replace('∨',' OR ');
+            if (op == '¬')
+                return query.replace('¬',' NOT ');
+            if (op == '≠')
+                return query.replace('≠','<>');
+            if (op == '≥')
+                return query.replace('≥','>=');
+            if (op == '≤')
+                return query.replace('≤','<=');
+
+            return '';
+        }
 
         $scope.sendQuery = function() {
             $http.get( "API/APIadmin.php?sql=" + $scope.query)
