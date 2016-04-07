@@ -71,17 +71,15 @@
         $scope.addOp = function(op) {
             $scope.query += op;
 
-            if ($scope.type == "ALG"){
-                increaseQuery(op);
-                $scope.convertQuery();    
-            }
+            if ($scope.type == "ALG")
+                increaseQuery(op);   
             
         };
 
         /* Tkd-Alex ALG --> SQL */
 
         $scope.querySQL = "";                                                           //SQL Query (Final).
-        var type = new Array("select","where","from","newName","oldName","union");      //Type of query.
+        var type = new Array("select","where","from","newName","oldName");              //Type of query.
 
         //Struct of querySQL
         $scope.structQuerysSql = {
@@ -92,6 +90,7 @@
 
             completeQuery : "",                             //Query completed.
             tmpQuery : "",                                  //Temp query.
+            linker : "",                                    //Linker (Union, Intersect, Not in).
 
             //Inizialize method.
             inizializeStruct: function () {
@@ -99,12 +98,14 @@
                     this.flag[type[i]] = false;
                     this.query[type[i]] = "";
                     this.indexOf[type[i]] = 0;
+                    this.linker = "";
                 }
             }
         };
 
         var querysSql = new Array();                        //Array contains splittedQuery.
         var nQuerysSql = 0;                                 //Number of splittedQuery.
+        var queryCounter = 0;
 
         //If the index location in null||undefined -> inizialize.
         function checkIsUndefine (i) {
@@ -117,118 +118,160 @@
         //IncreaseQuery 
         function increaseQuery (op) {
             //Union ∪
-            if ( op == '∪' ){
-                
+            if ( op == '∪' || op == '∩' || op == '-' ){
+                queryCounter++;  
+                checkIsUndefine(queryCounter);      
             }
         }
                        
         //Convert query method.
         $scope.convertQuery = function () {
-            if ($scope.type == "ALG"){
+            if ($scope.type == "ALG" && $scope.query.length > 0 ){
 
-                checkIsUndefine(nQuerysSql);
-
-                for (var i=0; i<querysSql[nQuerysSql].tmpQuery.length; i++){
-
-                    //Select π.
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == 'π' )
-                        querysSql[nQuerysSql].flag["select"] = true; 
-                    
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["select"] )
-                        querysSql[nQuerysSql].flag["select"] = false;
-
-                    if ( querysSql[nQuerysSql].flag["select"] )
-                        querysSql[nQuerysSql].query["select"] += querysSql[nQuerysSql].tmpQuery[i]
-                                                                                                .replace('π','')
-                                                                                                .replace('(',''); 
-
-                    //NewName ρ.
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == 'ρ' ){
-                        querysSql[nQuerysSql].flag["newName"] = true;
-                        querysSql[nQuerysSql].flag["from"] = false; 
+                var querySplitted = $scope.query.replace('∪','|')
+                                                .replace('∩','|')
+                                                .replace('-','|')
+                                                .split('|');
+            
+                for (var i=0; i<=queryCounter; i++) {
+                    checkIsUndefine(i);
+                    querysSql[i].tmpQuery = " " + querySplitted[i];
+                    if (querysSql[i].tmpQuery.length == 0){
+                        querysSql[i] = null;
+                        queryCounter--;
                     }
-                    
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == '←' && querysSql[nQuerysSql].flag["newName"] )
-                        querysSql[nQuerysSql].flag["newName"] = false;
-
-                    if ( querysSql[nQuerysSql].flag["newName"] )
-                        querysSql[nQuerysSql].query["newName"] += querysSql[nQuerysSql].tmpQuery[i]
-                                                                                                .replace('ρ','')
-                                                                                                .replace('←',''); 
-
-                    //OldName ←
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == '←' )
-                        querysSql[nQuerysSql].flag["oldName"] = true; 
-                    
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["oldName"] )
-                        querysSql[nQuerysSql].flag["oldName"] = false;
-
-                    if ( querysSql[nQuerysSql].flag["oldName"] )
-                        querysSql[nQuerysSql].query["oldName"] += querysSql[nQuerysSql].tmpQuery[i]
-                                                                                                .replace('←','')
-                                                                                                .replace('(',''); 
-
-                    //Where σ.
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == 'σ' ){
-                        querysSql[nQuerysSql].flag["where"] = true;
-                        querysSql[nQuerysSql].flag["from"] = false; 
-                    }
-                    
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["where"] )
-                        querysSql[nQuerysSql].flag["where"] = false;
-
-                    if ( querysSql[nQuerysSql].flag["where"] )   
-                        querysSql[nQuerysSql].query["where"] += querysSql[nQuerysSql].tmpQuery[i]
-                                                                                                .replace('σ','')
-                                                                                                .replace('(',''); 
-
-                    //From ( )
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == '(' )
-                        querysSql[nQuerysSql].flag["from"] = true;
-
-                    if ( querysSql[nQuerysSql].tmpQuery[i] == ')' && querysSql[nQuerysSql].flag["from"] )
-                        querysSql[nQuerysSql].flag["from"] = false;
-
-                    if ( querysSql[nQuerysSql].flag["from"] )
-                        querysSql[nQuerysSql].query["from"] += querysSql[nQuerysSql].tmpQuery[i]
-                                                                                                .replace('(','')
-                                                                                                .replace(')','')
-                                                                                                .replace('×',' , '); 
-                             
                 }
 
-                if (querysSql[nQuerysSql].query["from"] != "")
-                    querysSql[nQuerysSql].query["from"] = " FROM " + querysSql[nQuerysSql].query["from"];
+                for (var j=0; j<=queryCounter; j++){
+                    nQuerysSql = j; 
 
-                if (querysSql[nQuerysSql].query["newName"] != "" && querysSql[nQuerysSql].query["oldName"]!= "" ){
-                    var newName = querysSql[nQuerysSql].query["newName"].replace(' ','').split(",");
-                    var oldName = querysSql[nQuerysSql].query["oldName"].replace(' ','').split(",");
+                    for (var i=0; i<querysSql[nQuerysSql].tmpQuery.length; i++){
 
-                    var newSelect = "";
-                    for (var j=0; j<newName.length;j++){
-                        newSelect += newName[j] + " AS " + oldName[j];
-                        if (j<newName.length-1)
-                            newSelect += ", "; 
+                        //Select π.
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == 'π' )
+                            querysSql[nQuerysSql].flag["select"] = true; 
+                        
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["select"] )
+                            querysSql[nQuerysSql].flag["select"] = false;
+
+                        if ( querysSql[nQuerysSql].flag["select"] )
+                            querysSql[nQuerysSql].query["select"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                    .replace('π','')
+                                                                                                    .replace('(',''); 
+
+                        //NewName ρ.
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == 'ρ' ){
+                            querysSql[nQuerysSql].flag["newName"] = true;
+                            querysSql[nQuerysSql].flag["from"] = false; 
+                        }
+                        
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == '←' && querysSql[nQuerysSql].flag["newName"] )
+                            querysSql[nQuerysSql].flag["newName"] = false;
+
+                        if ( querysSql[nQuerysSql].flag["newName"] )
+                            querysSql[nQuerysSql].query["newName"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                    .replace('ρ','')
+                                                                                                    .replace('←',''); 
+
+                        //OldName ←
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == '←' )
+                            querysSql[nQuerysSql].flag["oldName"] = true; 
+                        
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["oldName"] )
+                            querysSql[nQuerysSql].flag["oldName"] = false;
+
+                        if ( querysSql[nQuerysSql].flag["oldName"] )
+                            querysSql[nQuerysSql].query["oldName"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                    .replace('←','')
+                                                                                                    .replace('(',''); 
+
+                        //Where σ.
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == 'σ' ){
+                            querysSql[nQuerysSql].flag["where"] = true;
+                            querysSql[nQuerysSql].flag["from"] = false; 
+                        }
+                        
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == '(' && querysSql[nQuerysSql].flag["where"] )
+                            querysSql[nQuerysSql].flag["where"] = false;
+
+                        if ( querysSql[nQuerysSql].flag["where"] )   
+                            querysSql[nQuerysSql].query["where"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                    .replace('σ','')
+                                                                                                    .replace('(',''); 
+
+                        //From ( )
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == '(' )
+                            querysSql[nQuerysSql].flag["from"] = true;
+
+                        if ( querysSql[nQuerysSql].tmpQuery[i] == ')' && querysSql[nQuerysSql].flag["from"] )
+                            querysSql[nQuerysSql].flag["from"] = false;
+
+                        if ( querysSql[nQuerysSql].flag["from"] )
+                            querysSql[nQuerysSql].query["from"] += querysSql[nQuerysSql].tmpQuery[i]
+                                                                                                    .replace('(','')
+                                                                                                    .replace(')','')
+                                                                                                    .replace('×',' , '); 
+                                 
                     }
 
-                    querysSql[nQuerysSql].query["select"] = newSelect;
+                    if (querysSql[nQuerysSql].query["from"] != "")
+                        querysSql[nQuerysSql].query["from"] = " FROM " + querysSql[nQuerysSql].query["from"];
+
+                    if (querysSql[nQuerysSql].query["newName"] != "" && querysSql[nQuerysSql].query["oldName"]!= "" ){
+                        var newName = querysSql[nQuerysSql].query["newName"].replace(' ','').split(",");
+                        var oldName = querysSql[nQuerysSql].query["oldName"].replace(' ','').split(",");
+
+                        var newSelect = "";
+                        for (var j=0; j<newName.length;j++){
+                            newSelect += newName[j] + " AS " + oldName[j];
+                            if (j<newName.length-1)
+                                newSelect += ", "; 
+                        }
+
+                        querysSql[nQuerysSql].query["select"] = newSelect;
+                    }
+
+                    if (querysSql[nQuerysSql].query["select"] == "" && querysSql[nQuerysSql].query["from"] != "")
+                        querysSql[nQuerysSql].query["select"] = " SELECT * ";
+
+                    if (querysSql[nQuerysSql].query["select"] != "" && querysSql[nQuerysSql].query["select"] != " SELECT * ")
+                        querysSql[nQuerysSql].query["select"] = " SELECT " + querysSql[nQuerysSql].query["select"];
+
+                    if (querysSql[nQuerysSql].query["where"] != "")
+                        querysSql[nQuerysSql].query["where"] = " WHERE " + querysSql[nQuerysSql].query["where"];
+
+
+                    for(var i=0; i<$scope.query.length; i++){
+                        //To fix, not work
+
+                        //Union ∪
+                        if ( $scope.query[i] == '∪' ){
+                            querysSql[nQuerysSql].linker = " UNION ";
+                        }
+
+                        //Intersect ∩
+                        if ( $scope.query[i] == '∩' ){
+                            querysSql[nQuerysSql].linker = " INTERSECT ";
+                        }
+
+                        //Not in -
+                        if ( $scope.query[i] == '-' ){
+                            querysSql[nQuerysSql].linker = " NOT IN ";
+                        }
+                    }
+
+                    querysSql[nQuerysSql].completeQuery =   querysSql[nQuerysSql].query["select"] + 
+                                                            querysSql[nQuerysSql].query["from"] +
+                                                            querysSql[nQuerysSql].query["where"] +
+                                                            querysSql[nQuerysSql].linker;
+
+                    console.log(nQuerysSql);
+                    console.log(querysSql);
+
                 }
-
-                if (querysSql[nQuerysSql].query["select"] == "" && querysSql[nQuerysSql].query["from"] != "")
-                    querysSql[nQuerysSql].query["select"] = " SELECT * ";
-
-                if (querysSql[nQuerysSql].query["select"] != "" && querysSql[nQuerysSql].query["select"] != " SELECT * ")
-                    querysSql[nQuerysSql].query["select"] = " SELECT " + querysSql[nQuerysSql].query["select"];
-
-                if (querysSql[nQuerysSql].query["where"] != "")
-                    querysSql[nQuerysSql].query["where"] = " WHERE " + querysSql[nQuerysSql].query["where"];
-
-                querysSql[nQuerysSql].completeQuery =   querysSql[nQuerysSql].query["select"] + 
-                                                        querysSql[nQuerysSql].query["from"] +
-                                                        querysSql[nQuerysSql].query["where"];
 
                 var lastQuery="";
-                for (var i=0; i<=nQuerysSql; i++){
+                for (var i=0; i<=queryCounter; i++){
                     lastQuery+=querysSql[i].completeQuery;   
                 }
 
@@ -437,8 +480,6 @@
                 if (i<$scope.nTables-1)
                     queryToAPI += " | ";
             }
-
-            console.log(queryToAPI);
 
             //Call the API
             $http.get("API/APIadmin.php?query=" + queryToAPI + "&nameDB=" + $scope.nameDatabase)
