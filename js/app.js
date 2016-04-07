@@ -124,7 +124,7 @@
 
         /* Tkd-Alex ALG --> SQL */
         $scope.querySQL = "";                                                           //SQL Query (Final).
-        var type = new Array("select","where","from","newName","oldName");              //Type of query.
+        var type = new Array("select","where","from","newName","oldName","joinOn");     //Type of query.
 
         //Struct of querySQL
         $scope.structQuerySQL = {
@@ -251,14 +251,44 @@
                                                                                                     .replace(')','')
                                                                                                     .replace('×',' , ')
                                                                                                     .replace('⋈',' JOIN '); 
+
+                        
+                        //JOIN ⋈  
+                        if ( (  queryArray[indexQuery].tmpQuery[i] == '(' || 
+                                queryArray[indexQuery].tmpQuery[i] == 'σ' || 
+                                queryArray[indexQuery].tmpQuery[i] == 'π' 
+                            )   && queryArray[indexQuery].flag["joinOn"] ){
+
+                            queryArray[indexQuery].flag["joinOn"] = false;
+                            queryArray[indexQuery].flag["from"] = true;
+                        }
+
+                        if ( queryArray[indexQuery].tmpQuery[i] == '⋈'){
+                            queryArray[indexQuery].flag["joinOn"] = true;
+                            queryArray[indexQuery].flag["from"] = false; 
+                        }
+
+                        if (queryArray[indexQuery].flag["joinOn"])
+                            queryArray[indexQuery].query["joinOn"] += queryArray[indexQuery].tmpQuery[i].replace('⋈','');
                                  
                     }
 
                     //Rules for query.
 
                     //From ( ).
-                    if (queryArray[indexQuery].query["from"] != "")
+                    if (queryArray[indexQuery].query["from"] != ""){
                         queryArray[indexQuery].query["from"] = " FROM " + queryArray[indexQuery].query["from"];
+
+                        //JOIN ON ⋈
+                        if (queryArray[indexQuery].query["joinOn"] != ""){
+                            if (queryArray[indexQuery].query["joinOn"].indexOf("=") >= 0)
+                                queryArray[indexQuery].query["from"] += " ON " + queryArray[indexQuery].query["joinOn"];
+                            else
+                                queryArray[indexQuery].query["from"] += queryArray[indexQuery].query["joinOn"];
+                            
+                        } 
+
+                    }
 
                     //Rename ρ ←.
                     if (queryArray[indexQuery].query["newName"] != "" && queryArray[indexQuery].query["oldName"]!= "" ){
@@ -357,13 +387,17 @@
         $scope.tables = new Array();            
 
         $scope.inizializeTable = function() {
-            $scope.tables[$scope.nTables-1] = angular.copy($scope.table);
-            $scope.inizializeNewRow($scope.nTables-1);
+            for (var i=0; i<$scope.nTables; i++){
+                $scope.tables[i] = angular.copy($scope.table);
+                $scope.inizializeNewRow(i);
+            }
         }
 
         $scope.inizializeNewRow = function(table) {
-            if ($scope.tables[table].matrix[$scope.tables[table].rows-1] == null)
-                $scope.tables[table].matrix[$scope.tables[table].rows-1] = new Array();   
+            for (var i=0; i<$scope.tables[table].rows; i++ ){
+                if ($scope.tables[table].matrix[i] == null)
+                    $scope.tables[table].matrix[i] = new Array();   
+            }
         }
 
         //Function for ng-repeat.
