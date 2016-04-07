@@ -45,28 +45,28 @@
         <h3 class="modal-title">Impostazioni Tabella</h3>
     </div>
     <div class="modal-body">
-        
-            <div class="row" ng-repeat="i in numColum track by $index" ng-init="indexColum = $index">
-                <div ng-show="modalTables[indexTable].attr[indexColum]!=NULL">
-                    <div class="col-xs-8">
 
-                            {{ modalTables[indexTable].attr[indexColum] }} 
+        <div class="row">
+            <div ng-repeat="i in numColum track by $index" ng-init="indexColum = $index">
+                <div class="col-xs-6" ng-show="modalTables[indexTable].attr[indexColum]!=NULL">
 
-                            <br>
-                            AutoLoad
-                            <select ng-model="selectedAL" ng-change="autoLoader(indexColum, selectedAL)" ng-show = "! modalTables[indexTable].fk_attr[indexColum]">
-                                <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
-                                    {{ autoLoad }}
-                                </option>
-                            </select>
-                            
-                            <div class="checkbox">
-                                <label><input type="checkbox" value="" ng-model="modalTables[indexTable].fk_attr[indexColum]">FK</label>
-                            </div>
+                    {{ modalTables[indexTable].attr[indexColum] }} 
 
+                    <br>
+                    AutoLoad
+                    <select ng-model="selectedAL" ng-change="autoLoader(indexColum, selectedAL)" ng-show = "! modalTables[indexTable].fk_attr[indexColum]">
+                        <option id="select_autoLaod" ng-repeat="autoLoad in autoLoads track by $index" ng-init="indexAutoLoad = $index" value="{{ indexAutoLoad }}">
+                            {{ autoLoad }}
+                        </option>
+                    </select>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="" ng-model="modalTables[indexTable].fk_attr[indexColum]">FK</label>
                     </div>
+
                 </div>
             </div>
+        </div>
 
     </div>
     <div class="modal-footer">
@@ -161,7 +161,7 @@
 
             <div class="row text-center">
                 <button class="btn btn-success btn-lg"  ng-disabled="sameAttrName() || sameTableName() || emptyField()" type="submit">Aggiungi un nuovo database</button>
-                
+
                 <div class="col-xs-8 col-xs-offset-2">
                     <br>
                     <div class="alert alert-danger" ng-show="emptyField()">
