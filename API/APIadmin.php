@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
+
 session_start();
 include "config.php";
 
@@ -45,35 +50,65 @@ try {
                 $json = '{ "Error": "Non è stata eseguita una query SELECT!" }';
 
             } else {
-                /* TO DO: confronto tra il risultatotra la query soluzione e la query $sql */
+                /* incomplete */
 
                 /* Query Utente */
-                $stmt = $db->query($sql);
-
+                $stmt = $db->query("SELECT id_conto FROM banca_contocorrente WHERE saldo  = (SELECT MAX(saldo) FROM banca_contocorrente)");
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo count($data);
 
                 /* Query souzione */
                 $stmt = $db->query("SELECT id_conto FROM banca_contocorrente CC WHERE NOT EXISTS (SELECT * FROM banca_contocorrente CC1 WHERE CC1.saldo > CC.saldo)");
-
                 $data2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                echo " " . count($data2);
 
-                // COUNT : righe
-
-                /*
-                foreach($data as $mydata) {
-                    var_dump($mydata);
-                    foreach($mydata as $d) {
-                        echo "<br>";
-                        var_dump($d);
-                    }
-                    echo "<br><br>";
+                if (count($data) != count($data2)) {
+                    $json = '{ "Error": "Non è stato selezionato lo stesso numero di righe!" }';
                 }
-                */
+                else if (count($data[0]) != count($data2[0])) {
+                    $json = '{ "Error": "Non sono stati selezionati gli stessi campi e/o numero di colonne!" }';
+                } else {
 
-                return;
-                $json = json_encode($data);
+                    /* Extract keys associative */
+                    $keys = array();
+
+                    $i = 0;
+                    foreach ($data[0] as $key => $value) {
+                        $keys[$i] = $key;
+                        $i++;
+                    }
+
+                    /* Comapre the two tables results */
+                    $rowCompare = array();
+                    $rowCompare = array_fill(0, count($data), false);
+
+                    $fieldCompare = array();
+
+                    for ($i = 0; $i < count($data); $i++) {
+                        for ($k = 0; $k < count($data2); $k++) {
+
+                            $fieldCompare = array_fill(0, count($keys), false);
+
+                            for ($j = 0; $j < count($keys); $j++) {
+
+                                if ($data[$i][$keys[$j]] == $data2[$k][$keys[$j]]) {
+                                    $fieldCompare[$j] = true;
+                                } else {
+                                    $fieldCompare[$j] = false;
+                                    break;
+                                }
+                            }
+
+                            if (!(in_array(false, $fieldCompare))) {
+                                $rowCompare[$i] = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!(in_array(false, $rowCompare)))
+                        $json = '{ "Success": "Esercizio svolto con successo!" }';
+                    else
+                        $json = '{ "Error": "Query sbagliata! Visualizza la soluzione o il risultato che dovresti ottenere" }';
+                }
             }
         }
 
@@ -99,8 +134,8 @@ try {
             $arr = array();
 
             foreach ($stmt as $dbs) {
-            if ( strpos($dbs[0], "_") && !in_array(substr($dbs[0], 0, strpos($dbs[0], "_")), $arr) )
-                array_push($arr, substr($dbs[0], 0, strpos($dbs[0], "_")));
+                if ( strpos($dbs[0], "_") && !in_array(substr($dbs[0], 0, strpos($dbs[0], "_")), $arr) )
+                    array_push($arr, substr($dbs[0], 0, strpos($dbs[0], "_")));
             }
 
             $json = json_encode($arr);
@@ -109,13 +144,13 @@ try {
         //Execute query CREATE, ALTER, INSERT.
         if (isset($_GET['query']) && $_GET['query'] != "" && 
             isset($_GET['nameDB']) && $_GET['nameDB'] != ""
-            ){
-            
+           ){
+
             $stmt = $db->query('SHOW TABLES FROM des WHERE Tables_in_des LIKE "' . $_GET['nameDB'] . '_%"');
             if ( $stmt->fetchColumn() == ""){
 
                 $query = explode('|', $_GET['query']);
-            
+
                 foreach($query as $q){
                     $sql = strtolower($q);
                     $stmt = $db->query($sql);
