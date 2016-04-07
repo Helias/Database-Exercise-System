@@ -1,22 +1,16 @@
-.tables {
-  font-size: 15px;
-}
+.nav { margin-top: 10px; }
 
-.pagination {
-    margin: 0px 0px 0px 0px;
-}
+.numEx { margin-top: 0px; }
 
-.ex_text {
-    border-left: 1px solid #ededed;
-}
+.tables { font-size: 15px; }
 
-.tables_text {
-    border-right: 1px solid #ededed;
-}
+.pagination { margin: 0px 0px 0px 0px; }
+
+.ex_text { border-left: 1px solid #ededed; }
+.tables_text { border-right: 1px solid #ededed; }
 
 .db_title {
-    line-height: 1.5;
-    margin: 0px 0px;
-    font-size:;
+    font-size: 25px;
 }
 
+.sql-code .hljs-keyword { color: #c7254e; }

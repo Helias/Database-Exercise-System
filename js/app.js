@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var app = angular.module('exerciseSystem', ['ui.router', 'ui.bootstrap', 'chieffancypants.loadingBar', 'ngAnimate']);
+    var app = angular.module('exerciseSystem', ['ui.router', 'ui.bootstrap', 'chieffancypants.loadingBar', 'ngAnimate', 'hljs']);
 
     app.controller('argumentsCrtl', function($scope, $http, $stateParams) {
 
@@ -38,7 +38,7 @@
 
             $scope.exs = [];
             for (var i = 0; i < $scope.exercises.length; i++) {
-                $scope.exs.push({ text: $scope.exercises[i].testo, done:false, id: i+1, db_connesso: $scope.exercises[i].db_connesso});
+                $scope.exs.push({ text: $scope.exercises[i].testo, done:false, id: i+1, db_connesso: $scope.exercises[i].db_connesso, soluzione: $scope.exercises[i].soluzione});
             }
 
             $scope.$watch('currentPage + numPerPage', function() {
@@ -59,6 +59,17 @@
                         .error(function (data, status, header, config) {
                         console.log("[ERROR] $http.get request failed!");
                     });
+
+                    $http.get( "API/API.php?getSoluzione=" + $scope.filteredEx[0].soluzione)
+                        .success(function (data, status, header, config) {
+
+                        $scope.querySoluz = data;
+
+                    })
+                        .error(function (data, status, header, config) {
+                        console.log("[ERROR] $http.get request failed!");
+                    });
+
                 }
 
             });
@@ -74,9 +85,44 @@
 
             if ($scope.type == "ALG")
                 increaseQuery(op);   
-            
+
         };
 
+        $scope.soluzCollapsed = true;
+        $scope.sentQuery = false;
+
+        $scope.sendQuery = function() {
+            $http.get( "API/API.php?sql=" + $scope.query + "&soluz=" + $scope.filteredEx[0].soluzione)
+                .success(function (data, status, header, config) {
+
+                $scope.queryUser = data;
+                console.log(data);
+                if (data) {
+                    if ($scope.queryUser[1].Success != null)
+                        $scope.addAlert("success", $scope.queryUser[1].Success);
+                    else
+                        $scope.addAlert("danger", $scope.queryUser[1].Error);
+                }
+            })
+                .error(function (data, status, header, config) {
+                console.log("[ERROR] $http.get request failed!");
+            });
+
+            $scope.sentQuery = true;
+        };
+
+        $scope.alerts = [];
+
+        $scope.addAlert = function(type, msg) {
+            $scope.alerts.push({type: type, msg: msg});
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+
+
+        /* Tkd-Alex ALG --> SQL */
         $scope.querySQL = "";                                                           //SQL Query (Final).
         var type = new Array("select","where","from","newName","oldName");              //Type of query.
 
@@ -120,7 +166,7 @@
                 checkIsUndefine(queryCounter);      
             }
         }
-                       
+        
         //Convert query method ALG -> SQL.
         $scope.convertQuery = function () {
             if ($scope.type == "ALG" && $scope.query.length > 0 ){
@@ -154,7 +200,6 @@
                             queryArray[indexQuery].query["select"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('π','')
                                                                                                     .replace('(',''); 
-
                         //NewName ρ.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'ρ' ){
                             queryArray[indexQuery].flag["newName"] = true;
@@ -180,7 +225,6 @@
                             queryArray[indexQuery].query["oldName"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('←','')
                                                                                                     .replace('(',''); 
-
                         //Where σ.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'σ' ){
                             queryArray[indexQuery].flag["where"] = true;
@@ -193,8 +237,7 @@
                         if ( queryArray[indexQuery].flag["where"] )   
                             queryArray[indexQuery].query["where"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('σ','')
-                                                                                                    .replace('(',''); 
-
+                                                                                                    .replace('(','');
                         //From ( ).
                         if ( queryArray[indexQuery].tmpQuery[i] == '(' )
                             queryArray[indexQuery].flag["from"] = true;
@@ -271,7 +314,6 @@
                                                             queryArray[indexQuery].query["from"] +
                                                             queryArray[indexQuery].query["where"] +
                                                             queryArray[indexQuery].linker;
-
                 }
 
                 //Join all query to write the completeQuery.
@@ -287,25 +329,12 @@
         //Replace logic operator.
         function replacerLogOP(query) {
             return query.replace('∧',' AND ')
-                        .replace('∨',' OR ')
-                        .replace('¬',' NOT ')
-                        .replace('≠','<>')
-                        .replace('≥','>=')
-                        .replace('≤','<=');
+                .replace('∨',' OR ')
+                .replace('¬',' NOT ')
+                .replace('≠','<>')
+                .replace('≥','>=')
+                .replace('≤','<=');
         };
-
-        $scope.sendQuery = function() {
-            $http.get( "API/APIadmin.php?sql=" + $scope.query)
-                .success(function (data, status, header, config) {
-
-                console.log(data);
-
-            })
-                .error(function (data, status, header, config) {
-                console.log("[ERROR] $http.get request failed!");
-            });
-        };
-
     });
 
     app.controller('dbManager', function($scope, $http, $uibModal, $state) {
