@@ -122,7 +122,7 @@
                     <br>
 
                     <h4>Inserisci il numero di valori (righe):</h4>
-                    <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="5" value="1">
+                    <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="10" value="1" ng-change="inizializeNewRow(indexTable)">
                 </div>
 
                 <div class="col-xs-8">

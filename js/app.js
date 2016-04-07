@@ -276,13 +276,7 @@
             matrix: new Array(),                //Matrix contains the value of table.
 
             fk_matrix: new Array(),             //Matrix with indexTable, columns linked by FK.
-            fk_attr: new Array(),               //fk_attr (Boolean) --> the index is the same of attr.
-
-            //Create matrix.
-            inizializeMatrix: function () {
-                for (var i = 0; i < 5; i++)
-                    this.matrix[i] = new Array();
-            }
+            fk_attr: new Array()                //fk_attr (Boolean) --> the index is the same of attr.
         };
 
         //Create and inizialize array of table.
@@ -290,7 +284,12 @@
 
         $scope.inizializeTable = function() {
             $scope.tables[$scope.nTables-1] = angular.copy($scope.table);
-            $scope.tables[$scope.nTables-1].inizializeMatrix();
+            $scope.inizializeNewRow($scope.nTables-1);
+        }
+
+        $scope.inizializeNewRow = function(table) {
+            if ($scope.tables[table].matrix[$scope.tables[table].rows-1] == null)
+                $scope.tables[table].matrix[$scope.tables[table].rows-1] = new Array();   
         }
 
         //Function for ng-repeat.
