@@ -82,7 +82,7 @@
             <input type="text" id="text_nameDatabase" class="form-control" ng-model="nameDatabase" required>
 
             <label for="text_nTables">Inserisci il numero di tabelle:</label>
-            <input type="number" id="text_nTables" class="form-control" ng-model="nTables" min="1" max="5">
+            <input type="number" id="text_nTables" class="form-control" ng-model="nTables" min="1" max="10" ng-change="inizializeTable()">
         </div>
     </div>
 
@@ -106,7 +106,7 @@
                     <br>
 
                     <h4>Inserisci il numero di attributi (colonne):</h4>
-                    <input type="number" id="text_nColumns" class="form-control" ng-model="tables[indexTable].columns" min="1" max="5" value="1">
+                    <input type="number" id="text_nColumns" class="form-control" ng-model="tables[indexTable].columns" min="1" max="10" value="1">
 
                     <br>
 
@@ -122,7 +122,7 @@
                     <br>
 
                     <h4>Inserisci il numero di valori (righe):</h4>
-                    <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="5" value="1">
+                    <input type="number" id="text_nRows" class="form-control" ng-model="tables[indexTable].rows" min="1" max="10" value="1" ng-change="inizializeNewRow(indexTable)">
                 </div>
 
                 <div class="col-xs-8">

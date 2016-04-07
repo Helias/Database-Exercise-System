@@ -118,12 +118,7 @@
         function increaseQuery (op) {
             //Union ∪
             if ( op == '∪' ){
-                querysSql[nQuerysSql].flag["union"] = true;
-                querysSql[nQuerysSql].indexOf["union"] = $scope.query.length;
-
-                querysSql[nQuerysSql].completeQuery += querysSql[nQuerysSql].query["union"] = " UNION ";
-
-                nQuerysSql++;
+                
             }
         }
                        
@@ -132,13 +127,6 @@
             if ($scope.type == "ALG"){
 
                 checkIsUndefine(nQuerysSql);
-                
-                if (nQuerysSql>0){
-                    if (querysSql[nQuerysSql-1].flag["union"]){
-                        querysSql[nQuerysSql].tmpQuery = $scope.query.substring(querysSql[nQuerysSql-1].indexOf["union"],$scope.query.length);   
-                    }
-                }else
-                    querysSql[nQuerysSql].tmpQuery = $scope.query;
 
                 for (var i=0; i<querysSql[nQuerysSql].tmpQuery.length; i++){
 
@@ -237,8 +225,7 @@
 
                 querysSql[nQuerysSql].completeQuery =   querysSql[nQuerysSql].query["select"] + 
                                                         querysSql[nQuerysSql].query["from"] +
-                                                        querysSql[nQuerysSql].query["where"] +
-                                                        querysSql[nQuerysSql].query["union"];
+                                                        querysSql[nQuerysSql].query["where"];
 
                 var lastQuery="";
                 for (var i=0; i<=nQuerysSql; i++){
@@ -246,7 +233,6 @@
                 }
 
                 $scope.querySQL = lastQuery;
-                   
                 $scope.querySQL = replacerLogOP( $scope.querySQL );
             }
         }
@@ -290,21 +276,20 @@
             matrix: new Array(),                //Matrix contains the value of table.
 
             fk_matrix: new Array(),             //Matrix with indexTable, columns linked by FK.
-            fk_attr: new Array(),               //fk_attr (Boolean) --> the index is the same of attr.
-
-            //Create matrix.
-            inizializeMatrix: function () {
-                for (var i = 0; i < 5; i++)
-                    this.matrix[i] = new Array();
-            }
+            fk_attr: new Array()                //fk_attr (Boolean) --> the index is the same of attr.
         };
 
         //Create and inizialize array of table.
         $scope.tables = new Array();            
 
-        for (var i = 0; i < 5; i++) {
-            $scope.tables[i] = angular.copy($scope.table);
-            $scope.tables[i].inizializeMatrix();
+        $scope.inizializeTable = function() {
+            $scope.tables[$scope.nTables-1] = angular.copy($scope.table);
+            $scope.inizializeNewRow($scope.nTables-1);
+        }
+
+        $scope.inizializeNewRow = function(table) {
+            if ($scope.tables[table].matrix[$scope.tables[table].rows-1] == null)
+                $scope.tables[table].matrix[$scope.tables[table].rows-1] = new Array();   
         }
 
         //Function for ng-repeat.
@@ -453,6 +438,7 @@
                     queryToAPI += " | ";
             }
 
+            console.log(queryToAPI);
 
             //Call the API
             $http.get("API/APIadmin.php?query=" + queryToAPI + "&nameDB=" + $scope.nameDatabase)
