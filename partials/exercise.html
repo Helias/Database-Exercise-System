@@ -15,7 +15,7 @@
                     </a>
                 </li>
                 <li ng-repeat="page in pages track by $index" ng-class="{active: page.active}">
-                    <a href ng-click="selectPage(page.number)" uib-popover="{{ page.text }}" popover-trigger="mouseenter">{{  page.text }}</a>
+                    <a href ng-click="selectPage(page.number)">{{  page.text }}</a>
                 </li>
                 <li ng-if="directionLinks" ng-class="{disabled: noNext()}">
                     <a href ng-click="selectPage(page + 1)" title="Next Page">
@@ -30,7 +30,7 @@
             </ul>
         </script>
 
-        <h4>Ci sono {{ exercises.length }} esercizi di questo argomento</h4>
+        <h5 class="numEx">Ci sono {{ exercises.length }} esercizi di questo argomento</h5>
         <uib-pagination
                         ng-model="currentPage"
                         ng-show="exercises.length != 0"
@@ -46,20 +46,17 @@
 <div class="row" ng-show="exercises.length != 0">
     <div class="col-xs-12">
 
-        <div ng-repeat="ex in filteredEx track by $index">
-
-            <h3 class="text-center">Esercizio {{ ex.id }}</h3>
-
-            <div class="row">
-                <div class="col-xs-8 tables_text">
-                    <h4 class="text-center db_title">db: {{ db }}</h4>
-                    <b ng-repeat="table in tables" class="tables">{{ table }} <br></b>
-                </div>
-                <div class="col-xs-4 ex_text">
-                    <h4>{{ ex.text }}</h4>
-                </div>
+        <div class="row">
+            <div class="col-xs-8 tables_text">
+                <h4 class=" db_title">db: {{ db }}</h4>
+                <hr>
+                <b ng-repeat="table in tables" class="tables">{{ table }} <br></b>
             </div>
-
+            <div class="col-xs-4 ex_text">
+                <br><br>
+                <hr>
+                <h4>{{ filteredEx[0].text }}</h4>
+            </div>
         </div>
 
         <br>
@@ -93,8 +90,8 @@
                     <button class="btn btn-success btn-sm" ng-click="addOp('≠')" popover-title="Diverso" uib-popover="a ≠ b" popover-trigger="mouseenter">≠</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('≥')" popover-title="Maggiore o uguale" uib-popover="a ≥ b" popover-trigger="mouseenter">≥</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('≤')" popover-title="Minore o uguale" uib-popover="a ≤ b" popover-trigger="mouseenter">≤</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('>')" popover-title="Maggiore" uib-popover="a > b" popover-trigger="mouseenter">></button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('<')" popover-title="Minore" uib-popover="a < b" popover-trigger="mouseenter"><</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('>')" popover-title="Maggiore" uib-popover="a > b" popover-trigger="mouseenter">&gt;</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('<')" popover-title="Minore" uib-popover="a < b" popover-trigger="mouseenter">&lt;</button>
                 </div>
             </div>
         </div>
@@ -111,6 +108,43 @@
                 <br>
 
                 <button class="btn btn-primary" ng-click="sendQuery()">Invia</button>
+
+                <br><br>
+
+                <uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="closeAlert($index)">{{ alert.msg }}</uib-alert>
+
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <td ng-repeat="(key, value) in queryUser[0].results[0]">{{ key }}&nbsp;</td>
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="row in queryUser[0].results">
+                        <td ng-repeat="value in row"> {{ value }}</td>
+                    </tr>
+                </table>
+
+                <div ng-show="sentQuery">
+                    <br>
+                    <button type="button" class="btn btn-default btn-success" ng-click="soluzCollapsed = !soluzCollapsed">Mostra soluzione</button>
+                    <hr>
+                    <div uib-collapse="soluzCollapsed">
+                        <div class="text-left sql-code" hljs language="sql" contentEditable="false" source="querySoluz[0].query"></div>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <td ng-repeat="(key, value) in querySoluz[1].results[0]">{{ key }}&nbsp;</td>
+                                </tr>
+                            </thead>
+                            <tr ng-repeat="row in querySoluz[1].results">
+                                <td ng-repeat="value in row"> {{ value }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <br><br><br><br><br>
+                </div>
+
             </div>
         </div>
 

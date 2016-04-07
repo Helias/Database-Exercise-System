@@ -55,6 +55,112 @@ else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
     $json = json_encode($tables);
 }
 
+// Get solution
+if (isset($_GET['getSoluzione']) && $_GET['getSoluzione'] != "") {
+    $stmt = $db->query("SELECT soluzione FROM soluzioni WHERE id = " . $_GET['getSoluzione']);
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $soluzione = $data[0]['soluzione'];
+
+    $stmt = $db->query($soluzione);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo '[{ "query": "' . $soluzione . '" }, { "results" : ' . json_encode($result) . '}]';
+
+}
+
+//Blacklist word
+if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET['soluz'] != "") {
+    $sql = strtolower($_GET['sql']);
+
+    if (strpos($sql, "select") == -1)
+        $json = '{ "Error": "Non è stata eseguita una query SELECT!" }';
+    else {
+        if (   strpos($sql, "delete") > -1
+            || strpos($sql, "insert") > -1
+            || strpos($sql, "create") > -1
+            || strpos($sql, "drop") > -1
+            || strpos($sql, "replication") > -1
+            || strpos($sql, "replace") > -1
+            || strpos($sql, "grant") > -1
+            || strpos($sql, "show") > -1
+            || strpos($sql, "trigger") > -1
+            || strpos($sql, "from utenti") > -1
+            || strpos($sql, "from argomenti") > -1
+            || strpos($sql, "from domandeALG") > -1
+            || strpos($sql, "from domandeSQL") > -1
+            || strpos($sql, "from soluzioni") > -1) {
+
+            $json = '{ "Error": "Non è stata eseguita una query SELECT!" }';
+
+        } else {
+            /* Query Utente */
+            $stmt = $db->query($_GET['sql']);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $json = '[{"results" : ' . json_encode($data) . "}, ";
+
+            /* Query souzione */
+            $stmt = $db->query("SELECT soluzione FROM soluzioni WHERE id = " . $_GET['soluz']);
+            $solution = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['soluzione'];
+
+            $stmt = $db->query($solution);
+            $data2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($data) != count($data2)) {
+                $json .= '{ "Error": "Query sbagliata! Non è stato selezionato lo stesso numero di righe!" }';
+            }
+            else if (count($data[0]) != count($data2[0])) {
+                $json .= '{ "Error": "Query sbagliata! Non sono stati selezionati gli stessi campi e/o numero di colonne!" }';
+            } else {
+
+                /* Extract keys associative */
+                $keys = array();
+
+                $i = 0;
+                foreach ($data[0] as $key => $value) {
+                    $keys[$i] = $key;
+                    $i++;
+                }
+
+                /* Comapre the two tables results */
+                $rowCompare = array();
+                $rowCompare = array_fill(0, count($data), false);
+
+                $fieldCompare = array();
+
+                for ($i = 0; $i < count($data); $i++) {
+                    for ($k = 0; $k < count($data2); $k++) {
+
+                        $fieldCompare = array_fill(0, count($keys), false);
+
+                        for ($j = 0; $j < count($keys); $j++) {
+
+                            if ($data[$i][$keys[$j]] == $data2[$k][$keys[$j]]) {
+                                $fieldCompare[$j] = true;
+                            } else {
+                                $fieldCompare[$j] = false;
+                                break;
+                            }
+                        }
+
+                        if (!(in_array(false, $fieldCompare))) {
+                            $rowCompare[$i] = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!(in_array(false, $rowCompare)))
+                    $json .= '{ "Success": "Esercizio svolto con successo!" }';
+                else
+                    $json .= '{ "Error": "Query sbagliata! Visualizza la soluzione o il risultato che dovresti ottenere" }';
+            }
+        }
+    }
+    $json .= "]";
+}
+
 header('Content-Type: application/json');
 echo $json;
 ?>
