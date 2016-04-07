@@ -206,7 +206,8 @@
                             queryArray[indexQuery].query["from"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('(','')
                                                                                                     .replace(')','')
-                                                                                                    .replace('×',' , '); 
+                                                                                                    .replace('×',' , ')
+                                                                                                    .replace('⋈',' JOIN '); 
                                  
                     }
 
