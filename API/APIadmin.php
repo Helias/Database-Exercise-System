@@ -51,7 +51,7 @@ try {
         }
 
         //Execute query CREATE, ALTER, INSERT.
-        if (isset($_GET['query']) && $_GET['query'] != "" && 
+        if (isset($_GET['query']) && $_GET['query'] != "" &&
             isset($_GET['nameDB']) && $_GET['nameDB'] != ""
            ){
 

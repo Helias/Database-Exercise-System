@@ -78,14 +78,14 @@
             console.log("[ERROR] $http.get request failed!");
         });
 
-        $scope.query = "";         
+        $scope.query = "";
         $scope.querySQL = "";      //SQL Query (Final).
-        
+
         $scope.addOp = function(op) {
             $scope.query += op;
 
             if ($scope.type == "ALG")
-                increaseQuery(op);   
+                increaseQuery(op);
 
         };
 
@@ -119,7 +119,7 @@
                 $scope.sentQuery = true;
             }else
                 $scope.addAlert("danger", "Assicurati di aver chiuso tutte le parentesi.");
-            
+
         };
 
         $scope.alerts = [];
@@ -136,7 +136,7 @@
 
         //Struct of querySQL
         $scope.structQuerySQL = {
-            
+
             flag : new Array(),                             //Flag for type.
             query : new Array(),                            //Query/string for type.
             indexOf : new Array(),                          //Last index of char (?).
@@ -156,7 +156,7 @@
             }
         };
 
-        var queryArray = new Array();                        //Array contains splittedQuery.                               
+        var queryArray = new Array();                        //Array contains splittedQuery.
         var queryCounter = 0;                                //Number of splittedQuery.
 
         //If the index location in null||undefined -> inizialize.
@@ -170,22 +170,22 @@
         //Increase the number of splitter query.
         function increaseQuery (op) {
             if ( op == '∪' || op == '∩' || op == '-' || op == '÷'){
-                queryCounter++;  
-                checkIsUndefine(queryCounter);      
+                queryCounter++;
+                checkIsUndefine(queryCounter);
             }
         }
-        
+
         //Convert query method ALG -> SQL.
         $scope.convertQuery = function () {
             if ($scope.type == "ALG" && $scope.query.length > 0 ){
 
                 //Replace the ∪ ∩ - char with | and splitted by he.
-                var querySplitted = $scope.query.replace('∪','|')       
+                var querySplitted = $scope.query.replace('∪','|')
                                                 .replace('∩','|')
                                                 .replace('-','|')
                                                 .replace('÷','|')
                                                 .split('|');
-                
+
                 //Inizialize all query
                 for (var i=0; i<=queryCounter; i++) {
                     checkIsUndefine(i);
@@ -200,50 +200,50 @@
 
                         //Select π.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'π' )
-                            queryArray[indexQuery].flag["select"] = true; 
-                        
+                            queryArray[indexQuery].flag["select"] = true;
+
                         if ( queryArray[indexQuery].tmpQuery[i] == '(' && queryArray[indexQuery].flag["select"] )
                             queryArray[indexQuery].flag["select"] = false;
 
                         if ( queryArray[indexQuery].flag["select"] )
                             queryArray[indexQuery].query["select"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('π','')
-                                                                                                    .replace('(',''); 
+                                                                                                    .replace('(','');
                         //NewName ρ.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'ρ' ){
                             queryArray[indexQuery].flag["newName"] = true;
-                            queryArray[indexQuery].flag["from"] = false; 
+                            queryArray[indexQuery].flag["from"] = false;
                         }
-                        
+
                         if ( queryArray[indexQuery].tmpQuery[i] == '←' && queryArray[indexQuery].flag["newName"] )
                             queryArray[indexQuery].flag["newName"] = false;
 
                         if ( queryArray[indexQuery].flag["newName"] )
                             queryArray[indexQuery].query["newName"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('ρ','')
-                                                                                                    .replace('←',''); 
+                                                                                                    .replace('←','');
 
                         //OldName ←
                         if ( queryArray[indexQuery].tmpQuery[i] == '←' )
-                            queryArray[indexQuery].flag["oldName"] = true; 
-                        
+                            queryArray[indexQuery].flag["oldName"] = true;
+
                         if ( queryArray[indexQuery].tmpQuery[i] == '(' && queryArray[indexQuery].flag["oldName"] )
                             queryArray[indexQuery].flag["oldName"] = false;
 
                         if ( queryArray[indexQuery].flag["oldName"] )
                             queryArray[indexQuery].query["oldName"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('←','')
-                                                                                                    .replace('(',''); 
+                                                                                                    .replace('(','');
                         //Where σ.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'σ' ){
                             queryArray[indexQuery].flag["where"] = true;
-                            queryArray[indexQuery].flag["from"] = false; 
+                            queryArray[indexQuery].flag["from"] = false;
                         }
-                        
+
                         if ( queryArray[indexQuery].tmpQuery[i] == '(' && queryArray[indexQuery].flag["where"] )
                             queryArray[indexQuery].flag["where"] = false;
 
-                        if ( queryArray[indexQuery].flag["where"] )   
+                        if ( queryArray[indexQuery].flag["where"] )
                             queryArray[indexQuery].query["where"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('σ','')
                                                                                                     .replace('(','');
@@ -258,15 +258,15 @@
                             queryArray[indexQuery].query["from"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('(','')
                                                                                                     .replace(')','')
-                                                                                                    .replace('×',' , ') 
+                                                                                                    .replace('×',' , ')
                                                                                                     .replace('⋈','');
 
-                        
-                        //JOIN ⋈  
+
+                        //JOIN ⋈
                         if ( (  queryArray[indexQuery].tmpQuery[i] == ' ' ||
-                                queryArray[indexQuery].tmpQuery[i] == '(' || 
-                                queryArray[indexQuery].tmpQuery[i] == 'σ' || 
-                                queryArray[indexQuery].tmpQuery[i] == 'π' 
+                                queryArray[indexQuery].tmpQuery[i] == '(' ||
+                                queryArray[indexQuery].tmpQuery[i] == 'σ' ||
+                                queryArray[indexQuery].tmpQuery[i] == 'π'
                             )   && queryArray[indexQuery].flag["joinOn"] ){
 
                             queryArray[indexQuery].flag["joinOn"] = false;
@@ -281,11 +281,11 @@
 
                         if ( queryArray[indexQuery].tmpQuery[i] == '⋈'){
                             queryArray[indexQuery].flag["joinOn"] = true;
-                            queryArray[indexQuery].flag["from"] = false; 
+                            queryArray[indexQuery].flag["from"] = false;
                         }
 
-                        
-                                 
+
+
                     }
 
                     //Rules for query.
@@ -309,8 +309,8 @@
 
                                 queryArray[indexQuery].query["from"] += queryArray[indexQuery].query["joinOn"];
                             }
-                            
-                        } 
+
+                        }
 
                     }
 
@@ -323,7 +323,7 @@
                         for (var j=0; j<newName.length;j++){
                             newSelect += newName[j] + " AS " + oldName[j];
                             if (j<newName.length-1)
-                                newSelect += ", "; 
+                                newSelect += ", ";
                         }
 
                         queryArray[indexQuery].query["select"] = newSelect;
@@ -343,7 +343,7 @@
                     //Check 'linker' char.
                     var tmpCounter = 0;
                     for(var i=0; i<$scope.query.length; i++){
-                            
+
                             //Union ∪.
                             if ( $scope.query[i] == '∪' ){
                                 queryArray[tmpCounter].linker = " UNION ";
@@ -370,7 +370,7 @@
                     }
 
                     //Join all splitted query to write the completeQuery.
-                    queryArray[indexQuery].completeQuery =  queryArray[indexQuery].query["select"] + 
+                    queryArray[indexQuery].completeQuery =  queryArray[indexQuery].query["select"] +
                                                             queryArray[indexQuery].query["from"] +
                                                             queryArray[indexQuery].query["where"] +
                                                             queryArray[indexQuery].linker;
@@ -379,7 +379,7 @@
                 //Join all query to write the completeQuery.
                 $scope.querySQL ="";
                 for (var i=0; i<=queryCounter; i++)
-                    $scope.querySQL+=queryArray[i].completeQuery;   
+                    $scope.querySQL+=queryArray[i].completeQuery;
 
                 //Replace the logic operator.
                 $scope.querySQL = replacerLogOP( $scope.querySQL ).toLowerCase();
@@ -432,7 +432,7 @@
         };
 
         //Create and inizialize array of table.
-        $scope.tables = new Array();            
+        $scope.tables = new Array();
 
         $scope.inizializeTable = function() {
             for (var i=0; i<$scope.nTables; i++){
@@ -444,7 +444,7 @@
         $scope.inizializeNewRow = function(table) {
             for (var i=0; i<$scope.tables[table].rows; i++ ){
                 if ($scope.tables[table].matrix[i] == null)
-                    $scope.tables[table].matrix[i] = new Array();   
+                    $scope.tables[table].matrix[i] = new Array();
             }
         }
 
@@ -484,7 +484,7 @@
                     for (var j = 0; j < $scope.tables[k].columns; j++) {
                         if ($scope.tables[k].matrix[i][j] == '' || $scope.tables[k].matrix[i][j] == null)
                             return true;
-                    }    
+                    }
                 }
             }
             return false;
@@ -543,9 +543,9 @@
                         queryResult[counter] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
                             " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
 
-                        queryResult[counter] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name + 
+                        queryResult[counter] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name +
                             " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
-                            " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name + 
+                            " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
                             "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
                         counter++;
                     }
@@ -568,9 +568,9 @@
             queryInsert = $scope.writeQueryInsert();
 
             //Order the array with INSERT QUERY.
-            for (var i=0; i<$scope.nTables; i++) {                      
-                for (var j=0; j<$scope.tables[i].columns; j++){         
-                    if ( $scope.tables[i].fk_attr[j] ){ 
+            for (var i=0; i<$scope.nTables; i++) {
+                for (var j=0; j<$scope.tables[i].columns; j++){
+                    if ( $scope.tables[i].fk_attr[j] ){
                         if (i < $scope.tables[i].fk_matrix[j][0]){
                             var tmp = queryInsert[i];
                             queryInsert[i] = queryInsert[$scope.tables[i].fk_matrix[j][0]];
@@ -784,7 +784,7 @@
 
         $http.get("API/APIadmin.php?database")
             .success(function (data, status, header, config) {
-            if (data.length > 0) 
+            if (data.length > 0)
                 $scope.databases = data;
         })
             .error(function (data, status, header, config) {

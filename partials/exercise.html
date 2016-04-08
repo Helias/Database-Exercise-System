@@ -80,7 +80,7 @@
                     <button class="btn btn-success btn-sm" ng-click="addOp('÷')" popover-title="Divisione" uib-popover="A ÷ B" popover-trigger="mouseenter">÷</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('×')" popover-title="Prodotto cartesiano" uib-popover="A × B"  popover-trigger="mouseenter">×</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('⋈')" popover-title="Join" uib-popover="A ⋈ B" popover-trigger="mouseenter">⋈</button>
-                    <button class="btn btn-success btn-sm" ng-click="addOp('σ')" popover-title="Selezione" uib-popover="σ a > x (A)" popover-trigger="mouseenter">σ</button>
+                    <button class="btn btn-success btn-sm" ng-click="addOp('σ')" popover-title="Selezione" uib-popover="σ a = 'x' (A)" popover-trigger="mouseenter">σ</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('π')" popover-title="Proiezione" uib-popover="π a,b (A)" popover-trigger="mouseenter">π</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('ρ ←')" popover-title="Ridenominazione" uib-popover="ρ a ← b" popover-trigger="mouseenter">ρ</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('∧')" popover-title="And" uib-popover="a ∧ b" popover-trigger="mouseenter">∧</button>
@@ -92,6 +92,9 @@
                     <button class="btn btn-success btn-sm" ng-click="addOp('≤')" popover-title="Minore o uguale" uib-popover="a ≤ b" popover-trigger="mouseenter">≤</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('>')" popover-title="Maggiore" uib-popover="a > b" popover-trigger="mouseenter">&gt;</button>
                     <button class="btn btn-success btn-sm" ng-click="addOp('<')" popover-title="Minore" uib-popover="a < b" popover-trigger="mouseenter">&lt;</button>
+
+                    <br><br>
+                    <p>Se usi la selezione utilizza gli apici per assegnare un valore (esempio: <b>σ a = 'x' (A))</b></p>
                 </div>
             </div>
         </div>
@@ -103,8 +106,10 @@
                 <textarea type="text" class="form-control" id="query" placeholder="Inserisci la query..." ng-model="query" style="resize: vertical; min-height:110px;" ng-change="convertQuery()">
                 </textarea>
 
-                <br>
+                <p>Ricordati di inserire di fronte ad ogni tabella il prefisso "nome_database_" (esempio: <b>{{ db }}_tabella</b>)</p>
+
                 {{ querySQL }}
+                <br>
                 <br>
 
                 <button class="btn btn-primary" ng-click="sendQuery()">Invia</button>
