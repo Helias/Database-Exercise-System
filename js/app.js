@@ -78,7 +78,8 @@
             console.log("[ERROR] $http.get request failed!");
         });
 
-        $scope.query = "";
+        $scope.query = "";         
+        $scope.querySQL = "";      //SQL Query (Final).
         
         $scope.addOp = function(op) {
             $scope.query += op;
@@ -92,23 +93,33 @@
         $scope.sentQuery = false;
 
         $scope.sendQuery = function() {
-            $http.get( "API/API.php?sql=" + $scope.query + "&soluz=" + $scope.filteredEx[0].soluzione)
-                .success(function (data, status, header, config) {
+            if ($scope.checkBracket) {
 
-                $scope.queryUser = data;
-                console.log(data);
-                if (data) {
-                    if ($scope.queryUser[1].Success != null)
-                        $scope.addAlert("success", $scope.queryUser[1].Success);
-                    else
-                        $scope.addAlert("danger", $scope.queryUser[1].Error);
-                }
-            })
-                .error(function (data, status, header, config) {
-                console.log("[ERROR] $http.get request failed!");
-            });
+                if ($scope.type == "ALG")
+                    $scope.queryToSend = $scope.querySQL;
+                else
+                    $scope.queryToSend = $scope.query;
 
-            $scope.sentQuery = true;
+                $http.get( "API/API.php?sql=" + $scope.queryToSend + "&soluz=" + $scope.filteredEx[0].soluzione)
+                    .success(function (data, status, header, config) {
+
+                    $scope.queryUser = data;
+                    console.log(data);
+                    if (data) {
+                        if ($scope.queryUser[1].Success != null)
+                            $scope.addAlert("success", $scope.queryUser[1].Success);
+                        else
+                            $scope.addAlert("danger", $scope.queryUser[1].Error);
+                    }
+                })
+                    .error(function (data, status, header, config) {
+                    console.log("[ERROR] $http.get request failed!");
+                });
+
+                $scope.sentQuery = true;
+            }else
+                $scope.addAlert("danger", "Assicurati di aver chiuso tutte le parentesi.");
+            
         };
 
         $scope.alerts = [];
@@ -121,9 +132,6 @@
             $scope.alerts.splice(index, 1);
         };
 
-
-        /* Tkd-Alex ALG --> SQL */
-        $scope.querySQL = "";                                                           //SQL Query (Final).
         var type = new Array("select","where","from","newName","oldName","joinOn");     //Type of query.
 
         //Struct of querySQL
@@ -161,7 +169,7 @@
 
         //Increase the number of splitter query.
         function increaseQuery (op) {
-            if ( op == '∪' || op == '∩' || op == '-' ){
+            if ( op == '∪' || op == '∩' || op == '-' || op == '÷'){
                 queryCounter++;  
                 checkIsUndefine(queryCounter);      
             }
@@ -175,6 +183,7 @@
                 var querySplitted = $scope.query.replace('∪','|')       
                                                 .replace('∩','|')
                                                 .replace('-','|')
+                                                .replace('÷','|')
                                                 .split('|');
                 
                 //Inizialize all query
@@ -249,27 +258,33 @@
                             queryArray[indexQuery].query["from"] += queryArray[indexQuery].tmpQuery[i]
                                                                                                     .replace('(','')
                                                                                                     .replace(')','')
-                                                                                                    .replace('×',' , ')
-                                                                                                    .replace('⋈',' JOIN '); 
+                                                                                                    .replace('×',' , ') 
+                                                                                                    .replace('⋈','');
 
                         
                         //JOIN ⋈  
-                        if ( (  queryArray[indexQuery].tmpQuery[i] == '(' || 
+                        if ( (  queryArray[indexQuery].tmpQuery[i] == ' ' ||
+                                queryArray[indexQuery].tmpQuery[i] == '(' || 
                                 queryArray[indexQuery].tmpQuery[i] == 'σ' || 
                                 queryArray[indexQuery].tmpQuery[i] == 'π' 
                             )   && queryArray[indexQuery].flag["joinOn"] ){
 
                             queryArray[indexQuery].flag["joinOn"] = false;
                             queryArray[indexQuery].flag["from"] = true;
+                            queryArray[indexQuery].query["from"] += " JOIN ";
                         }
+
+                        if (queryArray[indexQuery].flag["joinOn"])
+                            queryArray[indexQuery].query["joinOn"] += queryArray[indexQuery].tmpQuery[i]
+                                                                                                        .replace('(','')
+                                                                                                        .replace(')','');
 
                         if ( queryArray[indexQuery].tmpQuery[i] == '⋈'){
                             queryArray[indexQuery].flag["joinOn"] = true;
                             queryArray[indexQuery].flag["from"] = false; 
                         }
 
-                        if (queryArray[indexQuery].flag["joinOn"])
-                            queryArray[indexQuery].query["joinOn"] += queryArray[indexQuery].tmpQuery[i].replace('⋈','');
+                        
                                  
                     }
 
@@ -283,8 +298,17 @@
                         if (queryArray[indexQuery].query["joinOn"] != ""){
                             if (queryArray[indexQuery].query["joinOn"].indexOf("=") >= 0)
                                 queryArray[indexQuery].query["from"] += " ON " + queryArray[indexQuery].query["joinOn"];
-                            else
+                            else{
+                                var splittedJoin = queryArray[indexQuery].query["joinOn"].split('⋈');
+                                var newJoin = "";
+
+                                for (var i=0; i<splittedJoin.length; i++)
+                                    newJoin += " JOIN " + splittedJoin[i];
+
+                                queryArray[indexQuery].query["joinOn"] = newJoin;
+
                                 queryArray[indexQuery].query["from"] += queryArray[indexQuery].query["joinOn"];
+                            }
                             
                         } 
 
@@ -320,21 +344,27 @@
                     var tmpCounter = 0;
                     for(var i=0; i<$scope.query.length; i++){
                             
-                            //Union ∪
+                            //Union ∪.
                             if ( $scope.query[i] == '∪' ){
                                 queryArray[tmpCounter].linker = " UNION ";
                                 tmpCounter++;
                             }
 
-                            //Intersect ∩
+                            //Intersect ∩.
                             if ( $scope.query[i] == '∩' ){
                                 queryArray[tmpCounter].linker = " INTERSECT ";
                                 tmpCounter++;
                             }
 
-                            //Not in -
+                            //Not in -.
                             if ( $scope.query[i] == '-' ){
                                 queryArray[tmpCounter].linker = " NOT IN ";
+                                tmpCounter++;
+                            }
+
+                            //Division ÷.
+                            if ( $scope.query[i] == '÷' ){
+                                queryArray[tmpCounter].linker = " WHERE NOT EXISTS ";
                                 tmpCounter++;
                             }
                     }
@@ -352,7 +382,7 @@
                     $scope.querySQL+=queryArray[i].completeQuery;   
 
                 //Replace the logic operator.
-                $scope.querySQL = replacerLogOP( $scope.querySQL );
+                $scope.querySQL = replacerLogOP( $scope.querySQL ).toLowerCase();
             }
         }
 
@@ -365,6 +395,24 @@
                 .replace('≥','>=')
                 .replace('≤','<=');
         };
+
+        //Check if all brackets are closed.
+        $scope.checkBracket = function(){
+            var counterOpen = 0;
+            var counterClose = 0;
+
+            for (var i=0; i<$scope.query.length; i++){
+                if ($scope.query[i] == '(' || $scope.query[i] == '[')
+                    counterOpen++;
+                if ($scope.query[i] == ')' || $scope.query[i] == ']')
+                    counterClose++;
+            }
+
+            if (counterOpen == counterClose)
+                return true;
+            else
+                return false;
+        }
     });
 
     app.controller('dbManager', function($scope, $http, $uibModal, $state) {
