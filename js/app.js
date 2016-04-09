@@ -87,6 +87,7 @@
             if ($scope.type == "ALG")
                 increaseQuery(op);
 
+            document.getElementById("query").focus();
         };
 
         $scope.soluzCollapsed = true;
@@ -494,7 +495,7 @@
         $scope.writeQueryCreate = function(){
             var queryResult = new Array();
             for (var i = 0; i < $scope.nTables; i++) {
-                queryResult[i] = "CREATE TABLE IF NOT EXISTS des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
+                queryResult[i] = "CREATE TABLE IF NOT EXISTS " + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
                 for (var j = 0; j < $scope.tables[i].columns; j++) {
                     queryResult[i] += $scope.tables[i].attr[j] + " varchar(255) NOT NULL ";
                     if (j < $scope.tables[i].columns-1)
@@ -509,7 +510,7 @@
         $scope.writeQueryInsert = function(){
             var queryResult = new Array();
             for (var i = 0; i < $scope.nTables; i++) {
-                queryResult[i] = "INSERT INTO des." + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
+                queryResult[i] = "INSERT INTO " + $scope.nameDatabase + "_" + $scope.tables[i].name + " ( ";
                 for (var j = 0; j < $scope.tables[i].columns; j++) {
                     queryResult[i] += $scope.tables[i].attr[j] ;
                     if (j < $scope.tables[i].columns-1)
@@ -540,12 +541,12 @@
                 for (var j=0; j<$scope.tables[i].columns; j++){
 
                     if ($scope.tables[i].fk_attr[j]){
-                        queryResult[counter] = "ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
+                        queryResult[counter] = "ALTER TABLE " + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
                             " ADD PRIMARY KEY ( " + $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] + " );";
 
-                        queryResult[counter] += " ALTER TABLE des." + $scope.nameDatabase + "_" + $scope.tables[i].name +
+                        queryResult[counter] += " ALTER TABLE " + $scope.nameDatabase + "_" + $scope.tables[i].name +
                             " ADD FOREIGN KEY ( " + $scope.tables[i].attr[j] + " )" +
-                            " REFERENCES des." + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
+                            " REFERENCES " + $scope.nameDatabase + "_" + $scope.tables[$scope.tables[i].fk_matrix[j][0]].name +
                             "( "+ $scope.tables[$scope.tables[i].fk_matrix[j][0]].attr[$scope.tables[i].fk_matrix[j][1]] +" );";
                         counter++;
                     }

@@ -6,19 +6,19 @@ $db = new PDO('mysql:host='.$host.';dbname='.$database, $username, $password);
 if (isset($_GET['arguments']))
 {
     $stmt = $db->query('SELECT * FROM argomenti');
-    $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+    $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 else if (isset($_GET['exerciseSQL']) && $_GET['exerciseSQL'] != "")
 {
     // select all SQL exercises for argument
     $stmt = $db->query('SELECT * FROM domandeSQL WHERE argomento = ' . $_GET['exerciseSQL']);
-    $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+    $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 else if (isset($_GET['exerciseALG']) && $_GET['exerciseALG'] != "")
 {
     // select all algebra exercises for argument
     $stmt = $db->query('SELECT * FROM domandeALG WHERE argomento = ' . $_GET['exerciseALG']);
-    $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+    $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 else if (isset($_GET['database'])) {
     // show all "databases"
@@ -31,7 +31,7 @@ else if (isset($_GET['database'])) {
             array_push($arr, substr($dbs[0], 0, strpos($dbs[0], "_")));
     }
 
-    $json = json_encode($arr);
+    $json = getJson($arr);
 }
 else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
     // show tables from database
@@ -52,7 +52,7 @@ else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
         array_push($tables, $t);
     }
 
-    $json = json_encode($tables);
+    $json = getJson($tables);
 }
 
 // Get solution
@@ -65,7 +65,7 @@ if (isset($_GET['getSoluzione']) && $_GET['getSoluzione'] != "") {
     $stmt = $db->query($soluzione);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo '[{ "query": "' . $soluzione . '" }, { "results" : ' . json_encode($result) . '}]';
+    echo '[{ "query": "' . $soluzione . '" }, { "results" : ' . getJson($result) . '}]';
 
 }
 
@@ -98,7 +98,7 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
             $stmt = $db->query($_GET['sql']);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $json = '[{"results" : ' . json_encode($data) . "}, ";
+            $json = '[{"results" : ' . getJson($data) . "}, ";
 
             /* Query souzione */
             $stmt = $db->query("SELECT soluzione FROM soluzioni WHERE id = " . $_GET['soluz']);

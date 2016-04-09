@@ -11,9 +11,9 @@ try {
     if ((isset($_GET['username']) && $_GET['username'] != "") &&
         (isset($_GET['password']) && $_GET['password'] != "")
        ) {
-        $stmt = $db->query('SELECT * FROM des.utenti WHERE username = "' . $_GET['username'] .'";');
+        $stmt = $db->query('SELECT * FROM utenti WHERE username = "' . $_GET['username'] .'";');
         if ( $stmt->fetchColumn() != "" ) {
-            $stmt = $db->query('SELECT * FROM des.utenti WHERE psw = "' . md5($_GET['password']) .'";');
+            $stmt = $db->query('SELECT * FROM utenti WHERE psw = "' . md5($_GET['password']) .'";');
             if ( $stmt->fetchColumn() != "" ) {
                 $_SESSION["username"] = $_GET['username'];
                 $_SESSION["password"] = md5($_GET['password']);
@@ -47,7 +47,7 @@ try {
                     array_push($arr, substr($dbs[0], 0, strpos($dbs[0], "_")));
             }
 
-            $json = json_encode($arr);
+            $json = getJson($arr);
         }
 
         //Execute query CREATE, ALTER, INSERT.
@@ -72,8 +72,8 @@ try {
 
         //Show all arguments.
         if ( isset($_GET['arguments']) ) {
-            $stmt = $db->query('SELECT * FROM des.argomenti;');
-            $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            $stmt = $db->query('SELECT * FROM argomenti;');
+            $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
         //Show all solutions.
@@ -85,18 +85,18 @@ try {
             $stmt = $db->query('SELECT DISTINCT soluzioni.id, soluzioni.soluzione
                                     FROM ' . $_GET['question'] . ' INNER JOIN soluzioni
                                     WHERE ' . $_GET['question'] . '.argomento = ' . $_GET['argument'] . ' AND ' . $_GET['question'] . '.soluzione = soluzioni.id;');
-            $json = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
 
         //Submit newQuestion, INSERT argomento, soluzioni and domandeALG/SQL.
         function submitNewQuestion($db, $argumentId, $solutionId) {
-            $stmt = $db->query("INSERT INTO des." . $_GET['type'] . " (testo,db_connesso,soluzione,argomento)
+            $stmt = $db->query("INSERT INTO " . $_GET['type'] . " (testo,db_connesso,soluzione,argomento)
                                 VALUES ('" . $_GET['text'] . "','" . $_GET['db'] . "'," . $solutionId . "," . $argumentId . ");");
             $json = '{ "Success": "Domanda aggiunta!" }';
         }
 
         function getIdArgument($db){
-            $stmt = $db->query("SELECT id FROM des.argomenti WHERE argomento = '" . $_GET['new_argument'] . "';");
+            $stmt = $db->query("SELECT id FROM argomenti WHERE argomento = '" . $_GET['new_argument'] . "';");
             return $stmt->fetchColumn();
         }
 
@@ -114,8 +114,8 @@ try {
 
             if ( getIdArgument($db) == "" ){
                 if ( getIdSolution($db) == "" ){
-                    $stmt = $db->query("INSERT INTO des.argomenti(argomento) VALUES ('" . $_GET['new_argument'] . "') ;");
-                    $stmt = $db->query("INSERT INTO des.soluzioni(soluzione) VALUES ('" . $_GET['new_solution'] . "') ;");
+                    $stmt = $db->query("INSERT INTO argomenti(argomento) VALUES ('" . $_GET['new_argument'] . "') ;");
+                    $stmt = $db->query("INSERT INTO soluzioni(soluzione) VALUES ('" . $_GET['new_solution'] . "') ;");
 
                     submitNewQuestion($db, getIdArgument($db), getIdSolution($db));
                 }
@@ -142,7 +142,7 @@ try {
            ) {
 
             if ( getIdSolution($db) == "" ) {
-                $stmt = $db->query("INSERT INTO des.soluzioni(soluzione) VALUES ('" . $_GET['new_solution'] . "') ;");
+                $stmt = $db->query("INSERT INTO soluzioni(soluzione) VALUES ('" . $_GET['new_solution'] . "') ;");
 
                 submitNewQuestion($db, $_GET['ex_argument'], getIdSolution($db));
             }
