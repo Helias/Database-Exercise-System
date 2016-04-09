@@ -189,7 +189,8 @@
                 //Inizialize all query
                 for (var i=0; i<=queryCounter; i++) {
                     checkIsUndefine(i);
-                    queryArray[i].tmpQuery = " " + querySplitted[i].replace(/\[/g,'(').replace(/\]/g,')');
+                    if (querySplitted[i]!=null)
+                        queryArray[i].tmpQuery = " " + querySplitted[i].replace(/\[/g,'(').replace(/\]/g,')');
                     if (queryArray[i].tmpQuery.length == 0)
                         queryCounter--;
                 }
