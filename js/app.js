@@ -189,7 +189,7 @@
                 //Inizialize all query
                 for (var i=0; i<=queryCounter; i++) {
                     checkIsUndefine(i);
-                    queryArray[i].tmpQuery = " " + querySplitted[i];
+                    queryArray[i].tmpQuery = " " + querySplitted[i].replace('[','(').replace(']',')');
                     if (queryArray[i].tmpQuery.length == 0)
                         queryCounter--;
                 }
