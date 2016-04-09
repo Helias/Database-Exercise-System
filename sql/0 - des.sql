@@ -10,13 +10,13 @@ CREATE TABLE IF NOT EXISTS argomenti(
 -- Create 'soluzioni' table
 CREATE TABLE IF NOT EXISTS soluzioni(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    soluzione varchar(255) NOT NULL
+    soluzione varchar(1000) NOT NULL
 );
 
 -- Create 'domandeALG' table
 CREATE TABLE IF NOT EXISTS domandeALG(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    testo varchar(255) NOT NULL,
+    testo varchar(1000) NOT NULL,
     db_connesso varchar(255) NOT NULL,
     soluzione INT NOT NULL,
     argomento INT NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS domandeALG(
 -- Create 'domandeSQL' table
 CREATE TABLE IF NOT EXISTS domandeSQL(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    testo varchar(255) NOT NULL,
+    testo varchar(1000) NOT NULL,
     db_connesso varchar(255) NOT NULL,
     soluzione INT NOT NULL,
     argomento INT NOT NULL,
@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS domandeSQL(
 -- Test population argomenti
 INSERT INTO argomenti VALUES
 (1, 'MAX/MIN'),
-(2, 'GROUP BY');
+(2, 'GROUP BY'),
+(3, 'NOT EXISTS');
 
 CREATE TABLE IF NOT EXISTS utenti(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
