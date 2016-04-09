@@ -180,16 +180,16 @@
             if ($scope.type == "ALG" && $scope.query.length > 0 ){
 
                 //Replace the ∪ ∩ - char with | and splitted by he.
-                var querySplitted = $scope.query.replace('∪','|')
-                                                .replace('∩','|')
-                                                .replace('-','|')
-                                                .replace('÷','|')
+                var querySplitted = $scope.query.replace(/\∪/g,'|')
+                                                .replace(/\∩/g,'|')
+                                                .replace(/\-/g,'|')
+                                                .replace(/\÷/g,'|')
                                                 .split('|');
 
                 //Inizialize all query
                 for (var i=0; i<=queryCounter; i++) {
                     checkIsUndefine(i);
-                    queryArray[i].tmpQuery = " " + querySplitted[i].replace('[','(').replace(']',')');
+                    queryArray[i].tmpQuery = " " + querySplitted[i].replace(/\[/g,'(').replace(/\]/g,')');
                     if (queryArray[i].tmpQuery.length == 0)
                         queryCounter--;
                 }
@@ -207,8 +207,8 @@
 
                         if ( queryArray[indexQuery].flag["select"] )
                             queryArray[indexQuery].query["select"] += queryArray[indexQuery].tmpQuery[i]
-                                                                                                    .replace('π','')
-                                                                                                    .replace('(','');
+                                                                                                    .replace(/\π/g,'')
+                                                                                                    .replace(/\(/g,'');
                         //NewName ρ.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'ρ' ){
                             queryArray[indexQuery].flag["newName"] = true;
@@ -220,8 +220,8 @@
 
                         if ( queryArray[indexQuery].flag["newName"] )
                             queryArray[indexQuery].query["newName"] += queryArray[indexQuery].tmpQuery[i]
-                                                                                                    .replace('ρ','')
-                                                                                                    .replace('←','');
+                                                                                                    .replace(/\ρ/g,'')
+                                                                                                    .replace(/\←/g,'');
 
                         //OldName ←
                         if ( queryArray[indexQuery].tmpQuery[i] == '←' )
@@ -232,8 +232,8 @@
 
                         if ( queryArray[indexQuery].flag["oldName"] )
                             queryArray[indexQuery].query["oldName"] += queryArray[indexQuery].tmpQuery[i]
-                                                                                                    .replace('←','')
-                                                                                                    .replace('(','');
+                                                                                                    .replace(/\←/g,'')
+                                                                                                    .replace(/\(/g,'');
                         //Where σ.
                         if ( queryArray[indexQuery].tmpQuery[i] == 'σ' ){
                             queryArray[indexQuery].flag["where"] = true;
@@ -245,8 +245,8 @@
 
                         if ( queryArray[indexQuery].flag["where"] )
                             queryArray[indexQuery].query["where"] += queryArray[indexQuery].tmpQuery[i]
-                                                                                                    .replace('σ','')
-                                                                                                    .replace('(','');
+                                                                                                    .replace(/\σ/g,'')
+                                                                                                    .replace(/\(/g,'');
                         //From ( ).
                         if ( queryArray[indexQuery].tmpQuery[i] == '(' )
                             queryArray[indexQuery].flag["from"] = true;
@@ -256,10 +256,10 @@
 
                         if ( queryArray[indexQuery].flag["from"] )
                             queryArray[indexQuery].query["from"] += queryArray[indexQuery].tmpQuery[i]
-                                                                                                    .replace('(','')
-                                                                                                    .replace(')','')
-                                                                                                    .replace('×',' , ')
-                                                                                                    .replace('⋈','');
+                                                                                                    .replace(/\(/g,'')
+                                                                                                    .replace(/\)/g,'')
+                                                                                                    .replace(/\×/g,' , ')
+                                                                                                    .replace(/\⋈/g,'');
 
 
                         //JOIN ⋈
@@ -276,8 +276,8 @@
 
                         if (queryArray[indexQuery].flag["joinOn"])
                             queryArray[indexQuery].query["joinOn"] += queryArray[indexQuery].tmpQuery[i]
-                                                                                                        .replace('(','')
-                                                                                                        .replace(')','');
+                                                                                                        .replace(/\(/g,'')
+                                                                                                        .replace(/\)/g,'');
 
                         if ( queryArray[indexQuery].tmpQuery[i] == '⋈'){
                             queryArray[indexQuery].flag["joinOn"] = true;
@@ -388,12 +388,12 @@
 
         //Replace logic operator.
         function replacerLogOP(query) {
-            return query.replace('∧',' AND ')
-                .replace('∨',' OR ')
-                .replace('¬',' NOT ')
-                .replace('≠','<>')
-                .replace('≥','>=')
-                .replace('≤','<=');
+            return query.replace(/\∧/g,' AND ')
+                        .replace(/\∨/g,' OR ')
+                        .replace(/\¬/g,' NOT ')
+                        .replace(/\≠/g,'<>')
+                        .replace(/\≥/g,'>=')
+                        .replace(/\≤/g,'<=');
         };
 
         //Check if all brackets are closed.
