@@ -842,15 +842,18 @@
         $scope.submitNewQuestion = function() {
 
             if ($scope.radio_typeArgument == 'new_argument' && $scope.radio_typeSolution == 'new_solution') {
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
-                    .success(function (data, status, header, config) {
+                if ( ($scope.argument!=null && $scope.argument!="") && ($scope.solution!=null && $scope.solution!="") ) {
+                    $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
+                        .success(function (data, status, header, config) {
 
-                    $scope.checkErrQuestion(data.Error);
+                        $scope.checkErrQuestion(data.Error);
 
-                })
-                    .error(function (data, status, header, config) {
-                    console.log("[ERROR] $http.get request failed!");
-                });
+                    })
+                        .error(function (data, status, header, config) {
+                        console.log("[ERROR] $http.get request failed!");
+                    });
+                }else
+                    $scope.addAlert('danger', "Assicurati di aver riempito tutti i campi.");  
             }
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'ex_solution') {
@@ -866,16 +869,18 @@
             }
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'new_solution') {
+                if ($scope.solution!=null && $scope.solution!="") {
+                    $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
+                        .success(function (data, status, header, config) {
 
-                $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
-                    .success(function (data, status, header, config) {
+                        $scope.checkErrQuestion(data.Error);
 
-                    $scope.checkErrQuestion(data.Error);
-
-                })
-                    .error(function (data, status, header, config) {
-                    console.log("[ERROR] $http.get request failed!");
-                });
+                    })
+                        .error(function (data, status, header, config) {
+                        console.log("[ERROR] $http.get request failed!");
+                    });
+                }else
+                    $scope.addAlert('danger', "Assicurati di aver riempito tutti i campi.");  
             }
         };
 
