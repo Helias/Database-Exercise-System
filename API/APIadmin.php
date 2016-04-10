@@ -38,7 +38,7 @@ try {
 
         //Show all "databases".
         if (isset($_GET['database'])) {
-            $stmt = $db->query('SHOW TABLES FROM des');
+            $stmt = $db->query('SHOW TABLES FROM ' . $database);
 
             $arr = array();
 
@@ -55,7 +55,7 @@ try {
             isset($_GET['nameDB']) && $_GET['nameDB'] != ""
            ){
 
-            $stmt = $db->query('SHOW TABLES FROM des WHERE Tables_in_des LIKE "' . $_GET['nameDB'] . '_%"');
+            $stmt = $db->query('SHOW TABLES FROM ' . $database . ' WHERE Tables_in_' . $database . ' LIKE "' . $_GET['nameDB'] . '_%"');
             if ( $stmt->fetchColumn() == ""){
 
                 $query = explode('|', $_GET['query']);
