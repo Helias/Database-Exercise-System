@@ -744,8 +744,8 @@
         $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
 
         $scope.autoLoadList = new Array();
-        $scope.autoLoadList[0] = new Array('Aldo', 'Giovanni', 'Giacomo', 'Mario', 'Alessandro', 'Stefano', 'Salvatore', 'Alfredo');
-        $scope.autoLoadList[1] = new Array('Rossi', 'Borzì', 'Pulvirenti', 'Maggio', 'Calabrò', 'Foti');
+        $scope.autoLoadList[0] = new Array('Aldo', 'Giacomo', 'Alfredo', 'Angelo', 'Antonella', 'Antonio', 'Alice', 'Andrea', 'Alessandro', 'Alessio', 'Alessandra', 'Alfredo', 'Chiara', 'Daniele', 'Eugenio', 'Elisabetta', 'Emanuela', 'Emanuele', 'Enrico', 'Ferdinando', 'Francesco', 'Gianni', 'Giovanni', 'Giulio', 'Giulia', 'Gabriele', 'Giuseppe', 'Gaetano', 'Guglielmo', 'Giuliana', 'Ivano', 'Lorenzo', 'Lorenza', 'Loredana', 'Matteo', 'Marco', 'Mario', 'Mauro', 'Michele', 'Peppe', 'Paolo', 'Raffaele', 'Rita', 'Rebecca', 'Stefano', 'Salvatore', 'Salvo', 'Salvatrice', 'Sonia', 'Stefania', 'Sara', 'Sebastiano', 'Valentina', 'Valeria');
+        $scope.autoLoadList[1] = new Array('Rossi', 'Pulvirenti', 'Maggio', 'Calabro', 'Foti', 'Anza', 'Auteri', 'Borzi', 'Benfatto', 'Bianchi', 'Bruni', 'Bruno', 'Barbera', 'Caruso', 'Catena', 'Condorelli', 'Cicero', 'Corallo', 'Chisari', 'Costanzo', 'Calvagna', 'Conti', 'Esposito', 'Farinella', 'Ferrero', 'Fontana', 'Gelardi', 'Grillo', 'Logrande', 'Laudani', 'Longo', 'Lopresti', 'Mancuso', 'Marchese', 'Mangano', 'Nicosia', 'Oliveri', 'Pappalardo', 'Pezzino', 'Palmeri', 'Rapisarda', 'Rossi', 'Reina', 'Russo', 'Rao', 'Scuto', 'Sinatra', 'Signorello', 'Signorelli', 'Spitaleri', 'Tirenna', 'Travagliante', 'Tomasello', 'Tortomasi', 'Toscano', 'Virgillito');
         $scope.autoLoadList[2] = new Array('Giallo', 'Rosso', 'Verde', 'Blu', 'Arancione', 'Celeste', 'Viola');
         $scope.autoLoadList[3] = new Array('Roma', 'Catania', 'Messina', 'Barcellona PG', 'Caltagirone');
         $scope.autoLoadList[4] = new Array('21.50', '596.20', '444121.00', '12');
@@ -853,7 +853,7 @@
                         console.log("[ERROR] $http.get request failed!");
                     });
                 }else
-                    $scope.addAlert('danger', "Assicurati di aver riempito tutti i campi.");  
+                    $scope.addAlert('danger', "Assicurati di aver riempito tutti i campi.");
             }
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'ex_solution') {
@@ -880,7 +880,7 @@
                         console.log("[ERROR] $http.get request failed!");
                     });
                 }else
-                    $scope.addAlert('danger', "Assicurati di aver riempito tutti i campi.");  
+                    $scope.addAlert('danger', "Assicurati di aver riempito tutti i campi.");
             }
         };
 
