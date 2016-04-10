@@ -73,12 +73,12 @@ INSERT INTO soluzioni VALUES
 
 -- DELETE FROM domandeSQL WHERE id IN (1,2,3);
 INSERT INTO domandeSQL VALUES
-(1, 'Trovare il contocorrente con il saldo più alto', 'banca', 1, 1),
-(2, 'Trovare la persona che ha il saldo più alto', 'banca', 2, 2),
-(3, 'Trovare il prodotto finanziario che ha più rate', 'banca', 3, 1);
+(1, 'Trovare il contocorrente con il saldo più alto', 'banca', 1, 2),
+(2, 'Trovare la persona che ha il saldo più alto', 'banca', 2, 3),
+(3, 'Trovare il prodotto finanziario che ha più rate', 'banca', 3, 2);
 
 -- DELETE FROM domandeALG WHERE id IN (1,2,3);
 INSERT INTO domandeALG VALUES
-(1, 'Trovare il contocorrente con il saldo più alto', 'banca', 1, 1),
+(1, 'Trovare il contocorrente con il saldo più alto', 'banca', 1, 2),
 -- (2, 'Trovare la persona che ha il saldo più alto', 'banca', 2, 2),
-(3, 'Trovare il prodotto finanziario che ha più rate', 'banca', 3, 1);
+(3, 'Trovare il prodotto finanziario che ha più rate', 'banca', 3, 2);

@@ -46,4 +46,4 @@ CREATE TABLE `escursioni_partecipante` (
 INSERT INTO `escursioni_partecipante` VALUES ('1','1'),('2','2'),('4','3'),('13','4'),('1','2'),('1','3'),('1','4'),('1','5'),('1','6');
 
 INSERT INTO `soluzioni` VALUES (4, 'SELECT nome,cognome FROM escursioni_persona AS p WHERE NOT EXISTS (SELECT * FROM escursioni_escursione AS e WHERE NOT EXISTS (SELECT * FROM  escursioni_partecipante AS ep, escursioni_dataescursione AS de WHERE idpartecipante = p.id AND ep.idescursione = de.id AND de.idescursione = e.id))');
-INSERT INTO `domandeSQL` (`id`, `testo`, `db_connesso`, `soluzione`, `argomento`) VALUES (5, 'Trovare i partecipanti (dando nome e cognome in output) che hanno aprtecipato a tutte le escursioni', 'escursioni', 4,  3);
+INSERT INTO `domandeSQL` (`id`, `testo`, `db_connesso`, `soluzione`, `argomento`) VALUES (5, 'Trovare i partecipanti (dando nome e cognome in output) che hanno aprtecipato a tutte le escursioni', 'escursioni', 4,  4);

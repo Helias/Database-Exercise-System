@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS domandeALG(
     FOREIGN KEY (argomento) REFERENCES argomenti(id)
 );
 
-
 -- Create 'domandeSQL' table
 CREATE TABLE IF NOT EXISTS domandeSQL(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -36,16 +35,17 @@ CREATE TABLE IF NOT EXISTS domandeSQL(
     FOREIGN KEY (argomento) REFERENCES argomenti(id)
 );
 
--- Test population argomenti
-INSERT INTO argomenti VALUES
-(1, 'MAX/MIN'),
-(2, 'GROUP BY'),
-(3, 'NOT EXISTS');
-
 CREATE TABLE IF NOT EXISTS utenti(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     username varchar(255) NOT NULL,
     psw varchar(255) NOT NULL
 );
 
-INSERT INTO utenti(username,psw) VALUES ('admin',md5('dbex'));
+-- Data of table 'argomenti'
+INSERT INTO argomenti VALUES
+(1, 'SELECT'),
+(2, 'MAX/MIN'),
+(3, 'GROUP BY'),
+(4, 'NOT EXISTS');
+
+INSERT INTO utenti(username,psw) VALUES ('admin', md5('dbex'));
