@@ -366,7 +366,11 @@
 
                             //Division ÷.
                             if ( $scope.query[i] == '÷' ){
-                                queryArray[tmpCounter].linker = " WHERE NOT EXISTS ";
+                                if (queryArray[tmpCounter].query["from"] != "")
+                                    queryArray[tmpCounter].linker = " AND WHERE NOT EXISTS ";
+                                else
+                                    queryArray[tmpCounter].linker = " WHERE NOT EXISTS ";
+
                                 tmpCounter++;
                             }
                     }
