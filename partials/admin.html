@@ -60,7 +60,7 @@
                 <hr>
 
                 <label for="select_database">Seleziona un Database esistente:</label>
-                <select class="form-control" id="select_database" ng-model="selected_database" >
+                <select class="form-control" id="select_database" ng-model="selected_database" required>
                     <option ng-repeat="database in databases">{{ database }}</option>
                 </select>
                 
@@ -71,7 +71,7 @@
 
             <div class="row text-center">
                 <div class="col-xs-6 col-xs-offset-3">
-                    <button class="btn btn-success btn-lg" type="submit">Aggiungi una nuova domanda</button>
+                    <button class="btn btn-success btn-lg" type="submit" ng-disabled="selected_database == null">Aggiungi una nuova domanda</button>
                     <br>
                     <br>
                     <uib-alert ng-repeat="alert in alerts" type="{{ alert.type }}" close="closeAlert($index)">{{ alert.msg }}</uib-alert>

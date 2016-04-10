@@ -366,7 +366,7 @@
 
                             //Division ÷.
                             if ( $scope.query[i] == '÷' ){
-                                if (queryArray[tmpCounter].query["from"] != "")
+                                if (queryArray[tmpCounter].query["where"] != "")
                                     queryArray[tmpCounter].linker = " AND WHERE NOT EXISTS ";
                                 else
                                     queryArray[tmpCounter].linker = " WHERE NOT EXISTS ";
@@ -374,6 +374,8 @@
                                 tmpCounter++;
                             }
                     }
+
+                    console.log(queryArray);
 
                     //Join all splitted query to write the completeQuery.
                     queryArray[indexQuery].completeQuery =  queryArray[indexQuery].query["select"] +
