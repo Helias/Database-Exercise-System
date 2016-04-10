@@ -22,7 +22,7 @@ else if (isset($_GET['exerciseALG']) && $_GET['exerciseALG'] != "")
 }
 else if (isset($_GET['database'])) {
     // show all "databases"
-    $stmt = $db->query('SHOW TABLES FROM des');
+    $stmt = $db->query('SHOW TABLES FROM ' . $database);
 
     $arr = array();
 
@@ -36,7 +36,7 @@ else if (isset($_GET['database'])) {
 else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
     // show tables from database
     $prefix = $_GET['db_tables'];
-    $stmt = $db->query('SHOW TABLES FROM des WHERE Tables_in_des LIKE "' . $prefix . '_%"');
+    $stmt = $db->query('SHOW TABLES FROM ' . $database . ' WHERE Tables_in_' . $database . ' LIKE "' . $prefix . '_%"');
 
     $tables = array();
 
