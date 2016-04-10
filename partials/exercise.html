@@ -108,8 +108,10 @@
 
                 <p>Ricordati di inserire di fronte ad ogni tabella il prefisso "nomeDatabase_" (esempio: <b>{{ db }}_tabella</b>)</p>
 
-                {{ querySQL }}
                 <br>
+
+                <div class="text-left sql-code" hljs language="sql" contentEditable="false" source="querySQL" ng-show="querySQL!=''"></div>
+
                 <br>
 
                 <button class="btn btn-primary" ng-click="sendQuery()">Invia</button>

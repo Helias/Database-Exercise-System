@@ -333,10 +333,10 @@
 
                     //Select .
                     if (queryArray[indexQuery].query["select"] == "" && queryArray[indexQuery].query["from"] != "")
-                        queryArray[indexQuery].query["select"] = " SELECT * ";
+                        queryArray[indexQuery].query["select"] = " SELECT DISTINCT * ";
 
                     if (queryArray[indexQuery].query["select"] != "" && queryArray[indexQuery].query["select"] != " SELECT * ")
-                        queryArray[indexQuery].query["select"] = " SELECT " + queryArray[indexQuery].query["select"];
+                        queryArray[indexQuery].query["select"] = " SELECT DISTINCT " + queryArray[indexQuery].query["select"];
 
                     //Where σ.
                     if (queryArray[indexQuery].query["where"] != "")
@@ -444,8 +444,10 @@
 
         $scope.inizializeTable = function() {
             for (var i=0; i<$scope.nTables; i++){
-                $scope.tables[i] = angular.copy($scope.table);
-                $scope.inizializeNewRow(i);
+                if ($scope.tables[i] == null){
+                    $scope.tables[i] = angular.copy($scope.table);
+                    $scope.inizializeNewRow(i);
+                }
             }
         }
 
@@ -741,14 +743,21 @@
         $scope.modalTables = tables;
         $scope.numColum = new Array(tables[_indexTable].columns);
 
-        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Saldo");
+        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Rnd Int", "Rnd Float");
 
         $scope.autoLoadList = new Array();
         $scope.autoLoadList[0] = new Array('Aldo', 'Giacomo', 'Alfredo', 'Angelo', 'Antonella', 'Antonio', 'Alice', 'Andrea', 'Alessandro', 'Alessio', 'Alessandra', 'Alfredo', 'Chiara', 'Daniele', 'Eugenio', 'Elisabetta', 'Emanuela', 'Emanuele', 'Enrico', 'Ferdinando', 'Francesco', 'Gianni', 'Giovanni', 'Giulio', 'Giulia', 'Gabriele', 'Giuseppe', 'Gaetano', 'Guglielmo', 'Giuliana', 'Ivano', 'Lorenzo', 'Lorenza', 'Loredana', 'Matteo', 'Marco', 'Mario', 'Mauro', 'Michele', 'Peppe', 'Paolo', 'Raffaele', 'Rita', 'Rebecca', 'Stefano', 'Salvatore', 'Salvo', 'Salvatrice', 'Sonia', 'Stefania', 'Sara', 'Sebastiano', 'Valentina', 'Valeria');
         $scope.autoLoadList[1] = new Array('Rossi', 'Pulvirenti', 'Maggio', 'Calabro', 'Foti', 'Anza', 'Auteri', 'Borzi', 'Benfatto', 'Bianchi', 'Bruni', 'Bruno', 'Barbera', 'Caruso', 'Catena', 'Condorelli', 'Cicero', 'Corallo', 'Chisari', 'Costanzo', 'Calvagna', 'Conti', 'Esposito', 'Farinella', 'Ferrero', 'Fontana', 'Gelardi', 'Grillo', 'Logrande', 'Laudani', 'Longo', 'Lopresti', 'Mancuso', 'Marchese', 'Mangano', 'Nicosia', 'Oliveri', 'Pappalardo', 'Pezzino', 'Palmeri', 'Rapisarda', 'Rossi', 'Reina', 'Russo', 'Rao', 'Scuto', 'Sinatra', 'Signorello', 'Signorelli', 'Spitaleri', 'Tirenna', 'Travagliante', 'Tomasello', 'Tortomasi', 'Toscano', 'Virgillito');
         $scope.autoLoadList[2] = new Array('Giallo', 'Rosso', 'Verde', 'Blu', 'Arancione', 'Celeste', 'Viola', 'Nero', 'Grigio', 'Acquamarina', 'Azzuerro', 'Ciano', 'Lilla', 'Marrone', 'Magenta', 'Ocra', 'Rosa', 'Scarlatto', 'Turchese', 'Vinaccia');
         $scope.autoLoadList[3] = new Array('Roma', 'Milano', 'Napoli', 'Torino', 'Palermo', 'Genova', 'Bologna', 'Firenze', 'Bari', 'Catania', 'Venezia', 'Verona', 'Messina', 'Padova', 'Trieste', 'Taranto', 'Brescia', 'Prato', 'Parma', 'Modena', 'Reggio Calabria', 'Reggio Emilia', 'Perugia', 'Livorno', 'Ravenna', 'Cagliari', 'Foggia', 'Rimini', 'Salerno', 'Ferrara', 'Sassari', 'Latina', 'Siracusa', 'Monza', 'Pescara', 'Giugliano in Campania', 'Bergamo', 'Forlì', 'Trento', 'Vicenza', 'Terni', 'Bolzano', 'Novara', 'Piacenza', 'Ancona', 'Andria', 'Udine', 'Arezzo', 'Cesena', 'Barletta', 'Barcellona PG', 'Paterno', 'Ragalna');
-        $scope.autoLoadList[4] = new Array('21.50', '596.20', '444121.00', '12');
+        
+        $scope.autoLoadList[4] = new Array();
+        for (var i=0; i<40; i++)
+            $scope.autoLoadList[4][i] = Math.floor(Math.random() * 1024) + 1  ;
+
+        $scope.autoLoadList[5] = new Array();
+        for (var i=0; i<40; i++)
+            $scope.autoLoadList[5][i] = (Math.random() * (1024 - 1) + 1).toPrecision(7) ;
 
         $scope.autoLoader = function(column,selectedAutoLoad){
             for (var i = 0; i < $scope.modalTables[_indexTable].rows; i++) {
