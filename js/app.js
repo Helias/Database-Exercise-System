@@ -780,7 +780,7 @@
 
         $scope.autoLoadList[5] = new Array();
         for (var i=0; i<40; i++)
-            $scope.autoLoadList[5][i] = (Math.random() * (2048 - 1) + 1).toPrecision(7) ;
+            $scope.autoLoadList[5][i] = (Math.random() * (2048 - 1) + 1).toPrecision(6) ;
 
         $scope.autoLoadList[6] = new Array();
         for (var i=0; i<40; i++)
