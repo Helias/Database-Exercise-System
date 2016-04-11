@@ -766,7 +766,7 @@
         $scope.modalTables = tables;
         $scope.numColum = new Array(tables[_indexTable].columns);
 
-        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Rnd Int", "Rnd Float");
+        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Rnd Int", "Rnd Float", "Rnd Data");
 
         $scope.autoLoadList = new Array();
         $scope.autoLoadList[0] = new Array('Aldo', 'Giacomo', 'Alfredo', 'Angelo', 'Antonella', 'Antonio', 'Alice', 'Andrea', 'Alessandro', 'Alessio', 'Alessandra', 'Alfredo', 'Chiara', 'Daniele', 'Eugenio', 'Elisabetta', 'Emanuela', 'Emanuele', 'Enrico', 'Ferdinando', 'Francesco', 'Gianni', 'Giovanni', 'Giulio', 'Giulia', 'Gabriele', 'Giuseppe', 'Gaetano', 'Guglielmo', 'Giuliana', 'Ivano', 'Lorenzo', 'Lorenza', 'Loredana', 'Matteo', 'Marco', 'Mario', 'Mauro', 'Michele', 'Peppe', 'Paolo', 'Raffaele', 'Rita', 'Rebecca', 'Stefano', 'Salvatore', 'Salvo', 'Salvatrice', 'Sonia', 'Stefania', 'Sara', 'Sebastiano', 'Valentina', 'Valeria');
@@ -776,11 +776,17 @@
         
         $scope.autoLoadList[4] = new Array();
         for (var i=0; i<40; i++)
-            $scope.autoLoadList[4][i] = Math.floor(Math.random() * 1024) + 1  ;
+            $scope.autoLoadList[4][i] = Math.floor(Math.random() * 2048) + 1  ;
 
         $scope.autoLoadList[5] = new Array();
         for (var i=0; i<40; i++)
-            $scope.autoLoadList[5][i] = (Math.random() * (1024 - 1) + 1).toPrecision(7) ;
+            $scope.autoLoadList[5][i] = (Math.random() * (2048 - 1) + 1).toPrecision(6) ;
+
+        $scope.autoLoadList[6] = new Array();
+        for (var i=0; i<40; i++)
+            $scope.autoLoadList[6][i] = (Math.floor(Math.random() * 30) + 1 ) + "-" + 
+                                        (Math.floor(Math.random() * 12) + 1 ) + "-" + 
+                                        (Math.floor((Math.random() * (2016 - 1996) + 1996))) ;
 
         $scope.autoLoader = function(column,selectedAutoLoad){
             for (var i = 0; i < $scope.modalTables[_indexTable].rows; i++) {
@@ -875,6 +881,7 @@
 
             if ($scope.radio_typeArgument == 'new_argument' && $scope.radio_typeSolution == 'new_solution') {
                 if ( ($scope.argument!=null && $scope.argument!="") && ($scope.solution!=null && $scope.solution!="") ) {
+                    $scope.solution = $scope.solution.replace(/"/g,"'");
                     $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
                         .success(function (data, status, header, config) {
 
@@ -902,6 +909,7 @@
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'new_solution') {
                 if ($scope.solution!=null && $scope.solution!="") {
+                    $scope.solution = $scope.solution.replace(/"/g,"'");
                     $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
                         .success(function (data, status, header, config) {
 
