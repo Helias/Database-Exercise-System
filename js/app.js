@@ -766,7 +766,7 @@
         $scope.modalTables = tables;
         $scope.numColum = new Array(tables[_indexTable].columns);
 
-        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Rnd Int", "Rnd Float");
+        $scope.autoLoads = new Array('Nome', 'Cognome', 'Colore', 'Città', "Rnd Int", "Rnd Float", "Rnd Data");
 
         $scope.autoLoadList = new Array();
         $scope.autoLoadList[0] = new Array('Aldo', 'Giacomo', 'Alfredo', 'Angelo', 'Antonella', 'Antonio', 'Alice', 'Andrea', 'Alessandro', 'Alessio', 'Alessandra', 'Alfredo', 'Chiara', 'Daniele', 'Eugenio', 'Elisabetta', 'Emanuela', 'Emanuele', 'Enrico', 'Ferdinando', 'Francesco', 'Gianni', 'Giovanni', 'Giulio', 'Giulia', 'Gabriele', 'Giuseppe', 'Gaetano', 'Guglielmo', 'Giuliana', 'Ivano', 'Lorenzo', 'Lorenza', 'Loredana', 'Matteo', 'Marco', 'Mario', 'Mauro', 'Michele', 'Peppe', 'Paolo', 'Raffaele', 'Rita', 'Rebecca', 'Stefano', 'Salvatore', 'Salvo', 'Salvatrice', 'Sonia', 'Stefania', 'Sara', 'Sebastiano', 'Valentina', 'Valeria');
@@ -776,11 +776,17 @@
         
         $scope.autoLoadList[4] = new Array();
         for (var i=0; i<40; i++)
-            $scope.autoLoadList[4][i] = Math.floor(Math.random() * 1024) + 1  ;
+            $scope.autoLoadList[4][i] = Math.floor(Math.random() * 2048) + 1  ;
 
         $scope.autoLoadList[5] = new Array();
         for (var i=0; i<40; i++)
-            $scope.autoLoadList[5][i] = (Math.random() * (1024 - 1) + 1).toPrecision(7) ;
+            $scope.autoLoadList[5][i] = (Math.random() * (2048 - 1) + 1).toPrecision(7) ;
+
+        $scope.autoLoadList[6] = new Array();
+        for (var i=0; i<40; i++)
+            $scope.autoLoadList[6][i] = (Math.floor(Math.random() * 30) + 1 ) + "-" + 
+                                        (Math.floor(Math.random() * 12) + 1 ) + "-" + 
+                                        (Math.floor((Math.random() * (2016 - 1996) + 1996))) ;
 
         $scope.autoLoader = function(column,selectedAutoLoad){
             for (var i = 0; i < $scope.modalTables[_indexTable].rows; i++) {
