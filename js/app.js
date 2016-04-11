@@ -64,7 +64,9 @@
                         .success(function (data, status, header, config) {
 
                         $scope.querySoluz = data;
-
+                        $scope.sentQuery = false;
+                        $scope.soluzCollapsed = true;
+                        
                     })
                         .error(function (data, status, header, config) {
                         console.log("[ERROR] $http.get request failed!");
@@ -105,7 +107,6 @@
                     .success(function (data, status, header, config) {
 
                     $scope.queryUser = data;
-                    console.log(data);
                     if (data) {
                         if ($scope.queryUser[1].Success != null)
                             $scope.addAlert("success", $scope.queryUser[1].Success);
