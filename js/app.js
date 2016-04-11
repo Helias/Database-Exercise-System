@@ -82,14 +82,38 @@
 
         $scope.query = "";
         $scope.querySQL = "";      //SQL Query (Final).
+        $scope.cursorPosVal = -1;  //Position cursor | .  
 
         $scope.addOp = function(op) {
-            $scope.query += op;
+            $scope.query = $scope.query.substring(0,$scope.cursorPosVal) + op + $scope.query.substring($scope.cursorPosVal,$scope.query.length);
 
             if ($scope.type == "ALG")
                 increaseQuery(op);
 
             document.getElementById("query").focus();
+        };
+
+        $scope.getCursorPos = function($event) {
+            var myEl = $event.target;
+            $scope.doGetCaretPosition(myEl);  
+        };
+
+        $scope.doGetCaretPosition = function(oField) {    
+            var iCaretPos = 0;
+
+            // IE Support
+            if (document.selection) {
+                oField.focus ();
+                var oSel = document.selection.createRange ();
+                oSel.moveStart ('character', -oField.value.length);
+                iCaretPos = oSel.text.length;
+            }
+            // Firefox support
+            else if (oField.selectionStart || oField.selectionStart == '0')
+                iCaretPos = oField.selectionStart;
+
+            // Return results
+            $scope.cursorPosVal = iCaretPos;
         };
 
         $scope.soluzCollapsed = true;
@@ -375,8 +399,6 @@
                                 tmpCounter++;
                             }
                     }
-
-                    console.log(queryArray);
 
                     //Join all splitted query to write the completeQuery.
                     queryArray[indexQuery].completeQuery =  queryArray[indexQuery].query["select"] +
