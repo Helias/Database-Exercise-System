@@ -875,6 +875,7 @@
 
             if ($scope.radio_typeArgument == 'new_argument' && $scope.radio_typeSolution == 'new_solution') {
                 if ( ($scope.argument!=null && $scope.argument!="") && ($scope.solution!=null && $scope.solution!="") ) {
+                    $scope.solution = $scope.solution.replace(/"/g,"'");
                     $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&new_argument=" + $scope.argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
                         .success(function (data, status, header, config) {
 
@@ -902,6 +903,7 @@
 
             if ($scope.radio_typeArgument == 'ex_argument' && $scope.radio_typeSolution == 'new_solution') {
                 if ($scope.solution!=null && $scope.solution!="") {
+                    $scope.solution = $scope.solution.replace(/"/g,"'");
                     $http.get("API/APIadmin.php?type=" + $scope.radio_question + "&text=" + $scope.question + "&ex_argument=" + $scope.selected_argument + "&new_solution=" + $scope.solution + "&db=" + $scope.selected_database )
                         .success(function (data, status, header, config) {
 
