@@ -335,7 +335,7 @@
                     if (queryArray[indexQuery].query["select"] == "" && queryArray[indexQuery].query["from"] != "")
                         queryArray[indexQuery].query["select"] = " SELECT DISTINCT * ";
 
-                    if (queryArray[indexQuery].query["select"] != "" && queryArray[indexQuery].query["select"] != " SELECT * ")
+                    if (queryArray[indexQuery].query["select"] != "" && queryArray[indexQuery].query["select"] != " SELECT DISTINCT * ")
                         queryArray[indexQuery].query["select"] = " SELECT DISTINCT " + queryArray[indexQuery].query["select"];
 
                     //Where σ.
