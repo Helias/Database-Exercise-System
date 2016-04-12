@@ -298,7 +298,7 @@
 
                             queryArray[indexQuery].flag["joinOn"] = false;
                             queryArray[indexQuery].flag["from"] = true;
-                            queryArray[indexQuery].query["from"] += " JOIN ";
+                            queryArray[indexQuery].query["from"] += " JOIN " + $scope.db + "_";
                         }
 
                         if (queryArray[indexQuery].flag["joinOn"])
@@ -319,7 +319,7 @@
 
                     //From ( ).
                     if (queryArray[indexQuery].query["from"] != ""){
-                        queryArray[indexQuery].query["from"] = " FROM " + queryArray[indexQuery].query["from"];
+                        queryArray[indexQuery].query["from"] = " FROM " + $scope.db + "_" + queryArray[indexQuery].query["from"];
 
                         //JOIN ON ⋈
                         if (queryArray[indexQuery].query["joinOn"] != ""){
@@ -330,7 +330,7 @@
                                 var newJoin = "";
 
                                 for (var i=0; i<splittedJoin.length; i++)
-                                    newJoin += " JOIN " + splittedJoin[i];
+                                    newJoin += " JOIN " + $scope.db + "_" + splittedJoin[i];
 
                                 queryArray[indexQuery].query["joinOn"] = newJoin;
 
@@ -406,6 +406,8 @@
                                                             queryArray[indexQuery].query["where"] +
                                                             queryArray[indexQuery].linker;
                 }
+
+                //console.log(queryArray);
 
                 //Join all query to write the completeQuery.
                 $scope.querySQL ="";
