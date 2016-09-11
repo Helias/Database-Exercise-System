@@ -96,7 +96,15 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
         } else {
             /* Query Utente */
             $stmt = $db->query($_GET['sql']);
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	    if (!$stmt) {
+		$json = '{ "Error": "Errore durante l\' esecuzione della query" }';
+		header('Content-Type: application/json');
+		echo $json;
+		return;
+	    }
+
+	    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $json = '[{"results" : ' . getJson($data) . "}, ";
 
