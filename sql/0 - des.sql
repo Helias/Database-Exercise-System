@@ -5,13 +5,13 @@
 CREATE TABLE IF NOT EXISTS argomenti(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     argomento varchar(255) NOT NULL
-);
+) ENGINE=InnoDB CHARACTER SET=utf8;
 
 -- Create 'soluzioni' table
 CREATE TABLE IF NOT EXISTS soluzioni(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     soluzione varchar(1000) NOT NULL
-);
+) ENGINE=InnoDB CHARACTER SET=utf8;
 
 -- Create 'domandeALG' table
 CREATE TABLE IF NOT EXISTS domandeALG(
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS domandeALG(
     argomento INT NOT NULL,
     FOREIGN KEY (soluzione) REFERENCES soluzioni(id),
     FOREIGN KEY (argomento) REFERENCES argomenti(id)
-);
+) ENGINE=InnoDB CHARACTER SET=utf8;
 
 -- Create 'domandeSQL' table
 CREATE TABLE IF NOT EXISTS domandeSQL(
@@ -33,13 +33,13 @@ CREATE TABLE IF NOT EXISTS domandeSQL(
     argomento INT NOT NULL,
     FOREIGN KEY (soluzione) REFERENCES soluzioni(id),
     FOREIGN KEY (argomento) REFERENCES argomenti(id)
-);
+) ENGINE=InnoDB CHARACTER SET=utf8;
 
 CREATE TABLE IF NOT EXISTS utenti(
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     username varchar(255) NOT NULL,
     psw varchar(255) NOT NULL
-);
+) ENGINE=InnoDB CHARACTER SET=utf8;
 
 -- Data of table 'argomenti'
 INSERT INTO argomenti VALUES
