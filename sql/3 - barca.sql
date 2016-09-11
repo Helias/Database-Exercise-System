@@ -38,7 +38,7 @@ INSERT INTO `barca_prenotazioni` VALUES ('1','1','20-06-2016'),('2','2','30-08-2
 
 INSERT INTO `soluzioni` VALUES
 (5, 'SELECT DISTINCT colore FROM barca_marinai AS t1 JOIN barca_prenotazioni AS t2 ON t1.idm = t2.idm JOIN barca_barche AS t3 ON t2.idb = t3.idb WHERE nomem = \'Marco\''),
-(6, 'SELECT idm FROM barca_marinai WHERE rating >= 8 UNION SELECT idm FROM barca_prenotazioni WHERE idb=103'),
+(6, 'SELECT idm FROM barca_marinai WHERE rating >= 8 UNION SELECT idm FROM barca_prenotazioni WHERE idb=103');
 
 INSERT INTO `domandeALG` VALUES
 (4, 'Trovare i colori della barca prenotata dal marinaio Marco', 'barca', 5, 1),
