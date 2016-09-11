@@ -66,7 +66,7 @@ if (isset($_GET['getSoluzione']) && $_GET['getSoluzione'] != "") {
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo '[{ "query": "' . $soluzione . '" }, { "results" : ' . getJson($result) . '}]';
-
+    return;
 }
 
 //Blacklist word
@@ -94,17 +94,18 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
             $json = '{ "Error": "Non è stata eseguita una query SELECT!" }';
 
         } else {
+
             /* Query Utente */
             $stmt = $db->query($_GET['sql']);
 
-	    if (!$stmt) {
-		$json = '{ "Error": "Errore durante l\' esecuzione della query" }';
-		header('Content-Type: application/json');
-		echo $json;
-		return;
-	    }
+            if (!$stmt) {
+              $json = '{ "Error": "Errore durante l\' esecuzione della query" }';
+              header('Content-Type: application/json');
+              echo $json;
+              return;
+            }
 
-	    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $json = '[{"results" : ' . getJson($data) . "}, ";
 

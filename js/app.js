@@ -66,7 +66,7 @@
                         $scope.querySoluz = data;
                         $scope.sentQuery = false;
                         $scope.soluzCollapsed = true;
-                        
+
                     })
                         .error(function (data, status, header, config) {
                         console.log("[ERROR] $http.get request failed!");
@@ -82,7 +82,7 @@
 
         $scope.query = "";
         $scope.querySQL = "";      //SQL Query (Final).
-        $scope.cursorPosVal = -1;  //Position cursor | .  
+        $scope.cursorPosVal = -1;  //Position cursor | .
 
         $scope.addOp = function(op) {
             $scope.query = $scope.query.substring(0,$scope.cursorPosVal) + op + $scope.query.substring($scope.cursorPosVal,$scope.query.length);
@@ -95,10 +95,10 @@
 
         $scope.getCursorPos = function($event) {
             var myEl = $event.target;
-            $scope.doGetCaretPosition(myEl);  
+            $scope.doGetCaretPosition(myEl);
         };
 
-        $scope.doGetCaretPosition = function(oField) {    
+        $scope.doGetCaretPosition = function(oField) {
             var iCaretPos = 0;
 
             // IE Support
@@ -131,11 +131,17 @@
                     .success(function (data, status, header, config) {
 
                     $scope.queryUser = data;
+
                     if (data) {
+                      if ($scope.queryUser.Error != null) {
+                        $scope.addAlert("danger", $scope.queryUser.Error);
+                      }
+                      else {
                         if ($scope.queryUser[1].Success != null)
                             $scope.addAlert("success", $scope.queryUser[1].Success);
                         else
                             $scope.addAlert("danger", $scope.queryUser[1].Error);
+                      }
                     }
                 })
                     .error(function (data, status, header, config) {
@@ -143,7 +149,7 @@
                 });
 
                 $scope.sentQuery = true;
-            }else
+            } else
                 $scope.addAlert("danger", "Assicurati di aver chiuso tutte le parentesi.");
 
         };
@@ -775,7 +781,7 @@
         $scope.autoLoadList[1] = new Array('Rossi', 'Pulvirenti', 'Maggio', 'Calabro', 'Foti', 'Anza', 'Auteri', 'Borzi', 'Benfatto', 'Bianchi', 'Bruni', 'Bruno', 'Barbera', 'Caruso', 'Catena', 'Condorelli', 'Cicero', 'Corallo', 'Chisari', 'Costanzo', 'Calvagna', 'Conti', 'Esposito', 'Farinella', 'Ferrero', 'Fontana', 'Gelardi', 'Grillo', 'Logrande', 'Laudani', 'Longo', 'Lopresti', 'Mancuso', 'Marchese', 'Mangano', 'Nicosia', 'Oliveri', 'Pappalardo', 'Pezzino', 'Palmeri', 'Rapisarda', 'Rossi', 'Reina', 'Russo', 'Rao', 'Scuto', 'Sinatra', 'Signorello', 'Signorelli', 'Spitaleri', 'Tirenna', 'Travagliante', 'Tomasello', 'Tortomasi', 'Toscano', 'Virgillito');
         $scope.autoLoadList[2] = new Array('Giallo', 'Rosso', 'Verde', 'Blu', 'Arancione', 'Celeste', 'Viola', 'Nero', 'Grigio', 'Acquamarina', 'Azzuerro', 'Ciano', 'Lilla', 'Marrone', 'Magenta', 'Ocra', 'Rosa', 'Scarlatto', 'Turchese', 'Vinaccia');
         $scope.autoLoadList[3] = new Array('Roma', 'Milano', 'Napoli', 'Torino', 'Palermo', 'Genova', 'Bologna', 'Firenze', 'Bari', 'Catania', 'Venezia', 'Verona', 'Messina', 'Padova', 'Trieste', 'Taranto', 'Brescia', 'Prato', 'Parma', 'Modena', 'Reggio Calabria', 'Reggio Emilia', 'Perugia', 'Livorno', 'Ravenna', 'Cagliari', 'Foggia', 'Rimini', 'Salerno', 'Ferrara', 'Sassari', 'Latina', 'Siracusa', 'Monza', 'Pescara', 'Giugliano in Campania', 'Bergamo', 'Forlì', 'Trento', 'Vicenza', 'Terni', 'Bolzano', 'Novara', 'Piacenza', 'Ancona', 'Andria', 'Udine', 'Arezzo', 'Cesena', 'Barletta', 'Barcellona PG', 'Paterno', 'Ragalna');
-        
+
         $scope.autoLoadList[4] = new Array();
         for (var i=0; i<40; i++)
             $scope.autoLoadList[4][i] = Math.floor(Math.random() * 2048) + 1  ;
@@ -786,8 +792,8 @@
 
         $scope.autoLoadList[6] = new Array();
         for (var i=0; i<40; i++)
-            $scope.autoLoadList[6][i] = (Math.floor(Math.random() * 30) + 1 ) + "-" + 
-                                        (Math.floor(Math.random() * 12) + 1 ) + "-" + 
+            $scope.autoLoadList[6][i] = (Math.floor(Math.random() * 30) + 1 ) + "-" +
+                                        (Math.floor(Math.random() * 12) + 1 ) + "-" +
                                         (Math.floor((Math.random() * (2016 - 1996) + 1996))) ;
 
         $scope.autoLoader = function(column,selectedAutoLoad){
