@@ -37,14 +37,13 @@ CREATE TABLE `barca_prenotazioni` (
 INSERT INTO `barca_prenotazioni` VALUES ('1','1','20-06-2016'),('2','2','30-08-2016'),('1','3','28-04-2016'),('1','4','10-10-2016'),('10','9','21-09-2016'),('9','10','22-05-2016'),('8','8','12-04-2016'),('7','7','01-13-2016'),('6','6','05-05-2016'),('5','5','03-12-2016'),('2','103','20-10-2016'),('3','103','15-03-2016'),('4','103','11-01-2016');
 
 INSERT INTO `soluzioni` VALUES
-(5, 'SELECT DISTINCT colore FROM barca_marinai JOIN barca_prenotazioni JOIN barca_barche WHERE nomem=\'marco\''),
+(5, 'SELECT DISTINCT colore FROM barca_marinai AS t1 JOIN barca_prenotazioni AS t2 ON t1.idm = t2.idm JOIN barca_barche AS t3 ON t2.idb = t3.idb WHERE nomem = \'Marco\''),
 (6, 'SELECT idm FROM barca_marinai WHERE rating >= 8 UNION SELECT idm FROM barca_prenotazioni WHERE idb=103'),
-(7, 'SELECT DISTINCT colore FROM barca_marinai AS t1 JOIN barca_prenotazioni AS t2 ON t1.idm = t2.idm JOIN barca_barche AS t3 ON t2.idb = t3.idb WHERE nomem = \'Marco\'');
 
 INSERT INTO `domandeALG` VALUES
 (4, 'Trovare i colori della barca prenotata dal marinaio Marco', 'barca', 5, 1),
 (5, 'Stampare gli id dei marinai che hanno un rating di almeno 8 o che hanno prenotato la barca 103', 'barca', 6, 1);
 
 INSERT INTO `domandeSQL` VALUES
-(6, 'Trovare i colori della barca prenotata dal marinaio Marco', 'barca', 7, 1),
+(6, 'Trovare i colori della barca prenotata dal marinaio Marco', 'barca', 5, 1),
 (7, 'Stampare gli id dei marinai che hanno un rating di almeno 8 o che hanno prenotato la barca 103', 'barca', 6, 1);
