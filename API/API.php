@@ -95,7 +95,7 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
 
         } else {
 
-            /* Query Utente */
+            /* User Query */
             $stmt = $db->query($_GET['sql']);
 
             if (!$stmt) {
@@ -109,7 +109,7 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
 
             $json = '[{"results" : ' . getJson($data) . "}, ";
 
-            /* Query souzione */
+            /* Solution Query */
             $stmt = $db->query("SELECT soluzione FROM soluzioni WHERE id = " . $_GET['soluz']);
             $solution = $stmt->fetchAll(PDO::FETCH_ASSOC)[0]['soluzione'];
 
@@ -132,7 +132,7 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
                     $i++;
                 }
 
-                /* Comapre the two tables results */
+                /* Compare the two tables results */
                 $rowCompare = array();
                 $rowCompare = array_fill(0, count($data), false);
 
