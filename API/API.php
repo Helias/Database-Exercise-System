@@ -7,18 +7,24 @@ if (isset($_GET['arguments']))
 {
     $stmt = $db->query('SELECT * FROM argomenti');
     $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
+    print_json($json);
+    return;
 }
 else if (isset($_GET['exerciseSQL']) && $_GET['exerciseSQL'] != "")
 {
     // select all SQL exercises for argument
     $stmt = $db->query('SELECT * FROM domandeSQL WHERE argomento = ' . $_GET['exerciseSQL']);
     $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
+    print_json($json);
+    return;
 }
 else if (isset($_GET['exerciseALG']) && $_GET['exerciseALG'] != "")
 {
     // select all algebra exercises for argument
     $stmt = $db->query('SELECT * FROM domandeALG WHERE argomento = ' . $_GET['exerciseALG']);
     $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
+    print_json($json);
+    return;
 }
 else if (isset($_GET['database'])) {
     // show all "databases"
@@ -32,6 +38,8 @@ else if (isset($_GET['database'])) {
     }
 
     $json = getJson($arr);
+    print_json($json);
+    return;
 }
 else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
     // show tables from database
@@ -53,6 +61,8 @@ else if (isset($_GET['db_tables']) && $_GET['db_tables'] != "") {
     }
 
     $json = getJson($tables);
+    print_json($json);
+    return;
 }
 
 // Get solution

@@ -84,15 +84,17 @@ try {
         }
 
         //Show all solutions.
-        if ( isset($_GET['solutions']) &&
-            (isset($_GET['argument']) && $_GET['argument'] != "") &&
-            (isset($_GET['question']) && $_GET['question'] != "")
+        if (isset($_GET['solutions']) &&
+            (isset($_GET['argument']) && $_GET['argument'] != "")
            ) {
+            $stmt = $db->query('SELECT id, soluzione
+                                FROM soluzioni
+                                WHERE id IN (SELECT soluzione FROM domandeALG WHERE argomento = ' . $_GET['argument'] . ')
+                                OR id IN (SELECT soluzione FROM domandeSQL WHERE argomento =  ' . $_GET['argument'] . ')');
 
-            $stmt = $db->query('SELECT DISTINCT soluzioni.id, soluzioni.soluzione
-                                    FROM ' . $_GET['question'] . ' INNER JOIN soluzioni
-                                    WHERE ' . $_GET['question'] . '.argomento = ' . $_GET['argument'] . ' AND ' . $_GET['question'] . '.soluzione = soluzioni.id;');
             $json = getJson($stmt->fetchAll(PDO::FETCH_ASSOC));
+            print_json($json);
+            return;
         }
 
         //Submit newQuestion, INSERT argomento, soluzioni and domandeALG/SQL.
@@ -100,6 +102,7 @@ try {
             $stmt = $db->query("INSERT INTO " . $_GET['type'] . " (testo,db_connesso,soluzione,argomento)
                                 VALUES ('" . $_GET['text'] . "','" . $_GET['db'] . "'," . $solutionId . "," . $argumentId . ");");
             $json = '{ "Success": "Domanda aggiunta!" }';
+            print_json($json);
         }
 
         function getIdArgument($db){
@@ -125,6 +128,7 @@ try {
                     $stmt = $db->query("INSERT INTO soluzioni(soluzione) VALUES ('" . $_GET['new_solution'] . "') ;");
 
                     submitNewQuestion($db, getIdArgument($db), getIdSolution($db));
+                    return;
                 }
                 else
                     $json = '{ "Error": "Soluzione esistente!" }';
@@ -138,8 +142,10 @@ try {
             (isset($_GET['ex_argument']) && $_GET['ex_argument'] != "") &&
             (isset($_GET['ex_solution']) && $_GET['ex_solution'] != "") &&
             (isset($_GET['db']) && $_GET['db'] != "")
-           )
+           ) {
             submitNewQuestion($db, $_GET['ex_argument'], $_GET['ex_solution']);
+            return;
+          }
 
         if ((isset($_GET['text']) && $_GET['text'] != "") &&
             (isset($_GET['type']) && $_GET['type'] != "") &&
@@ -152,6 +158,7 @@ try {
                 $stmt = $db->query("INSERT INTO soluzioni(soluzione) VALUES ('" . $_GET['new_solution'] . "') ;");
 
                 submitNewQuestion($db, $_GET['ex_argument'], getIdSolution($db));
+                return;
             }
             else
                 $json = '{ "Error": "Soluzione esistente!" }';
