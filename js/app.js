@@ -124,8 +124,10 @@
 
                 if ($scope.type == "ALG")
                     $scope.queryToSend = $scope.querySQL;
-                else
+                else {
                     $scope.queryToSend = $scope.query;
+                    $scope.queryToSend = $scope.queryToSend.replace(/\n/g, " ");
+                }
 
                 $http.get( "API/API.php?sql=" + $scope.queryToSend + "&soluz=" + $scope.filteredEx[0].soluzione)
                     .success(function (data, status, header, config) {
