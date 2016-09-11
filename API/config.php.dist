@@ -27,4 +27,9 @@ function getJson($input) {
     utf8_encode_deep($res);
     return json_encode($res);
 }
+
+function print_json($json) {
+  header('Content-Type: application/json');
+  echo $json;
+}
 ?>

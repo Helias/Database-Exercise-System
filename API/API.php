@@ -99,9 +99,7 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
             $stmt = $db->query($_GET['sql']);
 
             if (!$stmt) {
-              $json = '{ "Error": "Errore durante l\' esecuzione della query" }';
-              header('Content-Type: application/json');
-              echo $json;
+              print_json('{ "Error": "Errore durante l\' esecuzione della query" }');
               return;
             }
 
@@ -168,7 +166,8 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
         }
     }
     $json .= "]";
-}
+} else
+  $json = '{ "Error": "Errore durante l\' esecuzione della query" }';
 
 header('Content-Type: application/json');
 echo $json;

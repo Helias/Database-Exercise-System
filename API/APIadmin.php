@@ -2,6 +2,13 @@
 session_start();
 include "config.php";
 
+if ((!isset($_SESSION['username']) || $_SESSION['username'] == "") ||
+    (!isset($_SESSION['password']) || $_SESSION['password'] == "")
+   ) {
+     $_SESSION["username"] = "";
+     $_SESSION["password"] = "";
+}
+
 $db = new PDO('mysql:host='.$host.';dbname='.$database, $username, $password);
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -11,20 +18,20 @@ try {
     if ((isset($_GET['username']) && $_GET['username'] != "") &&
         (isset($_GET['password']) && $_GET['password'] != "")
        ) {
+        $json = "";
+
         $stmt = $db->query('SELECT * FROM utenti WHERE username = "' . $_GET['username'] .'";');
         if ( $stmt->fetchColumn() != "" ) {
             $stmt = $db->query('SELECT * FROM utenti WHERE psw = "' . md5($_GET['password']) .'";');
             if ( $stmt->fetchColumn() != "" ) {
                 $_SESSION["username"] = $_GET['username'];
                 $_SESSION["password"] = md5($_GET['password']);
-            }else
-                $json = '{ "Error": "Password non corretta!" }';
-        }else
-            $json = '{ "Error": "Nome utente non esistente!" }';
-        header('Content-Type: application/json');
-        echo $json;
+            } else
+              print_json('{ "Error": "Password non corretta!" }');
+        } else
+          print_json('{ "Error": "Nome utente non esistente!" }');
         return;
-    }
+     }
 
     //Check if the user is logged.
     if ( isset($_GET['checklogin']) ) {
@@ -33,7 +40,7 @@ try {
     }
 
     //If user is logged.
-    if ( $_SESSION["username"] != "" || $_SESSION["password"] != "" ) {
+    if ( $_SESSION["username"] != "" && $_SESSION["password"] != "" ) {
 
 
         //Show all "databases".
