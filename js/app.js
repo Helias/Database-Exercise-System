@@ -129,6 +129,14 @@
                     $scope.queryToSend = $scope.queryToSend.replace(/\n/g, " ");
                 }
 
+                $scope.tables_ = [];
+                var re;
+                for (var i = 0; i < $scope.tables.length; i++) {
+                  $scope.tables_[i] = $scope.tables[i].substr(0, $scope.tables[i].indexOf(" ")).toLowerCase();
+                  re = new RegExp($scope.tables_[i], "gi");
+                  $scope.queryToSend = $scope.queryToSend.replace(re, $scope.db + "_" + $scope.tables_[i]);
+                }
+
                 $http.get( "API/API.php?sql=" + $scope.queryToSend + "&soluz=" + $scope.filteredEx[0].soluzione)
                     .success(function (data, status, header, config) {
 

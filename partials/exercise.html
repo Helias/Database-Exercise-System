@@ -106,8 +106,6 @@
                 <textarea type="text" class="form-control" id="query" placeholder="Inserisci la query..." ng-model="query" style="resize: vertical; min-height:110px;" ng-change="convertQuery()" ng-click="getCursorPos($event)" ng-keyup="getCursorPos($event)">
                 </textarea>
 
-                <p ng-show="type == 'SQL'">Ricordati di inserire di fronte ad ogni tabella il prefisso "nomeDatabase_" (esempio: <b>{{ db }}_tabella</b>)</p>
-
                 <br>
 
                 <div class="text-left sql-code" hljs language="sql" contentEditable="false" source="querySQL" ng-show="querySQL!=''"></div>
