@@ -55,22 +55,36 @@
 
                         $scope.tables = data;
 
+			$http.get( "API/API.php?getSoluzione=" + $scope.filteredEx[0].soluzione)
+				.success(function (data, status, header, config) {
+
+				$scope.querySoluz = data;
+
+				/* decode solution */
+				$scope.tables_ = [];
+				var re;
+				for (var i = 0; i < $scope.tables.length; i++) {
+				  $scope.tables_[i] = $scope.tables[i].substr(0, $scope.tables[i].indexOf(" ")).toLowerCase();
+				  re = new RegExp(" "+$scope.db+"_"+$scope.tables_[i], "gi");
+					console.log(re);
+					console.log($scope.querySoluz[0].query);
+				  $scope.querySoluz[0].query = $scope.querySoluz[0].query.replace(re, " " + $scope.tables_[i]);
+					console.log($scope.querySoluz[0].query);
+				}
+				
+				$scope.sentQuery = false;
+				$scope.soluzCollapsed = true;
+
+			    })
+				.error(function (data, status, header, config) {
+				console.log("[ERROR] $http.get request failed!");
+			    });
+
                     })
                         .error(function (data, status, header, config) {
                         console.log("[ERROR] $http.get request failed!");
                     });
 
-                    $http.get( "API/API.php?getSoluzione=" + $scope.filteredEx[0].soluzione)
-                        .success(function (data, status, header, config) {
-
-                        $scope.querySoluz = data;
-                        $scope.sentQuery = false;
-                        $scope.soluzCollapsed = true;
-
-                    })
-                        .error(function (data, status, header, config) {
-                        console.log("[ERROR] $http.get request failed!");
-                    });
 
                 }
 
@@ -129,12 +143,13 @@
                     $scope.queryToSend = $scope.queryToSend.replace(/\n/g, " ");
                 }
 
+		/* encode solution */
                 $scope.tables_ = [];
                 var re;
                 for (var i = 0; i < $scope.tables.length; i++) {
                   $scope.tables_[i] = $scope.tables[i].substr(0, $scope.tables[i].indexOf(" ")).toLowerCase();
-                  re = new RegExp($scope.tables_[i], "gi");
-                  $scope.queryToSend = $scope.queryToSend.replace(re, $scope.db + "_" + $scope.tables_[i]);
+                  re = new RegExp(" "+$scope.tables_[i], "gi");
+                  $scope.queryToSend = $scope.queryToSend.replace(re, " "+$scope.db + "_" + $scope.tables_[i]);
                 }
 
                 $http.get( "API/API.php?sql=" + $scope.queryToSend + "&soluz=" + $scope.filteredEx[0].soluzione)

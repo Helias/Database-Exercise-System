@@ -109,7 +109,7 @@ if (isset($_GET['sql']) && $_GET['sql'] != "" && isset($_GET['soluz']) && $_GET[
             $stmt = $db->query($_GET['sql']);
 
             if (!$stmt) {
-              print_json('{ "Error": "Errore durante l\' esecuzione della query" }');
+              print_json('{ "Error": "Errore durante l\' esecuzione della query: ' . $db->errorInfo()[2] . '" }');
               return;
             }
 
