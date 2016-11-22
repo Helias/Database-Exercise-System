@@ -66,10 +66,7 @@
 				for (var i = 0; i < $scope.tables.length; i++) {
 				  $scope.tables_[i] = $scope.tables[i].substr(0, $scope.tables[i].indexOf(" ")).toLowerCase();
 				  re = new RegExp(" "+$scope.db+"_"+$scope.tables_[i], "gi");
-					console.log(re);
-					console.log($scope.querySoluz[0].query);
 				  $scope.querySoluz[0].query = $scope.querySoluz[0].query.replace(re, " " + $scope.tables_[i]);
-					console.log($scope.querySoluz[0].query);
 				}
 				
 				$scope.sentQuery = false;
